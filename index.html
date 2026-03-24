@@ -641,13 +641,22 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
 .empty-state p{font-size:.85rem}
 
 /* Settings modal */
-.settings-overlay{position:fixed;inset:0;z-index:8500;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:24px}
+.settings-overlay{position:fixed;inset:0;z-index:8500;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:16px}
 .settings-overlay.open{display:flex;animation:fadeIn .18s ease}
-.settings-modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:28px;max-width:500px;width:100%;box-shadow:var(--sh-lg);max-height:90vh;overflow-y:auto}
-.settings-modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.settings-modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);max-width:780px;width:100%;box-shadow:var(--sh-lg);max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.settings-modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 0;flex-shrink:0}
 .settings-modal-hdr h2{font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:-.01em}
-.sm-close{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-xs);width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--sub);transition:all .15s;font-family:var(--font)}
+.sm-close{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-xs);width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--sub);transition:all .15s;font-family:var(--font);flex-shrink:0}
 .sm-close:hover{border-color:var(--red);color:var(--red);background:var(--red-s)}
+.sm-tabs{display:flex;gap:2px;padding:16px 24px 0;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
+.sm-tab{padding:8px 16px;border:none;background:none;color:var(--sub);font-family:var(--font);font-size:.84rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;white-space:nowrap}
+.sm-tab.act{color:var(--blue);border-bottom-color:var(--blue)}
+.sm-tab:hover:not(.act){color:var(--text)}
+.sm-body{overflow-y:auto;padding:20px 24px 24px;flex:1}
+.sm-panel{display:none}
+.sm-panel.act{display:flex;flex-direction:column;gap:14px}
+.sm-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.sm-row{grid-template-columns:1fr}}
 
 /* Chart zoom modal */
 .ch-modal-overlay{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:24px}
@@ -2638,91 +2647,119 @@ function updateAiBanner(){
 <!-- SETTINGS MODAL -->
 <div class="settings-overlay" id="settings-overlay" onclick="closeSettings(event)">
   <div class="settings-modal">
+
+    <!-- Header -->
     <div class="settings-modal-hdr">
-      <div>
-        <h2>⚙️ Impostazioni</h2>
-        <div style="font-size:.7rem;color:var(--sub);margin-top:2px;letter-spacing:.03em">Versione 1.1</div>
-      </div>
+      <h2>⚙️ Impostazioni</h2>
       <button class="sm-close" onclick="closeSettings()">✕</button>
     </div>
 
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div class="card">
-        <div class="card-title">💾 Backup e ripristino dati</div>
-        <p style="font-size:.82rem;color:var(--sub);margin-bottom:16px">I dati sono salvati nel browser. Esporta un file JSON per fare un backup o per spostarli su un altro dispositivo.</p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-primary" onclick="backupJSON()" data-tt-id="btn-backup">⬇️ Esporta backup</button>
-          <button class="btn btn-ghost" onclick="triggerRestore()" data-tt-id="btn-restore">⬆️ Importa backup</button>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">🔄 Aggiornamenti app</div>
-        <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Verifica se è disponibile una nuova versione dell'app. Se hai installato l'app sul desktop o sul telefono, l'aggiornamento verrà applicato al riavvio.</p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-          <button class="btn btn-primary" id="btn-check-updates" onclick="checkForUpdates()">🔄 Verifica aggiornamenti</button>
-        </div>
-        <div id="sw-update-status" style="font-size:.8rem;margin-top:10px"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">📱 Connessione app mobile</div>
-        <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Indirizzo email a cui inviare le categorie e ricevere i dati dall'app mobile. Sarà pre-compilato automaticamente nelle funzioni di scambio dati.</p>
-        <div class="field">
-          <label>Email di default</label>
-          <input type="email" class="inp" id="def-email-inp" placeholder="es. tuaemail@gmail.com" autocomplete="email">
-        </div>
-        <div id="def-email-status" style="font-size:.8rem;margin-bottom:12px"></div>
-        <button class="btn btn-primary btn-sm" onclick="saveDefEmail()" data-tt-id="btn-save-email">💾 Salva email</button>
-      </div>
-      <div class="card">
-        <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Necessaria per generare riepiloghi AI. Ottienila su <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a>. Salvata solo nel tuo browser.</p>
-        <div class="field">
-          <label>API Key</label>
-          <input type="password" class="inp" id="api-key-inp" placeholder="sk-ant-…" autocomplete="off">
-        </div>
-        <div id="api-key-status" style="font-size:.8rem;margin-bottom:12px"></div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-primary" onclick="saveApiKey()" data-tt-id="btn-save-apikey">💾 Salva chiave</button>
-          <button class="btn btn-ghost" onclick="clearApiKey()" data-tt-id="btn-clear-apikey">🗑 Rimuovi</button>
-        </div>
-      </div>
-      <div class="card" style="border-color:var(--red)">
-        <div class="card-title" style="color:var(--red-d)">🗑 Resetta dati</div>
-        <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Elimina definitivamente i dati del periodo selezionato. <strong>Operazione irreversibile.</strong> Verrà richiesta una password di conferma.</p>
-        <div class="field">
-          <label>Seleziona cosa resettare</label>
-          <select class="inp" id="reset-scope">
-            <option value="month">Mese corrente</option>
-            <option value="year">Anno corrente</option>
-            <option value="range">Intervallo date personalizzato</option>
-            <option value="all">Tutto (transazioni e snapshot patrimonio)</option>
-          </select>
-        </div>
-        <div id="reset-range-fields" style="display:none">
-          <div class="field">
-            <label>Dal</label>
-            <input type="date" class="inp" id="reset-from" style="margin-bottom:8px">
-          </div>
-          <div class="field">
-            <label>Al</label>
-            <input type="date" class="inp" id="reset-to">
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:12px;background:var(--red-s);border:1.5px solid var(--red);border-radius:var(--r-s)">
-          <input type="checkbox" id="reset-prog" style="width:16px;height:16px;accent-color:var(--red);cursor:pointer;flex-shrink:0">
-          <label for="reset-prog" style="font-size:.83rem;font-weight:600;color:var(--red-d);cursor:pointer">Resetta anche la Progettazione (categorie, depositi)</label>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:12px;background:var(--red-s);border:1.5px solid var(--red);border-radius:var(--r-s)">
-          <input type="checkbox" id="reset-settings" style="width:16px;height:16px;accent-color:var(--red);cursor:pointer;flex-shrink:0">
-          <label for="reset-settings" style="font-size:.83rem;font-weight:600;color:var(--red-d);cursor:pointer">Elimina anche le impostazioni (tema, email di default, chiave API)</label>
-        </div>
-        <div class="field">
-          <label>Password di conferma</label>
-          <input type="password" class="inp" id="reset-pwd" placeholder="Inserisci la password…" autocomplete="off">
-        </div>
-        <div id="reset-msg" style="font-size:.8rem;margin-bottom:10px"></div>
-        <button class="btn btn-danger" onclick="doReset()" data-tt-id="btn-reset">🗑 Resetta ora</button>
-      </div>
+    <!-- Tabs -->
+    <div class="sm-tabs">
+      <button class="sm-tab act" onclick="smTab(this,'sm-dati')">💾 Dati</button>
+      <button class="sm-tab" onclick="smTab(this,'sm-mobile')">📱 App mobile</button>
+      <button class="sm-tab" onclick="smTab(this,'sm-ai')">🤖 AI</button>
+      <button class="sm-tab" onclick="smTab(this,'sm-reset')" style="color:var(--red-d)">🗑 Reset</button>
     </div>
+
+    <div class="sm-body">
+
+      <!-- TAB: Dati -->
+      <div class="sm-panel act" id="sm-dati">
+        <div class="sm-row">
+          <div class="card" style="margin:0">
+            <div class="card-title">💾 Backup</div>
+            <p style="font-size:.82rem;color:var(--sub);margin-bottom:16px">Esporta tutti i tuoi dati e preferenze in un file JSON. Tienilo al sicuro come copia di riserva.</p>
+            <button class="btn btn-primary" onclick="backupJSON()" data-tt-id="btn-backup">⬇️ Esporta backup</button>
+          </div>
+          <div class="card" style="margin:0">
+            <div class="card-title">⬆️ Ripristino</div>
+            <p style="font-size:.82rem;color:var(--sub);margin-bottom:16px">Importa un backup precedentemente esportato. I dati attuali verranno sostituiti.</p>
+            <button class="btn btn-ghost" onclick="triggerRestore()" data-tt-id="btn-restore">⬆️ Importa backup</button>
+          </div>
+        </div>
+        <div class="card" style="margin:0">
+          <div class="card-title">🔄 Aggiornamenti app</div>
+          <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Controlla se è disponibile una nuova versione. Se l'app è installata sul desktop, ricarica la pagina dopo l'aggiornamento.</p>
+          <button class="btn btn-primary" id="btn-check-updates" onclick="checkForUpdates()">🔄 Verifica aggiornamenti</button>
+          <div id="sw-update-status" style="font-size:.8rem;margin-top:10px"></div>
+        </div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1</div>
+      </div>
+
+      <!-- TAB: App mobile -->
+      <div class="sm-panel" id="sm-mobile">
+        <div class="card" style="margin:0">
+          <div class="card-title">📧 Email di default</div>
+          <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Indirizzo pre-compilato automaticamente nelle funzioni di scambio dati con l'app mobile.</p>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" class="inp" id="def-email-inp" placeholder="es. tuaemail@gmail.com" autocomplete="email">
+          </div>
+          <div id="def-email-status" style="font-size:.8rem;margin-bottom:12px"></div>
+          <button class="btn btn-primary btn-sm" onclick="saveDefEmail()" data-tt-id="btn-save-email">💾 Salva email</button>
+        </div>
+      </div>
+
+      <!-- TAB: AI -->
+      <div class="sm-panel" id="sm-ai">
+        <div class="card" style="margin:0">
+          <div class="card-title">🤖 Chiave API Anthropic</div>
+          <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Necessaria per generare riepiloghi AI in modalità diretta. Ottienila su <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a>. Salvata <strong>solo nel tuo browser</strong>, mai inviata altrove.</p>
+          <div class="field">
+            <label>API Key</label>
+            <input type="password" class="inp" id="api-key-inp" placeholder="sk-ant-…" autocomplete="off">
+          </div>
+          <div id="api-key-status" style="font-size:.8rem;margin-bottom:12px"></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" onclick="saveApiKey()" data-tt-id="btn-save-apikey">💾 Salva chiave</button>
+            <button class="btn btn-ghost" onclick="clearApiKey()" data-tt-id="btn-clear-apikey">🗑 Rimuovi</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Reset -->
+      <div class="sm-panel" id="sm-reset">
+        <div class="card" style="margin:0;border-color:var(--red)">
+          <div class="card-title" style="color:var(--red-d)">🗑 Resetta dati</div>
+          <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Elimina definitivamente i dati del periodo selezionato. <strong>Operazione irreversibile.</strong> Verrà richiesta una password di conferma.</p>
+          <div class="sm-row">
+            <div class="field" style="margin:0">
+              <label>Cosa resettare</label>
+              <select class="inp" id="reset-scope">
+                <option value="month">Mese corrente</option>
+                <option value="year">Anno corrente</option>
+                <option value="range">Intervallo date personalizzato</option>
+                <option value="all">Tutto (transazioni e snapshot patrimonio)</option>
+              </select>
+            </div>
+            <div class="field" style="margin:0">
+              <label>Password di conferma</label>
+              <input type="password" class="inp" id="reset-pwd" placeholder="Inserisci la password…" autocomplete="off">
+            </div>
+          </div>
+          <div id="reset-range-fields" style="display:none;margin-top:10px">
+            <div class="sm-row">
+              <div class="field" style="margin:0"><label>Dal</label><input type="date" class="inp" id="reset-from"></div>
+              <div class="field" style="margin:0"><label>Al</label><input type="date" class="inp" id="reset-to"></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin:14px 0">
+            <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--red-s);border:1.5px solid var(--red);border-radius:var(--r-s);cursor:pointer;font-size:.83rem;font-weight:600;color:var(--red-d)">
+              <input type="checkbox" id="reset-prog" style="width:16px;height:16px;accent-color:var(--red);flex-shrink:0">
+              Resetta anche la Progettazione (categorie, depositi)
+            </label>
+            <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--red-s);border:1.5px solid var(--red);border-radius:var(--r-s);cursor:pointer;font-size:.83rem;font-weight:600;color:var(--red-d)">
+              <input type="checkbox" id="reset-settings" style="width:16px;height:16px;accent-color:var(--red);flex-shrink:0">
+              Elimina anche le impostazioni (tema, email, chiave API)
+            </label>
+          </div>
+          <div id="reset-msg" style="font-size:.8rem;margin-bottom:10px"></div>
+          <button class="btn btn-danger" onclick="doReset()" data-tt-id="btn-reset">🗑 Resetta ora</button>
+        </div>
+      </div>
+
+    </div><!-- /sm-body -->
   </div>
 </div>
 
@@ -2739,6 +2776,17 @@ function updateAiBanner(){
 <div class="tt" id="tt"></div>
 
 <script>
+// ═══════════════════════════════════════
+// SETTINGS TABS
+// ═══════════════════════════════════════
+function smTab(btn, panelId){
+  document.querySelectorAll('.sm-tab').forEach(function(b){ b.classList.remove('act'); });
+  document.querySelectorAll('.sm-panel').forEach(function(p){ p.classList.remove('act'); });
+  btn.classList.add('act');
+  var panel=document.getElementById(panelId);
+  if(panel) panel.classList.add('act');
+}
+
 // ═══════════════════════════════════════
 // EMAIL DI DEFAULT
 // ═══════════════════════════════════════
@@ -3738,29 +3786,42 @@ function closeChModal(e){
   window.checkForUpdates = function(){
     var btn = document.getElementById('btn-check-updates');
     var status = document.getElementById('sw-update-status');
-    if(btn){ btn.disabled=true; btn.textContent='⏳ Verifica in corso…'; }
-    if(!('serviceWorker' in navigator)){
-      if(status) status.innerHTML='<span style="color:var(--red-d)">Service Worker non supportato in questo browser.</span>';
+    var APP_VERSION = '1.1';
+    if(btn){ btn.disabled=true; btn.textContent='⏳ Verifica in corso\u2026'; }
+    if(status) status.innerHTML='';
+
+    // If hosted remotely, fetch the page and check version string
+    var currentUrl = window.location.href;
+    var isLocal = currentUrl.startsWith('file://') || currentUrl.includes('localhost') || currentUrl.includes('127.0.0.1');
+
+    if(isLocal){
       if(btn){ btn.disabled=false; btn.textContent='🔄 Verifica aggiornamenti'; }
+      if(status) status.innerHTML='<span style="color:var(--sub)">ℹ️ Stai usando la versione locale. Carica il file aggiornato da GitHub per aggiornare.</span>';
       return;
     }
-    navigator.serviceWorker.ready.then(function(reg){
-      return reg.update();
-    }).then(function(){
-      return navigator.serviceWorker.ready;
-    }).then(function(reg){
-      if(btn){ btn.disabled=false; btn.textContent='🔄 Verifica aggiornamenti'; }
-      if(reg.waiting){
-        if(status) status.innerHTML='<span style="color:var(--green-d)">✅ Aggiornamento disponibile! Clicca "Aggiorna ora" nel banner.</span>';
-        showUpdateBanner();
-      } else {
-        if(status) status.innerHTML='<span style="color:var(--green-d)">✅ Sei già alla versione più recente.</span>';
-        setTimeout(function(){ if(status) status.innerHTML=''; }, 4000);
-      }
-    }).catch(function(){
-      if(btn){ btn.disabled=false; btn.textContent='🔄 Verifica aggiornamenti'; }
-      if(status) status.innerHTML='<span style="color:var(--sub)">⚠️ Impossibile verificare. Controlla la connessione.</span>';
-    });
+
+    fetch(currentUrl + (currentUrl.indexOf('?')>=0?'&':'?') + '_v=' + Date.now(), {cache:'no-store'})
+      .then(function(r){ return r.text(); })
+      .then(function(html){
+        // Extract version from the fetched HTML
+        var match = html.match(/Versione\s+([\d.]+)/);
+        var remoteVersion = match ? match[1] : null;
+        if(btn){ btn.disabled=false; btn.textContent='🔄 Verifica aggiornamenti'; }
+        if(!remoteVersion){
+          if(status) status.innerHTML='<span style="color:var(--sub)">⚠️ Impossibile leggere la versione remota.</span>';
+          return;
+        }
+        if(remoteVersion === APP_VERSION){
+          if(status) status.innerHTML='<span style="color:var(--green-d)">✅ Sei alla versione più recente (v'+APP_VERSION+').</span>';
+        } else {
+          if(status) status.innerHTML='<span style="color:var(--amber)">🆕 Nuova versione disponibile: <strong>v'+remoteVersion+'</strong> (tua: v'+APP_VERSION+'). Ricarica la pagina per aggiornare.</span>&nbsp;<button onclick="window.location.reload()" style="margin-left:8px;background:var(--blue);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:.8rem;cursor:pointer;font-weight:600">Ricarica</button>';
+        }
+        setTimeout(function(){ if(status) status.innerHTML=''; }, 8000);
+      })
+      .catch(function(){
+        if(btn){ btn.disabled=false; btn.textContent='🔄 Verifica aggiornamenti'; }
+        if(status) status.innerHTML='<span style="color:var(--sub)">⚠️ Impossibile verificare. Controlla la connessione.</span>';
+      });
   };
 
   // Also listen for SW controller change (after skipWaiting)
