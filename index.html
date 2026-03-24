@@ -2684,7 +2684,7 @@ function updateAiBanner(){
           <button class="btn btn-primary" id="btn-check-updates" onclick="checkForUpdates()">🔄 Verifica aggiornamenti</button>
           <div id="sw-update-status" style="font-size:.8rem;margin-top:10px"></div>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.0.0</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -3704,130 +3704,100 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
+  var APP_VERSION = '1.0.0';
+
   if(!('serviceWorker' in navigator)) return;
 
-  // Inline SW code as a Blob — funziona anche da file locale e GitHub Pages
-  var SW_VERSION = '1.0.0';
-  var CACHE_NAME = 'bilancio-casa-v' + SW_VERSION;
+  // Registra il SW solo quando ospitato su GitHub Pages (o server reale)
+  // — evita errori 404 nell'anteprima locale/Claude
+  var swHost = window.location.hostname;
+  var isDeployedHost = swHost !== '' && !swHost.includes('claudeusercontent') && !swHost.includes('localhost') && swHost !== '127.0.0.1';
+  if(!isDeployedHost) return;
 
-  var swCode = [
-    'var CACHE="bilancio-casa-v' + SW_VERSION + '";',
-    'var URLS=["/"];',
-    'self.addEventListener("install",function(e){',
-    '  e.waitUntil(caches.open(CACHE).then(function(c){',
-    '    return c.addAll(URLS).catch(function(){});',
-    '  }));',
-    '  self.skipWaiting();',
-    '});',
-    'self.addEventListener("activate",function(e){',
-    '  e.waitUntil(caches.keys().then(function(keys){',
-    '    return Promise.all(keys.filter(function(k){return k!==CACHE;}).map(function(k){return caches.delete(k);}));',
-    '  }).then(function(){return self.clients.claim();}));',
-    '});',
-    'self.addEventListener("fetch",function(e){',
-    '  if(e.request.method!=="GET") return;',
-    '  e.respondWith(',
-    '    fetch(e.request).then(function(r){',
-    '      var rc=r.clone();',
-    '      caches.open(CACHE).then(function(c){c.put(e.request,rc);});',
-    '      return r;',
-    '    }).catch(function(){',
-    '      return caches.match(e.request);',
-    '    })',
-    '  );',
-    '});',
-    'self.addEventListener("message",function(e){',
-    '  if(e.data==="GET_VERSION") e.source.postMessage({type:"VERSION",version:"' + SW_VERSION + '"});',
-    '});'
-  ].join('\n');
+  navigator.serviceWorker.register('./sw.js').then(function(reg){
 
-  var blob = new Blob([swCode], {type:'application/javascript'});
-  var swUrl = URL.createObjectURL(blob);
-
-  navigator.serviceWorker.register(swUrl).then(function(reg){
-    // Check for updates on page load
+    // Controlla aggiornamenti subito al caricamento
     reg.update();
 
-    // Listen for new SW waiting to activate
+    // Ascolta nuovi SW in attesa
     reg.addEventListener('updatefound', function(){
       var newWorker = reg.installing;
       newWorker.addEventListener('statechange', function(){
         if(newWorker.state === 'installed' && navigator.serviceWorker.controller){
-          showUpdateBanner();
+          // Chiedi la versione al nuovo SW
+          newWorker.postMessage('GET_VERSION');
         }
       });
     });
-  }).catch(function(){});
 
-  // Check if already waiting
-  navigator.serviceWorker.ready.then(function(reg){
-    if(reg.waiting) showUpdateBanner();
+    // Controlla se c'è già un SW in attesa (es. dopo refresh)
+    if(reg.waiting){
+      reg.waiting.postMessage('GET_VERSION');
+    }
+
+  }).catch(function(err){ console.warn('[SW] Registrazione fallita:', err); });
+
+  // Riceve messaggi dal SW (versione disponibile)
+  navigator.serviceWorker.addEventListener('message', function(e){
+    if(e.data && e.data.type === 'NEW_VERSION'){
+      showUpdateToast(e.data.version);
+    }
   });
 
-  function showUpdateBanner(){
-    var existing = document.getElementById('sw-update-banner');
-    if(existing) return;
-    var banner = document.createElement('div');
-    banner.id = 'sw-update-banner';
-    banner.innerHTML = '🔄 Nuova versione disponibile! &nbsp;<button onclick="applySwUpdate()" style="background:#fff;color:#6366f1;border:none;border-radius:6px;padding:5px 12px;font-weight:700;cursor:pointer;font-size:.82rem">Aggiorna ora</button> <button onclick="this.parentNode.remove()" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:1.1rem;margin-left:6px">✕</button>';
-    banner.style.cssText='position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#6366f1;color:#fff;padding:12px 20px;border-radius:12px;font-size:.84rem;font-weight:600;z-index:9998;box-shadow:0 4px 20px rgba(99,102,241,.5);white-space:nowrap;display:flex;align-items:center;gap:8px';
-    document.body.appendChild(banner);
+  // Quando il controller cambia (skipWaiting completato) ricarica
+  navigator.serviceWorker.addEventListener('controllerchange', function(){
+    window.location.reload();
+  });
+
+  function showUpdateToast(version){
+    var existing = document.getElementById('sw-update-toast');
+    if(existing) existing.remove();
+    var t = document.createElement('div');
+    t.id = 'sw-update-toast';
+    t.innerHTML = '✅ Versione <strong>' + version + '</strong> disponibile!'
+      + ' &nbsp;<button onclick="applySwUpdate()" style="background:#fff;color:#22c55e;border:none;border-radius:6px;padding:5px 14px;font-weight:700;cursor:pointer;font-size:.82rem;flex-shrink:0">Aggiorna ora</button>'
+      + ' <button onclick="this.parentNode.remove()" style="background:none;border:none;color:rgba(255,255,255,.75);cursor:pointer;font-size:1.1rem;margin-left:4px;line-height:1">✕</button>';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);'
+      + 'background:#15803d;color:#fff;padding:12px 20px;border-radius:12px;'
+      + 'font-size:.85rem;font-weight:600;z-index:9998;'
+      + 'box-shadow:0 4px 24px rgba(21,128,61,.45);'
+      + 'display:flex;align-items:center;gap:10px;white-space:nowrap;'
+      + 'animation:fadeIn .3s ease';
+    document.body.appendChild(t);
   }
 
   window.applySwUpdate = function(){
     navigator.serviceWorker.ready.then(function(reg){
-      if(reg.waiting){
-        reg.waiting.postMessage('SKIP_WAITING');
-      }
-      window.location.reload();
+      if(reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
+      else window.location.reload();
     });
   };
 
   window.checkForUpdates = function(){
     var btn = document.getElementById('btn-check-updates');
     var status = document.getElementById('sw-update-status');
-    var APP_VERSION = '1.1';
-    if(btn){ btn.disabled=true; btn.textContent='⏳ Verifica in corso\u2026'; }
-    if(status) status.innerHTML='';
+    if(btn){ btn.disabled = true; btn.textContent = '\u23f3 Verifica in corso\u2026'; }
+    if(status) status.innerHTML = '';
 
-    // If hosted remotely, fetch the page and check version string
-    var currentUrl = window.location.href;
-    var isLocal = currentUrl.startsWith('file://') || currentUrl.includes('localhost') || currentUrl.includes('127.0.0.1');
-
-    if(isLocal){
-      if(btn){ btn.disabled=false; btn.textContent='🔄 Verifica aggiornamenti'; }
-      if(status) status.innerHTML='<span style="color:var(--sub)">ℹ️ Stai usando la versione locale. Carica il file aggiornato da GitHub per aggiornare.</span>';
-      return;
-    }
-
-    fetch(currentUrl + (currentUrl.indexOf('?')>=0?'&':'?') + '_v=' + Date.now(), {cache:'no-store'})
-      .then(function(r){ return r.text(); })
-      .then(function(html){
-        // Extract version from the fetched HTML
-        var match = html.match(/Versione\s+([\d.]+)/);
-        var remoteVersion = match ? match[1] : null;
-        if(btn){ btn.disabled=false; btn.textContent='🔄 Verifica aggiornamenti'; }
-        if(!remoteVersion){
-          if(status) status.innerHTML='<span style="color:var(--sub)">⚠️ Impossibile leggere la versione remota.</span>';
-          return;
-        }
-        if(remoteVersion === APP_VERSION){
-          if(status) status.innerHTML='<span style="color:var(--green-d)">✅ Sei alla versione più recente (v'+APP_VERSION+').</span>';
-        } else {
-          if(status) status.innerHTML='<span style="color:var(--amber)">🆕 Nuova versione disponibile: <strong>v'+remoteVersion+'</strong> (tua: v'+APP_VERSION+'). Ricarica la pagina per aggiornare.</span>&nbsp;<button onclick="window.location.reload()" style="margin-left:8px;background:var(--blue);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:.8rem;cursor:pointer;font-weight:600">Ricarica</button>';
-        }
-        setTimeout(function(){ if(status) status.innerHTML=''; }, 8000);
-      })
-      .catch(function(){
-        if(btn){ btn.disabled=false; btn.textContent='🔄 Verifica aggiornamenti'; }
-        if(status) status.innerHTML='<span style="color:var(--sub)">⚠️ Impossibile verificare. Controlla la connessione.</span>';
+    navigator.serviceWorker.ready.then(function(reg){
+      return reg.update().then(function(){
+        return reg;
       });
+    }).then(function(reg){
+      if(btn){ btn.disabled = false; btn.textContent = '\uD83D\uDD04 Verifica aggiornamenti'; }
+      if(reg.waiting){
+        reg.waiting.postMessage('GET_VERSION');
+        if(status) status.innerHTML = '<span style="color:var(--amber)">\uD83C\uDD95 Aggiornamento trovato! Clicca "Aggiorna ora" nel toast.</span>';
+      } else {
+        if(status) status.innerHTML = '<span style="color:var(--green-d)">\u2705 Sei alla versione pi\u00f9 recente (' + APP_VERSION + ').</span>';
+        setTimeout(function(){ if(status) status.innerHTML = ''; }, 4000);
+      }
+    }).catch(function(){
+      if(btn){ btn.disabled = false; btn.textContent = '\uD83D\uDD04 Verifica aggiornamenti'; }
+      if(status) status.innerHTML = '<span style="color:var(--sub)">\u26A0\uFE0F Impossibile verificare. Controlla la connessione o apri l\'app da GitHub Pages.</span>';
+    });
   };
 
-  // Also listen for SW controller change (after skipWaiting)
-  navigator.serviceWorker.addEventListener('controllerchange', function(){
-    window.location.reload();
-  });
 })();
 </script>
 </body>
