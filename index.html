@@ -709,6 +709,16 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
 @media not all and (prefers-color-scheme:dark){
   .tx-cat-sel option,.tx-cat-sel optgroup option{background:#1e2230;color:#f0f2fa}
 }
+/* Fix for ALL select.inp in dark theme — prevents white-on-white */
+.dark select.inp option,
+.dark select.inp optgroup{
+  background:#1e2230;
+  color:#f0f2fa;
+}
+.dark select.inp optgroup{
+  background:#151824;
+  color:#9ba3bc;
+}
 
 
 .tt{position:fixed;z-index:9000;max-width:280px;padding:10px 14px;background:#1e2130;color:#e8eaf0;border-radius:var(--r-s);font-size:.78rem;line-height:1.55;box-shadow:var(--sh-lg);pointer-events:none;opacity:0;transition:opacity .15s;border:1px solid rgba(255,255,255,.07)}
@@ -1011,6 +1021,16 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
         <button class="btn btn-primary btn-sm" onclick="addWcat()" data-tt-id="add-wcat">＋</button>
       </div>
     </div>
+    <!-- Entrate personali -->
+    <div class="card">
+      <div class="card-title" style="color:var(--green-d)">📥 Categorie Entrate Personali</div>
+      <p style="font-size:.78rem;color:var(--sub);margin-bottom:12px">Le sorgenti delle tue entrate (es. Stipendio, Freelance, Bonus…)</p>
+      <div class="tags" id="icat-list"></div>
+      <div class="inp-row">
+        <input class="inp" id="icat-in" placeholder="es. Stipendio, Bonus, Freelance…" onkeydown="if(event.key==='Enter')addIcat()">
+        <button class="btn btn-primary btn-sm" onclick="addIcat()" data-tt-id="add-icat">＋</button>
+      </div>
+    </div>
     <!-- Spese personali -->
     <div class="card" data-tt-id="prog-ecats">
       <div class="card-title">📋 Categorie Spese Personali</div>
@@ -1101,7 +1121,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
         <div class="field">
           <label>Categoria</label>
           <select class="inp tx-cat-sel" id="tx-c" style="display:none"></select>
-          <div class="inp" id="tx-c-income" style="color:var(--sub);cursor:default;background:var(--surface2)">📥 Stipendio / Entrata</div>
+          <div class="inp" id="tx-c-income" style="color:var(--sub);cursor:default;background:var(--surface2)">📥 Entrata</div>
         </div>
         <div class="field">
           <label>Nota / Descrizione</label>
@@ -1405,7 +1425,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
 // STATE
 // ═══════════════════════════════════════
 var S = {
-  wCats:[], eCats:[], cCats:[],
+  wCats:[], eCats:[], cCats:[], iCats:[],
   txs:[], wHist:[], partnerData:{},
   txType:'income', period:'month',
   defEmail:''
@@ -1661,6 +1681,17 @@ function drawECats(){
 function addEcat(){ var v=document.getElementById('ecat-in').value.trim(); if(!v) return; S.eCats.push(v); document.getElementById('ecat-in').value=''; save(); drawECats(); drawCCats(); fillTxCat(); fillFCat(); updateSendCatsBar(); }
 function delEcat(i){ S.eCats.splice(i,1); save(); drawECats(); drawCCats(); fillTxCat(); fillFCat(); updateSendCatsBar(); }
 
+function drawICats(){
+  var el=document.getElementById('icat-list'); if(!el) return;
+  if(!S.iCats.length){ el.innerHTML='<p style="color:var(--sub);font-size:.8rem;margin-bottom:8px">Nessuna categoria entrata ancora.</p>'; return; }
+  el.innerHTML=S.iCats.map(function(c,i){
+    return '<span class="tag" style="border-color:var(--green);background:var(--green-s);color:var(--text)">'+escH(c)
+      +' <button class="tag-x" onclick="delIcat('+i+')" style="color:inherit">✕</button></span>';
+  }).join('');
+}
+function addIcat(){ var v=document.getElementById('icat-in').value.trim(); if(!v) return; S.iCats.push(v); document.getElementById('icat-in').value=''; save(); drawICats(); fillTxCat(); fillFCat(); updateSendCatsBar(); }
+function delIcat(i){ S.iCats.splice(i,1); save(); drawICats(); fillTxCat(); fillFCat(); updateSendCatsBar(); }
+
 function drawCCats(){
   var el=document.getElementById('ccat-list'); if(!el) return;
   el.innerHTML=S.cCats.map(function(c,i){
@@ -1790,10 +1821,23 @@ function fillTxCat(){
   var lbl=document.getElementById('tx-c-income');
   if(!sel) return;
   if(S.txType==='income'){
-    sel.style.display='none';
-    if(lbl) lbl.style.display='';
-    sel.innerHTML='<option value="Stipendio / Entrata">Stipendio / Entrata</option>';
-    sel.value='Stipendio / Entrata';
+    if(S.iCats && S.iCats.length){
+      sel.style.display='';
+      if(lbl) lbl.style.display='none';
+      var curI=sel.value;
+      sel.innerHTML='';
+      S.iCats.forEach(function(c){
+        var o=document.createElement('option');
+        o.value=c; o.textContent=c; sel.appendChild(o);
+      });
+      if(curI) sel.value=curI;
+      if(!sel.value && sel.options.length) sel.selectedIndex=0;
+    } else {
+      sel.style.display='none';
+      if(lbl) lbl.style.display='';
+      sel.innerHTML='<option value="Entrata">Entrata</option>';
+      sel.value='Entrata';
+    }
   } else {
     sel.style.display='';
     if(lbl) lbl.style.display='none';
@@ -1843,9 +1887,18 @@ function setType(t){
 }
 function fillFCat(){
   var sel=document.getElementById('f-ca'); if(!sel) return;
-  var cur=sel.value; sel.innerHTML='<option value="">Tutte le categorie</option>';
-  ['Stipendio / Entrata'].concat(S.eCats).concat(S.cCats.map(function(c){return c+' 💑';})).forEach(function(c){
+  var cur=sel.value;
+  sel.innerHTML='<option value="">Tutte le categorie</option>';
+  // Income cats — only user-defined, fallback to generic label if none
+  var iList=(S.iCats&&S.iCats.length)?S.iCats:['Entrata'];
+  iList.forEach(function(c){
     var o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o);
+  });
+  S.eCats.forEach(function(c){
+    var o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o);
+  });
+  S.cCats.forEach(function(c){
+    var o=document.createElement('option'); o.value=c+' 💑'; o.textContent=c+' 💑'; sel.appendChild(o);
   });
   if(cur) sel.value=cur;
 }
@@ -2603,7 +2656,7 @@ function drawCoppia(){
 // RENDER ALL & INIT
 // ═══════════════════════════════════════
 function renderAll(){
-  drawWCats(); drawECats(); drawCCats(); drawSharedBanner();
+  drawWCats(); drawECats(); drawCCats(); drawICats(); drawSharedBanner();
   fillTxCat(); fillFCat();
   if(currentPage==='home') drawDashboard();
   if(currentPage==='comp') drawTxList();
@@ -2684,7 +2737,7 @@ function updateAiBanner(){
           <button class="btn btn-primary" id="btn-check-updates" onclick="checkForUpdates()">🔄 Verifica aggiornamenti</button>
           <div id="sw-update-status" style="font-size:.8rem;margin-top:10px"></div>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.0.0</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.0.1</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -2900,7 +2953,7 @@ function dismissSendCatsBar(){
 }
 
 function getCatsHash(){
-  return JSON.stringify({e:S.eCats.slice().sort(), c:S.cCats.slice().sort()});
+  return JSON.stringify({e:S.eCats.slice().sort(), c:S.cCats.slice().sort(), i:(S.iCats||[]).slice().sort()});
 }
 
 function updateSendCatsBar(){
@@ -2930,7 +2983,8 @@ function sendCatsToPhone(){
     _exportDate:new Date().toISOString(),
     eCats:S.eCats,
     cCats:S.cCats,
-    cats:{ eCats:S.eCats, cCats:S.cCats }
+    iCats:S.iCats||[],
+    cats:{ eCats:S.eCats, cCats:S.cCats, iCats:S.iCats||[] }
   };
   var json=JSON.stringify(exportObj, null, 2);
   var blob=new Blob([json],{type:'application/json'});
@@ -2945,9 +2999,10 @@ function sendCatsToPhone(){
   setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
 
   // 2. Open Gmail in browser (works on desktop without a local mail client)
-  var nE=S.eCats.length, nC=S.cCats.length;
+  var nE=S.eCats.length, nC=S.cCats.length, nI=(S.iCats||[]).length;
   var subject='Bilancio Casa — Categorie da importare';
   var body='Ciao!\n\nIn allegato trovi il file con le categorie aggiornate di Bilancio Casa.\n\n'
+    +'Categorie entrate ('+nI+'): '+(S.iCats||[]).join(', ')+'\n'
     +'Categorie personali ('+nE+'): '+S.eCats.join(', ')+'\n'
     +'Categorie di coppia ('+nC+'): '+S.cCats.join(', ')+'\n\n'
     +'Come importarle:\n'
@@ -3704,7 +3759,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.0.0';
+  var APP_VERSION = '1.0.1';
 
   if(!('serviceWorker' in navigator)) return;
 
