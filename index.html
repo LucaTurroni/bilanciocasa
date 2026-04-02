@@ -1091,7 +1091,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
-  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.1.3</div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.1.4</div>
 </div>
 <div id="page-prog" class="page">
   <div class="pg-head">
@@ -1633,7 +1633,16 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
         </div>
       </div>
 
-      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <span style="font-size:.8rem;font-weight:600;color:var(--sub)">Dettaglio prompt:</span>
+        <div style="display:flex;gap:4px">
+          <button id="ai-mode-syn" class="recur-chip act" onclick="setAiMode('synth',this)">📊 Sintetico</button>
+          <button id="ai-mode-full" class="recur-chip" onclick="setAiMode('full',this)">📋 Completo</button>
+        </div>
+        <span id="ai-mode-hint" style="font-size:.74rem;color:var(--sub)">Totali + categorie + tx con nota</span>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
         <button class="btn btn-primary" id="ai-call-btn" onclick="runAI()" data-tt-id="ai-call-btn">✨ Genera riepilogo AI</button>
         <button class="btn btn-ghost" onclick="genPrompt()" data-tt-id="ai-gen-prompt">📋 Genera prompt</button>
       </div>
@@ -4457,7 +4466,7 @@ function updateAiBanner(){
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
           <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()">🧪 Entra in modalità debug</button>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1.3</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1.4</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -4865,15 +4874,25 @@ function getAiPeriodLabel(){
   return 'Periodo selezionato';
 }
 
+var _aiMode='synth'; // 'synth' | 'full'
+
+function setAiMode(mode, btn){
+  _aiMode=mode;
+  document.querySelectorAll('#ai-mode-syn,#ai-mode-full').forEach(function(b){b.classList.remove('act');});
+  btn.classList.add('act');
+  var hint=document.getElementById('ai-mode-hint');
+  if(hint) hint.textContent=mode==='synth'
+    ?'Totali + categorie + tx con nota'
+    :'Tutte le transazioni con note (per periodi brevi)';
+}
+
 function buildAiContext(txs){
   var inc=txs.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+t.amount;},0);
   var rawExp=txs.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
-
-  // Use buildCatMap for real cost calculation
   var cm=buildCatMap(txs);
   var realExp=Object.values(cm).reduce(function(a,d){return a+d.personal+d.coupleTotal/2;},0);
 
-  // Category breakdown with real costs
+  // Category breakdown
   var catLines=Object.keys(cm).filter(function(k){ return cm[k].realCost>0||cm[k].income>0; })
     .sort(function(a,b){ return (cm[b].realCost+cm[b].income)-(cm[a].realCost+cm[a].income); })
     .map(function(k){
@@ -4887,19 +4906,48 @@ function buildAiContext(txs){
       return '  - '+k+': €'+fmt(d.realCost||d.income)+' ('+parts.join(', ')+')';
     }).join('\n');
 
-  // partner data in period
+  // Transactions — synth: only those with note + top 10 by amount; full: all
+  var txSorted=txs.slice().sort(function(a,b){return a.date.localeCompare(b.date);});
+  var txForPrompt;
+  var txNote='';
+  if(_aiMode==='full'){
+    txForPrompt=txSorted;
+  } else {
+    // Synth: tx with note + top 10 by amount (deduplicated)
+    var withNote=txSorted.filter(function(t){return t.note&&t.note.trim();});
+    var top10=txSorted.slice().sort(function(a,b){return b.amount-a.amount;}).slice(0,10);
+    var seen={};
+    txForPrompt=[];
+    withNote.concat(top10).forEach(function(t){
+      var key=t.id||t.date+t.cat+t.amount;
+      if(!seen[key]){ seen[key]=true; txForPrompt.push(t); }
+    });
+    txForPrompt.sort(function(a,b){return a.date.localeCompare(b.date);});
+    txNote='\n(Modalità sintetica: mostrate '+txForPrompt.length+' di '+txs.length+' tx — quelle con nota + le 10 più alte per importo)';
+  }
+
+  var txLines=txForPrompt.map(function(t){
+    var type=t.type==='income'?'ENTRATA':'USCITA'+(t.isCouple||t.cat.indexOf('💑')!==-1?' [coppia]':'');
+    var note=t.note?(' — nota: "'+t.note+'"'):'';
+    return '  '+fmtShort(t.date)+' | '+type+' | '+t.cat+' | €'+fmt(t.amount)+note;
+  }).join('\n');
+
+  // Partner data
   var partnerLines='';
   var aiTxsYms={};
   txs.forEach(function(t){ aiTxsYms[t.date.slice(0,7)]=true; });
   var partnerMonths=Object.keys(aiTxsYms).filter(function(ym){ return S.partnerData[ym]; });
   if(partnerMonths.length){
-    partnerLines='\nSpese partner ('+partnerMonths.map(fmtMon).join(', ')+'):\n'+S.cCats.map(function(c){
-      var tot=partnerMonths.reduce(function(a,ym){ return a+(S.partnerData[ym][c]||0); },0);
-      return '  - '+c+': €'+fmt(tot);
+    partnerLines='\n\n=== SPESE PARTNER ===\n'+partnerMonths.sort().map(function(ym){
+      var cats=S.cCats.filter(function(c){return (S.partnerData[ym][c]||0)>0;});
+      if(!cats.length) return '  '+fmtMon(ym)+': nessuna spesa inserita';
+      return '  '+fmtMon(ym)+':\n'+cats.map(function(c){
+        return '    - '+c+': €'+fmt(S.partnerData[ym][c]);
+      }).join('\n');
     }).join('\n');
   }
 
-  // last wallet snapshot
+  // Wallet snapshot
   var walletLine='';
   if(S.wHist.length){
     var last=S.wHist[S.wHist.length-1];
@@ -4909,17 +4957,20 @@ function buildAiContext(txs){
   var periodLabel=getAiPeriodLabel();
 
   return 'RIEPILOGO FINANZIARIO — '+periodLabel+'\n\n'
+    +'=== TOTALI ===\n'
     +'Entrate totali: €'+fmt(inc)+'\n'
     +'Uscite pagate (cassa): €'+fmt(rawExp)+'\n'
     +'Uscite nette reali (tua quota): €'+fmt(realExp)+'\n'
-    +'Saldo netto: €'+fmt(inc-realExp)+'\n\n'
-    +'Dettaglio per categoria (costo netto reale):\n'+catLines
+    +'Saldo netto: €'+fmt(inc-realExp)+'\n'
+    +walletLine+'\n\n'
+    +'=== RIEPILOGO PER CATEGORIA ===\n'+catLines+'\n\n'
+    +'=== TRANSAZIONI ==='+txNote+'\n'+txLines
     +partnerLines
-    +walletLine
-    +'\n\nCategorie personali: '+S.eCats.join(', ')
-    +'\nCategorie di coppia: '+S.cCats.join(', ')
-    +'\nNota: le uscite nette includono 50% spese comuni tue + 50% spese comuni della partner.'
-    +'\nNumero transazioni nel periodo: '+txs.length;
+    +'\n\n=== CONFIGURAZIONE ===\n'
+    +'Categorie personali: '+S.eCats.join(', ')+'\n'
+    +'Categorie di coppia: '+S.cCats.join(', ')+'\n'
+    +'Categorie entrate: '+(S.iCats&&S.iCats.length?S.iCats.join(', '):'—')+'\n'
+    +'Nota logica coppia: uscite nette = personale + 50% spese comuni tue + 50% spese comuni partner.';
 }
 
 function buildPromptText(context){
@@ -5605,7 +5656,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.1.3';
+  var APP_VERSION = '1.1.4';
 
   if(!('serviceWorker' in navigator)) return;
 

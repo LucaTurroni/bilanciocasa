@@ -4,7 +4,7 @@
 // Aggiorna CACHE_VERSION ad ogni release per forzare
 // il rinnovo della cache su tutti i dispositivi.
 
-var CACHE_VERSION = '1.1.3';
+var CACHE_VERSION = '1.1.4';
 var CACHE_NAME    = 'bilancio-casa-' + CACHE_VERSION;
 
 // File da mettere in cache al primo avvio
