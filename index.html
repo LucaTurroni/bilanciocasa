@@ -1082,7 +1082,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
-  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.1.1</div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.1.2</div>
 </div>
 <div id="page-prog" class="page">
   <div class="pg-head">
@@ -1409,7 +1409,16 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
     <div class="g2">
       <div class="ch-card" onclick="openChModal('c3',document.getElementById('ch3-title').textContent)" data-tt-id="chart-c3"><h3 id="ch3-title">Spese per area</h3><div class="ch-wrap"><canvas id="ch3"></canvas></div></div>
-      <div class="ch-card" onclick="openChModal('c4',document.getElementById('ch4-title').textContent)" data-tt-id="chart-c4"><h3 id="ch4-title">Andamento spese per area</h3><div class="ch-wrap"><canvas id="ch4"></canvas></div></div>
+      <div class="ch-card" data-tt-id="chart-c4">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <h3 id="ch4-title" style="margin:0;cursor:pointer" onclick="openChModal('c4',document.getElementById('ch4-title').textContent)">Dettaglio categorie</h3>
+          <div style="display:flex;gap:4px;flex-shrink:0">
+            <button id="c4-btn-bar" onclick="setC4Type('bar')" style="background:var(--blue);color:#fff;border:none;border-radius:6px;padding:3px 9px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font)">≡ Barre</button>
+            <button id="c4-btn-pie" onclick="setC4Type('pie')" style="background:var(--surface2);color:var(--sub);border:1.5px solid var(--border);border-radius:6px;padding:3px 9px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font)">◉ Torta</button>
+          </div>
+        </div>
+        <div class="ch-wrap"><canvas id="ch4"></canvas></div>
+      </div>
     </div>
   </div>
 
@@ -2429,7 +2438,7 @@ function getNetWorth(refDateStr){
   if(!baseSnap) return 0;
   var snapDate=baseSnap.snapDate||baseSnap.date.slice(0,10);
   // Somma algebrica di tutte le tx con data > snapDate e <= ref
-  var flow=S.txs.filter(function(t){ return t.date>snapDate&&t.date<=ref; })
+  var flow=S.txs.filter(function(t){ return t.date>=snapDate&&t.date<=ref; })
     .reduce(function(a,t){ return a+(t.type==='income'?t.amount:-t.amount); },0);
   return baseSnap.total+flow;
 }
@@ -3230,6 +3239,85 @@ function getPeriodEndDate(){
   return today();
 }
 
+var _c4Type='bar'; // 'bar' | 'pie'
+
+function setC4Type(t){
+  _c4Type=t;
+  // Update button styles
+  var bb=document.getElementById('c4-btn-bar'), bp=document.getElementById('c4-btn-pie');
+  if(bb&&bp){
+    if(t==='bar'){
+      bb.style.background='var(--blue)'; bb.style.color='#fff'; bb.style.border='none';
+      bp.style.background='var(--surface2)'; bp.style.color='var(--sub)'; bp.style.border='1.5px solid var(--border)';
+    } else {
+      bp.style.background='var(--blue)'; bp.style.color='#fff'; bp.style.border='none';
+      bb.style.background='var(--surface2)'; bb.style.color='var(--sub)'; bb.style.border='1.5px solid var(--border)';
+    }
+  }
+  // Redraw c4 only
+  var txs=getPeriodTxs();
+  var c=gC();
+  var periodLabel=getPeriodLabel();
+  var t4=document.getElementById('ch4-title');
+  killChart('c4');
+  (function(){ var w=document.querySelector('[data-tt-id="chart-c4"] .ch-wrap'); if(w){w.innerHTML='<canvas id="ch4"></canvas>';} })();
+  var cv4=document.getElementById('ch4'); if(!cv4) return;
+  if(t4) t4.textContent='Dettaglio categorie — '+periodLabel;
+  var catMap4=buildCatMap(txs);
+  var cat4Entries=Object.keys(catMap4)
+    .map(function(k){ return {name:k, val:catMap4[k].realCost+catMap4[k].income}; })
+    .filter(function(e){ return e.val>0; })
+    .sort(function(a,b){ return b.val-a.val; })
+    .slice(0,10);
+  if(!cat4Entries.length){ cv4.parentElement.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--sub);font-size:.82rem">Nessuna spesa nel periodo</div>'; return; }
+  var cat4Keys=cat4Entries.map(function(e){ return e.name; });
+  var c4vals=cat4Entries.map(function(e){ return e.val; });
+  var colors=c.pal.slice(0,cat4Keys.length);
+  drawC4Chart(cv4, cat4Keys, c4vals, colors, c, periodLabel);
+}
+
+function drawC4Chart(cv4, cat4Keys, c4vals, colors, c, periodLabel){
+  if(_c4Type==='pie'){
+    CH['c4']=new Chart(cv4,{type:'doughnut',
+      data:{labels:cat4Keys,datasets:[{
+        data:c4vals,
+        backgroundColor:colors.map(function(x){return x+'cc';}),
+        borderColor:colors,
+        borderWidth:2,hoverOffset:8
+      }]},
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:true,position:'right',labels:{color:c.txt,font:{family:'Inter',size:11},boxWidth:12,padding:10}},
+          tooltip:{callbacks:{label:function(x){
+            var tot=x.dataset.data.reduce(function(a,v){return a+v;},0);
+            var pct=tot>0?Math.round(x.parsed/tot*100):0;
+            return ' €'+fmt(x.parsed)+' ('+pct+'%)';
+          }}}
+        }
+      }});
+  } else {
+    CH['c4']=new Chart(cv4,{type:'bar',
+      data:{labels:cat4Keys,datasets:[{
+        label:'Spesa',data:c4vals,
+        backgroundColor:colors.map(function(x){return x+'cc';}),
+        borderColor:colors,borderWidth:1.5,borderRadius:5
+      }]},
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        indexAxis:'y',
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label:function(x){return ' €'+fmt(x.parsed.x);}}}
+        },
+        scales:{
+          x:{grid:{color:c.grid,drawBorder:false},ticks:{color:c.txt,font:{family:'Inter',size:11},callback:function(v){return '€'+fmt(v);}},beginAtZero:true},
+          y:{grid:{display:false},ticks:{color:c.txt,font:{family:'Inter',size:11}}}
+        }
+      }});
+  }
+}
+
 function updateCons(){
   var txs=getPeriodTxs();
   var catMap=buildCatMap(txs);
@@ -3576,13 +3664,12 @@ function updateCons(){
     }
   }
 
-  // Chart 4 — Dettaglio categorie (barre orizzontali) — usa costi netti reali
+  // Chart 4 — Dettaglio categorie — usa costi netti reali
   killChart('c4');
   (function(){ var w=document.querySelector('[data-tt-id="chart-c4"] .ch-wrap'); if(w&&!w.querySelector('canvas')){w.innerHTML='<canvas id="ch4"></canvas>';} })();
   var cv4=document.getElementById('ch4');
   if(t4) t4.textContent='Dettaglio categorie — '+periodLabel;
   if(cv4){
-    // Use catMap realCost for accurate per-category real cost
     var catMap4=buildCatMap(txs);
     var cat4Entries=Object.keys(catMap4)
       .map(function(k){ return {name:k, val:catMap4[k].realCost+catMap4[k].income}; })
@@ -3591,33 +3678,9 @@ function updateCons(){
       .slice(0,10);
     var cat4Keys=cat4Entries.map(function(e){ return e.name; });
     var c4vals=cat4Entries.map(function(e){ return e.val; });
+    var colors4=c.pal.slice(0,cat4Keys.length);
     if(cat4Keys.length){
-      CH['c4']=new Chart(cv4,{type:'bar',
-        data:{labels:cat4Keys,datasets:[{
-          label:'Spesa',data:c4vals,
-          backgroundColor:c.pal.slice(0,cat4Keys.length).map(function(x){return x+'cc';}),
-          borderColor:c.pal.slice(0,cat4Keys.length),
-          borderWidth:1.5,borderRadius:5
-        }]},
-        options:{
-          responsive:true,maintainAspectRatio:false,
-          indexAxis:'y',
-          plugins:{
-            legend:{display:false},
-            tooltip:{callbacks:{label:function(x){return ' €'+fmt(x.parsed.x);}}}
-          },
-          scales:{
-            x:{
-              grid:{color:c.grid,drawBorder:false},
-              ticks:{color:c.txt,font:{family:'Inter',size:11},callback:function(v){return '€'+fmt(v);}},
-              beginAtZero:true
-            },
-            y:{
-              grid:{display:false},
-              ticks:{color:c.txt,font:{family:'Inter',size:11}}
-            }
-          }
-        }});
+      drawC4Chart(cv4, cat4Keys, c4vals, colors4, c, periodLabel);
     } else {
       cv4.parentElement.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--sub);font-size:.82rem">Nessuna spesa nel periodo</div>';
     }
@@ -3976,7 +4039,7 @@ function updateAiBanner(){
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
           <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()">🧪 Entra in modalità debug</button>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1.1</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1.2</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -5124,7 +5187,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.1.1';
+  var APP_VERSION = '1.1.2';
 
   if(!('serviceWorker' in navigator)) return;
 
