@@ -103,6 +103,9 @@ body{
 .home-topbar .ht-logo{font-family:'Sora',sans-serif;font-size:1.2rem;font-weight:700;color:var(--blue);letter-spacing:-.01em}
 .home-topbar .ht-logo span{color:var(--sub);font-weight:400;font-size:.82rem;margin-left:8px}
 .home-topbar .ht-right{display:flex;align-items:center;gap:12px}
+/* Debug mode */
+#debug-banner{display:none;position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#dc2626;color:#fff;font-family:'Sora',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;padding:5px 18px;border-radius:20px;cursor:pointer;white-space:nowrap;animation:debugBlink 1.2s ease-in-out infinite;box-shadow:0 2px 12px rgba(220,38,38,.5);border:none;z-index:9999}
+@keyframes debugBlink{0%,100%{opacity:1;box-shadow:0 2px 12px rgba(220,38,38,.5)}50%{opacity:.65;box-shadow:0 2px 20px rgba(220,38,38,.85)}}
 .ht-theme{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--sub)}
 
 /* body in home mode: no sidebar margin, topbar padding */
@@ -722,6 +725,28 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
 
 
 .tt{position:fixed;z-index:9000;max-width:280px;padding:10px 14px;background:#1e2130;color:#e8eaf0;border-radius:var(--r-s);font-size:.78rem;line-height:1.55;box-shadow:var(--sh-lg);pointer-events:none;opacity:0;transition:opacity .15s;border:1px solid rgba(255,255,255,.07)}
+
+/* ── Custom Alert Modal ── */
+.bc-alert-overlay{position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .18s ease}
+.bc-alert-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);max-width:440px;width:100%;box-shadow:var(--sh-lg);overflow:hidden}
+.bc-alert-hdr{padding:16px 20px 0;display:flex;align-items:center;gap:10px}
+.bc-alert-icon{font-size:1.3rem;flex-shrink:0}
+.bc-alert-title{font-family:'Sora',sans-serif;font-size:.95rem;font-weight:700}
+.bc-alert-body{padding:12px 20px 16px;font-size:.85rem;color:var(--sub);line-height:1.6;white-space:pre-wrap}
+.bc-alert-footer{padding:12px 20px 16px;display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border)}
+
+/* ── Period picker sub-controls ── */
+.per-subcard{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-s);padding:12px 14px;margin-top:2px}
+.rng-tabs{display:flex;gap:4px;margin-bottom:10px}
+.rng-tab{padding:5px 14px;border:1.5px solid var(--border);border-radius:20px;background:none;color:var(--sub);font-size:.8rem;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s}
+.rng-tab.act{background:var(--blue);border-color:var(--blue);color:#fff}
+.rng-tab:hover:not(.act){border-color:var(--blue);color:var(--blue)}
+
+/* ── Date/Month picker wrapper ── */
+.date-wrap{position:relative;display:flex;align-items:center}
+.date-wrap input.inp{padding-right:38px;cursor:pointer}
+.date-wrap input.inp::-webkit-calendar-picker-indicator{opacity:0;position:absolute;right:0;width:38px;height:100%;cursor:pointer}
+.date-wrap .date-ico{position:absolute;right:10px;font-size:.95rem;pointer-events:none;color:var(--sub);line-height:1}
 .dark .tt{background:#f0f2f5;color:#1a1d23;border-color:rgba(0,0,0,.07)}
 .tt.show{opacity:1}
 .tt-title{font-weight:700;font-size:.8rem;margin-bottom:4px}
@@ -756,6 +781,71 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
   .mob-menu-btn{display:flex}
 }
 .mob-menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:200;width:36px;height:36px;border-radius:var(--r-s);background:var(--surface);border:1.5px solid var(--border);align-items:center;justify-content:center;cursor:pointer;font-size:1rem;box-shadow:var(--sh);color:var(--text)}
+
+/* ═══ CUSTOM DATE/MONTH PICKER ═══ */
+.cp-wrap{position:relative;display:inline-block;width:100%}
+.cp-input{display:flex;align-items:center;gap:8px;padding:10px 13px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-s);cursor:pointer;font-family:var(--font);font-size:.88rem;color:var(--text);transition:border-color .15s;user-select:none;min-height:42px}
+.cp-input:hover,.cp-input.open{border-color:var(--blue)}
+.cp-input .cp-val{flex:1;font-weight:500}
+.cp-input .cp-val.placeholder{color:var(--placeholder)}
+.cp-input .cp-ico{font-size:.9rem;flex-shrink:0;opacity:.6}
+/* Drop appended to body — always opaque, never clipped */
+.cp-drop{position:relative;width:300px;max-width:100%;overflow:hidden;background:#ffffff;border:1.5px solid #d0d3da;border-radius:14px;box-shadow:0 8px 36px rgba(0,0,0,.16)}
+.dark .cp-drop{background:#1e2232;border-color:#2a2f45;box-shadow:0 8px 36px rgba(0,0,0,.55)}
+/* Nav header */
+.cp-nav{display:flex;align-items:center;justify-content:space-between;padding:13px 14px 10px;border-bottom:1px solid #e8eaef}
+.dark .cp-nav{border-bottom-color:#2a2f45}
+.cp-nav-lbl{font-family:'Sora',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;padding:4px 10px;border-radius:20px;transition:background .15s;color:#111827}
+.dark .cp-nav-lbl{color:#e8eaf5}
+.cp-nav-lbl:hover{background:#f0f2f5}
+.dark .cp-nav-lbl:hover{background:#2a3050}
+.cp-nav-btn{background:none;border:1.5px solid #e4e6eb;border-radius:8px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.78rem;color:#6b7280;transition:all .15s;font-family:var(--font)}
+.dark .cp-nav-btn{border-color:#2a2f45;color:#8891a8}
+.cp-nav-btn:hover{border-color:#3b82f6;color:#3b82f6;background:#eff6ff}
+.dark .cp-nav-btn:hover{background:#1a2d4a;border-color:#3b82f6}
+/* Year grid */
+.cp-years{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:12px}
+.cp-yr{padding:8px 4px;text-align:center;border-radius:9px;cursor:pointer;font-size:.84rem;font-weight:500;transition:background .12s,color .12s;color:#374151}
+.dark .cp-yr{color:#c9d0e4}
+.cp-yr:hover:not(.act){background:#eff6ff;color:#3b82f6}
+.dark .cp-yr:hover:not(.act){background:#1a2d4a;color:#60a5fa}
+.cp-yr.act{background:#3b82f6;color:#fff;font-weight:700}
+/* Month grid */
+.cp-months{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:12px}
+.cp-mo{padding:10px 4px;text-align:center;border-radius:9px;cursor:pointer;font-size:.82rem;font-weight:500;transition:background .12s,color .12s;color:#374151}
+.dark .cp-mo{color:#c9d0e4}
+.cp-mo:hover:not(.act):not(.today-mo){background:#eff6ff;color:#3b82f6}
+.dark .cp-mo:hover:not(.act):not(.today-mo){background:#1a2d4a;color:#60a5fa}
+.cp-mo.act{background:#3b82f6;color:#fff;font-weight:700}
+.cp-mo.today-mo{border:1.5px solid #3b82f6;color:#3b82f6;font-weight:600}
+.cp-mo.today-mo.act{color:#fff}
+/* Day grid */
+.cp-days-hdr{display:grid;grid-template-columns:repeat(7,1fr);padding:8px 12px 0;gap:2px}
+.cp-dh{text-align:center;font-size:.67rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;padding-bottom:4px}
+.cp-days{display:grid;grid-template-columns:repeat(7,1fr);padding:4px 12px 8px;gap:2px}
+.cp-day{text-align:center;padding:7px 0;border-radius:9px;cursor:pointer;font-size:.83rem;transition:background .12s,color .12s;line-height:1.2;color:#374151}
+.dark .cp-day{color:#c9d0e4}
+.cp-day:hover:not(.empty):not(.act){background:#eff6ff;color:#3b82f6}
+.dark .cp-day:hover:not(.empty):not(.act){background:#1a2d4a;color:#60a5fa}
+.cp-day.empty{cursor:default;color:#d1d5db;pointer-events:none}
+.dark .cp-day.empty{color:#2e3450}
+.cp-day.act{background:#3b82f6;color:#fff;font-weight:700}
+.cp-day.today{font-weight:700;color:#3b82f6}
+.cp-day.today::after{content:'▪';display:block;font-size:.4rem;color:#3b82f6;margin-top:-4px}
+.cp-day.today.act{color:#fff}
+.cp-day.today.act::after{color:rgba(255,255,255,.6)}
+.cp-day.other-mo{color:#d1d5db}
+.dark .cp-day.other-mo{color:#2e3450}
+/* Footer */
+.cp-footer{padding:8px 12px 11px;border-top:1px solid #e8eaef;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.dark .cp-footer{border-top-color:#2a2f45}
+.cp-clear{background:none;border:none;cursor:pointer;font-size:.78rem;color:#9ca3af;font-family:var(--font);padding:5px 8px;border-radius:8px;transition:color .12s,background .12s}
+.cp-clear:hover{color:#ef4444;background:#fef2f2}
+.cp-today-btn{background:#eff6ff;border:1.5px solid #bfdbfe;cursor:pointer;font-size:.78rem;color:#3b82f6;font-family:var(--font);padding:5px 14px;border-radius:20px;font-weight:600;transition:all .12s}
+.dark .cp-today-btn{background:#1a2d4a;border-color:#1d4ed8;color:#60a5fa}
+.cp-today-btn:hover{background:#3b82f6;color:#fff;border-color:#3b82f6}
+.cp-ok-btn{background:#3b82f6;border:none;cursor:pointer;font-size:.82rem;color:#fff;font-family:var(--font);padding:6px 18px;border-radius:20px;font-weight:700;transition:background .12s;margin-left:auto}
+.cp-ok-btn:hover{background:#2563eb}
 </style>
 </head>
 <body>
@@ -771,6 +861,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
 <!-- TOPBAR — sempre visibile -->
 <div class="home-topbar" id="home-topbar" style="display:flex!important">
   <div class="ht-logo" style="cursor:pointer" onclick="showPage('home',null)">Bilancio Casa <span>gestione personale</span></div>
+  <button id="debug-banner" onclick="exitDebugMode()">⚠️ MODALITÀ DEBUG — premi per uscire</button>
   <div class="ht-right">
     <button class="ht-btn" onclick="openSettings()">⚙️ Impostazioni</button>
     <input type="file" id="restore-file" accept=".json" style="display:none" onchange="restoreJSON(this)">
@@ -912,28 +1003,27 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
         <div class="instr-section">
           <h3>⚙️ Configura — da fare una volta sola</h3>
           <ul>
-            <li>Vai in <strong>Progettazione</strong> e aggiungi i <strong>depositi</strong> (voci dove tieni i soldi) o i <strong>debiti futuri</strong> (spese non ancora addebitate), poi le <strong>categorie di spesa</strong>.</li>
-            <li><strong>Spese Personali</strong> — categorie solo tue (es. Macchina, Abbonamenti, Sanità).</li>
-            <li><strong>Spese di Coppia</strong> — categorie condivise al 50% con la tua compagna (es. Casa, Spesa, Bollette). Appaiono con 💑 nel form di inserimento.</li>
-            <li>Se una categoria ha lo stesso nome in entrambe le sezioni diventa <strong>MISTA</strong>: puoi registrare spese solo tue e spese condivise separatamente sotto lo stesso nome.</li>
-            <li>Quando modifichi le categorie appare il banner <strong>"Categorie aggiornate — non ancora inviate al telefono"</strong>. Premi <strong>📤 Invia categorie</strong> per aggiornare l'app mobile (scarica il file e apre Gmail), poi premi <strong>✓ Inviate</strong> per far sparire il banner — riapparirà solo se aggiungi nuove categorie.</li>
+            <li>Vai in <strong>Progettazione</strong> e aggiungi i <strong>depositi</strong> (conti e risparmi) o i <strong>debiti futuri</strong> (spese non ancora addebitate), le <strong>categorie di spesa personali</strong>, le <strong>categorie di coppia</strong> (condivise al 50%) e le <strong>categorie di entrata</strong>.</li>
+            <li>Le categorie con 💑 sono spese di coppia — se una categoria appare sia tra le Personali che tra le Coppia diventa <strong>MISTA</strong>: puoi registrare spese personali e condivise sotto lo stesso nome separatamente.</li>
+            <li>Quando modifichi le categorie appare il banner <strong>"Categorie aggiornate"</strong>. Premi <strong>📤 Invia categorie</strong> per aggiornare l'app mobile, poi <strong>✓ Inviate</strong> per nascondere il banner.</li>
           </ul>
         </div>
 
         <div class="instr-section">
           <h3>🏦 Snapshot Patrimonio — tieni traccia dei saldi reali</h3>
           <ul>
-            <li>Aggiorna i saldi di ogni voce: le categorie <strong>deposito</strong> (verde) con valore positivo, le categorie <strong>debito futuro</strong> (rosso) con valore negativo (spese già sostenute ma non ancora addebitate sul conto).</li>
-            <li>Premi <strong>💾 Salva snapshot</strong> per fissare il totale netto — usato nelle Statistiche per il <strong>Patrimonio Netto</strong> (snapshot ± saldo del periodo).</li>
+            <li>Aggiorna i saldi di ogni voce: <strong>depositi</strong> (verde, positivi) e <strong>debiti futuri</strong> (rosso, negativi). Seleziona la data dello snapshot (default: oggi).</li>
+            <li>Premi <strong>💾 Salva snapshot</strong> per fissare il totale netto — usato nelle Statistiche per il <strong>Patrimonio Netto</strong>. Puoi modificare snapshot esistenti con ✏️.</li>
+            <li>Gli snapshot sono <strong>non retroattivi</strong>: uno snapshot futuro non influenza i calcoli dei periodi passati.</li>
           </ul>
         </div>
 
         <div class="instr-section">
           <h3>✏️ Spese &amp; Entrate — registro quotidiano</h3>
           <ul>
-            <li>Ogni movimento va registrato qui: scegli <strong>Entrata</strong> (stipendio, rimborsi) o <strong>Uscita</strong>, seleziona categoria, inserisci importo e nota descrittiva.</li>
-            <li>Le categorie con 💑 sono spese condivise — influiscono sulle <strong>Uscite Nette</strong> e sull'<strong>Analisi Coppia</strong>.</li>
-            <li>Il pulsante <strong>📲 Importa dati dal telefono</strong> carica il file <strong>"SPESE BILANCIO DD.MM"</strong> esportato dall'app mobile: se ci sono duplicati l'app ti chiede come gestirli.</li>
+            <li>Registra ogni movimento: scegli <strong>Entrata</strong> o <strong>Uscita</strong>, seleziona categoria, importo e nota. Le categorie 💑 sono spese condivise.</li>
+            <li>Filtra, ordina e cerca tra le transazioni per categoria, nota, data o importo. Puoi modificare (✏️) o eliminare (🗑) qualsiasi voce.</li>
+            <li>Il pulsante <strong>📲 Importa dati dal telefono</strong> carica il file <strong>"SPESE BILANCIO DD.MM"</strong> dall'app mobile con gestione duplicati.</li>
           </ul>
         </div>
 
@@ -941,54 +1031,50 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
           <h3>👫 Spese Partner — coordinarsi con la compagna</h3>
           <ul>
             <li>Seleziona il mese: a sinistra inserisci quanto ha speso la tua compagna in ogni categoria comune; a destra vedi le <strong>tue spese da comunicare a lei</strong>.</li>
-            <li>Premi <strong>📋 Copia riepilogo</strong> per copiare un messaggio pronto da incollare su WhatsApp — lei fa lo stesso, poi inserisci i suoi dati e salva.</li>
+            <li>Premi <strong>📋 Copia riepilogo</strong> per un messaggio pronto da inviare su WhatsApp.</li>
           </ul>
         </div>
 
         <div class="instr-section">
           <h3>📊 Statistiche — capire l'andamento</h3>
           <ul>
-            <li>Scegli il periodo (Mese / Bimestre / Trimestre / Semestre / Anno / Tutto) e la data di riferimento — cambiarla ti permette di navigare tra periodi passati.</li>
-            <li><strong>Patrimonio Netto</strong> — card dorata in cima, con pulsante 👁 per nascondere il valore. <strong>Uscite</strong> = tutto quello che hai fisicamente pagato. <strong>Uscite Nette</strong> = personale + il tuo 50% delle spese comuni. Il <strong>Saldo</strong> mostra il periodo di riferimento (es. Saldo Marzo 2026).</li>
-            <li>Quattro grafici interattivi. <strong>Clicca un grafico per ingrandirlo.</strong></li>
+            <li>Scegli il periodo: <strong>Mese corrente</strong>, <strong>Mese a scelta</strong>, <strong>Periodo a scelta</strong> (anno / mese / date libere), o <strong>Tutto</strong>.</li>
+            <li><strong>Uscite pagate</strong> = quanto hai fisicamente speso. <strong>Uscite nette</strong> = personale + 50% spese comuni tue + 50% spese comuni della partner. Il <strong>Saldo netto</strong> = entrate − uscite nette.</li>
+            <li>Quattro grafici interattivi — <strong>clicca per ingrandire</strong>. Il grafico <em>Andamento risparmio</em> mostra la curva cumulativa: verde sopra lo zero (risparmio), rossa sotto (perdita).</li>
+            <li>Tre sezioni: <strong>Panoramica</strong> (card riepilogative), <strong>Tutte le transazioni</strong> (con filtri, ordinamento e ricerca), <strong>Per categoria</strong> (dettaglio per ogni categoria con logica coppia).</li>
           </ul>
         </div>
 
         <div class="instr-section">
           <h3>💑 Analisi Coppia — chi deve cosa</h3>
           <ul>
-            <li>Seleziona il mese: l'app confronta le tue spese 💑 con quelle della tua compagna (inserite in Spese Partner) e calcola il rimborso per pareggiare al 50%.</li>
-            <li>I dettagli per categoria mostrano solo le spese di coppia, senza le spese personali.</li>
+            <li>Seleziona il mese: l'app confronta le spese 💑 tue con quelle della partner (da Spese Partner) e calcola il rimborso per pareggiare al 50%.</li>
           </ul>
         </div>
 
         <div class="instr-section">
           <h3>🤖 Riepiloghi AI — analisi automatica</h3>
           <ul>
-            <li>Genera un testo in italiano con valutazione del periodo, spese rilevanti, note sulla coppia e un consiglio pratico.</li>
             <li><strong>Modalità diretta</strong> — inserisci la chiave API Anthropic nelle Impostazioni e premi <strong>✨ Genera riepilogo AI</strong>.</li>
-            <li><strong>Modalità manuale</strong> — premi <strong>📋 Genera prompt</strong> poi <strong>🔗 Copia e apri Claude</strong>: si apre claude.ai, incolla il prompt e ottieni l'analisi.</li>
+            <li><strong>Modalità manuale</strong> — premi <strong>📋 Genera prompt</strong> poi <strong>🔗 Copia e apri Claude</strong>: si apre claude.ai, incolla il prompt e ottieni l'analisi in italiano.</li>
           </ul>
         </div>
 
         <div class="instr-section">
           <h3>⚙️ Impostazioni — accessibili dalla topbar</h3>
           <ul>
-            <li><strong>Backup / Importa</strong> — esporta tutti i dati e preferenze in un file JSON, o ripristinali. Il backup include tema, email, chiave API e preferenze di visualizzazione.</li>
-            <li><strong>Email di default</strong> — usata da "Invia categorie al telefono" per aprire Gmail pre-compilato.</li>
-            <li><strong>Chiave API Anthropic</strong> — salvata solo nel browser, necessaria per i Riepiloghi AI in modalità diretta.</li>
-            <li><strong>Resetta dati</strong> — elimina dati per periodo (mese, anno, intervallo o tutto). Opzioni aggiuntive: <em>Resetta anche la Progettazione</em> (categorie e depositi) e <em>Elimina anche le impostazioni</em> (tema, email, chiave API). Richiede password.</li>
+            <li><strong>Backup / Ripristino</strong> — esporta e importa tutti i dati e preferenze in JSON.</li>
+            <li><strong>Modalità Debug</strong> — entra in una sandbox: puoi modificare qualsiasi dato liberamente senza che venga salvato. All'uscita, tutto viene ripristinato. Il banner rosso lampeggiante in topbar indica che il debug è attivo.</li>
+            <li><strong>Email di default</strong>, <strong>Chiave API Anthropic</strong>, <strong>Resetta dati</strong> (per periodo, con opzione di resettare anche progettazione e impostazioni).</li>
           </ul>
         </div>
 
         <div class="instr-section">
-          <h3>💡 Tooltip e barra in alto</h3>
+          <h3>💡 Barra in alto e calendari</h3>
           <ul>
-            <li>Tieni il mouse fermo 3 secondi su qualsiasi elemento per vedere un tooltip con spiegazione ed esempio.</li>
-            <li>Il pulsante <strong>💡</strong> nella barra in alto attiva e disattiva i tooltip — preferenza ricordata tra le sessioni.</li>
-            <li>Il pulsante <strong>👁</strong> nella barra in alto nasconde tutti i valori monetari dell'app con un effetto blur — utile quando mostri l'app ad altri. Premi di nuovo per mostrarli. La preferenza viene ricordata.</li>
-            <li>Nella barra in alto: <strong>⚙️ Impostazioni</strong>, toggle <strong>tema chiaro/scuro</strong> (ricordato alla prossima apertura).</li>
-            <li>Nella Home il <strong>Patrimonio Netto</strong> è mostrato come card dorata con il pulsante <strong>👁</strong> per nasconderne il valore individualmente, esattamente come nelle Statistiche.</li>
+            <li>Tieni il mouse fermo 3 secondi su qualsiasi elemento per vedere un tooltip. Il pulsante <strong>💡</strong> attiva/disattiva i tooltip.</li>
+            <li>Il pulsante <strong>👁</strong> nasconde tutti i valori monetari con blur — utile quando mostri l'app ad altri.</li>
+            <li>I calendari di selezione data appaiono centrati sul cursore del mouse. I calendari <strong>Dal / Al</strong> si aprono entrambi insieme affiancati. Ogni calendario mostra il nome del campo e dell'area — premi ✕ o clicca fuori per chiudere senza confermare, <strong>OK</strong> per applicare la selezione.</li>
           </ul>
         </div>
 
@@ -996,11 +1082,8 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.1.1</div>
 </div>
-
-<!-- ─────
-
-<!-- ───── PROGETTAZIONE ───── -->
 <div id="page-prog" class="page">
   <div class="pg-head">
     <h1>⚙️ Progettazione</h1>
@@ -1051,35 +1134,31 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
         <button class="btn btn-primary btn-sm" onclick="addCcat()" data-tt-id="add-ccat">＋</button>
       </div>
     </div>
-  </div>
-
-  <!-- Invia categorie al telefono — sempre sotto le card categorie -->
-  <div id="send-cats-bar" style="display:none;margin-top:16px">
-    <div class="card" style="border-color:var(--teal);background:var(--teal-s)">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="font-size:1.3rem">📤</span>
+    <!-- Invia categorie -->
+    <div id="send-cats-bar" style="display:none">
+      <div class="card" style="border-color:var(--teal);background:var(--teal-s);height:100%">
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px">
+          <span style="font-size:1.2rem">📤</span>
           <div>
-            <div style="font-weight:700;font-size:.9rem;color:var(--teal)">Categorie aggiornate — non ancora inviate al telefono</div>
-            <div style="font-size:.8rem;color:var(--sub);margin-top:2px">Invia le categorie all'app mobile affinché possa importarle.</div>
+            <div style="font-weight:700;font-size:.88rem;color:var(--teal)">Categorie non ancora inviate al telefono</div>
+            <div style="font-size:.78rem;color:var(--sub);margin-top:2px">Invia le categorie aggiornate all'app mobile.</div>
           </div>
         </div>
-        <div style="display:flex;gap:8px;flex-shrink:0">
-          <button class="btn btn-sm btn-send-cats-pulse" style="background:var(--teal);color:#fff;box-shadow:0 3px 10px rgba(20,184,166,.35)" onclick="sendCatsToPhone()" data-tt-id="btn-send-cats">📤 Invia categorie al telefono</button>
-          <button class="btn btn-sm btn-ghost" onclick="dismissSendCatsBar()" style="border-color:var(--teal);color:var(--teal)" title="Segna come già inviate e nascondi questo avviso">✓ Inviate</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-sm btn-send-cats-pulse" style="background:var(--teal);color:#fff;box-shadow:0 3px 10px rgba(20,184,166,.35)" onclick="sendCatsToPhone()" data-tt-id="btn-send-cats">📤 Invia</button>
+          <button class="btn btn-sm btn-ghost" onclick="dismissSendCatsBar()" style="border-color:var(--teal);color:var(--teal)">✓ Già inviate</button>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Logica di coppia + categorie miste (fuse insieme) -->
-  <div class="card" style="margin-top:16px;background:var(--blue-s);border-color:var(--blue)">
-    <div style="display:flex;gap:12px;align-items:flex-start">
-      <span style="font-size:1.2rem">💡</span>
-      <div style="flex:1">
-        <p style="font-weight:600;font-size:.85rem;margin-bottom:4px">Come funziona la logica di coppia</p>
-        <p style="font-size:.8rem;color:var(--sub)">Se una categoria ha lo stesso nome in <b>Personali</b> e <b>Coppia</b> (es. "Svaghi"), puoi registrare sia spese solo tue (in Personali) che spese condivise (in Coppia). Il costo reale sarà: <b>personale + 50% del comune</b>. Il bilancio di coppia calcolerà chi deve cosa all'altro in base a chi ha pagato di più nelle spese condivise.</p>
-        <div id="shared-banner"></div>
+    <!-- Logica di coppia -->
+    <div class="card" style="background:var(--blue-s);border-color:var(--blue)">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="font-size:1.1rem">💡</span>
+        <div>
+          <p style="font-weight:600;font-size:.85rem;margin-bottom:4px">Come funziona la logica di coppia</p>
+          <p style="font-size:.78rem;color:var(--sub)">Se una categoria ha lo stesso nome in <b>Personali</b> e <b>Coppia</b>, puoi registrare spese solo tue e spese condivise. Costo reale: <b>personale + 50% del comune</b>.</p>
+          <div id="shared-banner"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1149,13 +1228,22 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     <!-- TX LIST -->
     <div>
       <div class="card" style="margin-bottom:14px">
-        <div class="card-title">Filtra transazioni</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <input type="month" class="filter-chip inp" id="f-mo" onchange="drawTxList()" style="width:auto">
+        <div class="card-title">Filtra e cerca transazioni</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+          <input type="month" class="filter-chip inp" id="f-mo" onchange="drawTxList()" onclick="try{this.showPicker();}catch(e){}" style="width:auto;cursor:pointer">
           <select class="filter-chip inp" id="f-ca" onchange="drawTxList()" style="width:auto">
             <option value="">Tutte le categorie</option>
           </select>
+          <select class="filter-chip inp" id="f-sort" onchange="drawTxList()" style="width:auto">
+            <option value="date-desc">📅 Data ↓</option>
+            <option value="date-asc">📅 Data ↑</option>
+            <option value="amount-desc">💰 Importo ↓</option>
+            <option value="amount-asc">💰 Importo ↑</option>
+            <option value="cat-asc">🔤 Categoria A→Z</option>
+            <option value="insert-desc">🕐 Inserimento ↓</option>
+          </select>
         </div>
+        <input type="text" class="inp" id="f-search" placeholder="🔍 Cerca per categoria, nota, data (gg/mm/aaaa)…" oninput="drawTxList()" style="font-size:.83rem">
       </div>
       <div class="card" style="padding:0;overflow:hidden">
         <div id="tx-list"></div>
@@ -1179,8 +1267,15 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
         <span class="tb-label">Totale snapshot</span>
         <span class="tb-value privacy-blur" id="wa-tot">€ 0,00</span>
       </div>
-      <div class="action-row">
-        <button class="btn btn-primary" onclick="saveWSnap()" data-tt-id="wallet-snap-btn">💾 Salva snapshot</button>
+      <div class="action-row" style="flex-wrap:wrap;gap:10px;align-items:flex-end">
+        <div class="field" style="margin:0;min-width:160px">
+          <label style="font-size:.74rem">Data snapshot</label>
+          <input type="date" class="inp" id="snap-date" style="font-size:.85rem">
+        </div>
+        <input type="hidden" id="snap-edit-idx" value="">
+        <button class="btn btn-primary" id="snap-save-btn" onclick="saveWSnap()" data-tt-id="wallet-snap-btn">💾 Salva snapshot</button>
+        <button class="btn btn-ghost" id="snap-cancel-btn" onclick="cancelSnapEdit()" style="display:none">✕ Annulla modifica</button>
+        <button class="btn btn-ghost" onclick="resetWAFields()" title="Azzera tutti i campi">🔄 Azzera campi</button>
       </div>
     </div>
     <div class="card">
@@ -1243,16 +1338,60 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     <p>Analizza le tue spese per periodo</p>
   </div>
 
-  <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px">
-    <div class="period-bar" id="period-bar" data-tt-id="period-bar">
-      <button class="period-btn act" onclick="setPer('month',this)">Mese</button>
-      <button class="period-btn" onclick="setPer('bimonth',this)">Bimestre</button>
-      <button class="period-btn" onclick="setPer('quarter',this)">Trimestre</button>
-      <button class="period-btn" onclick="setPer('semester',this)">Semestre</button>
-      <button class="period-btn" onclick="setPer('year',this)">Anno</button>
-      <button class="period-btn" onclick="setPer('all',this)">Tutto</button>
+  <!-- Period selector -->
+  <div class="card" style="margin-bottom:20px;padding:16px 18px">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+      <button class="period-btn act" id="pbtn-current" onclick="setPer('current',this)">📅 Mese corrente</button>
+      <button class="period-btn" id="pbtn-pick-month" onclick="setPer('pick-month',this)">🗓 Mese a scelta</button>
+      <button class="period-btn" id="pbtn-range" onclick="setPer('range',this)">📆 Periodo a scelta</button>
+      <button class="period-btn" id="pbtn-all" onclick="setPer('all',this)">🗂 Tutto</button>
     </div>
-    <input type="date" class="filter-chip inp" id="cons-dt" onchange="updateCons()" style="width:auto" data-tt-id="cons-dt">
+
+    <!-- Mese a scelta -->
+    <div id="per-pick-month" style="display:none">
+      <div class="field" style="max-width:220px;margin:0">
+        <label>Seleziona mese</label>
+        <input type="month" class="inp" id="cons-pick-month" onchange="updateCons()">
+      </div>
+    </div>
+
+    <!-- Periodo a scelta -->
+    <div id="per-range" style="display:none">
+      <div class="per-subcard">
+        <div class="rng-tabs">
+          <button class="rng-tab act" id="rng-year-btn" onclick="setRangeMode('year')">📅 Anno</button>
+          <button class="rng-tab" id="rng-month-btn" onclick="setRangeMode('month')">🗓 Mese</button>
+          <button class="rng-tab" id="rng-day-btn" onclick="setRangeMode('day')">📆 Date</button>
+        </div>
+        <!-- Anno -->
+        <div id="rng-year-sel">
+          <div class="field" style="max-width:160px;margin:0">
+            <label>Anno</label>
+            <select class="inp" id="cons-year" onchange="updateCons()"></select>
+          </div>
+        </div>
+        <!-- Mese specifico -->
+        <div id="rng-month-sel" style="display:none">
+          <div class="field" style="max-width:220px;margin:0">
+            <label>Anno e mese</label>
+            <input type="month" class="inp" id="cons-range-month" onchange="updateCons()">
+          </div>
+        </div>
+        <!-- Date specifiche -->
+        <div id="rng-day-sel" style="display:none">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <div class="field" style="flex:1;min-width:140px;margin:0">
+              <label>Dal</label>
+              <input type="date" class="inp" id="cons-from" onchange="updateCons()">
+            </div>
+            <div class="field" style="flex:1;min-width:140px;margin:0">
+              <label>Al</label>
+              <input type="date" class="inp" id="cons-to" onchange="updateCons()">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="cons-stats" class="g4" style="margin-bottom:20px"></div>
@@ -1265,18 +1404,18 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
 
   <div id="sec-overview" class="sec-panel act">
     <div class="g2" style="margin-bottom:16px">
-      <div class="ch-card" onclick="openChModal('c1','Andamento entrate e uscite — ultimi 6 mesi')" data-tt-id="chart-c1"><h3>Andamento entrate e uscite — ultimi 6 mesi</h3><div class="ch-wrap"><canvas id="ch1"></canvas></div></div>
-      <div class="ch-card" onclick="openChModal('c2','Risparmio mensile — ultimi 6 mesi')" data-tt-id="chart-c2"><h3>Risparmio mensile — ultimi 6 mesi</h3><div class="ch-wrap"><canvas id="ch2"></canvas></div></div>
+      <div class="ch-card" onclick="openChModal('c2',document.getElementById('ch2-title').textContent)" data-tt-id="chart-c2"><h3 id="ch2-title">Andamento risparmio</h3><div class="ch-wrap"><canvas id="ch2"></canvas></div></div>
+      <div class="ch-card" onclick="openChModal('c1',document.getElementById('ch1-title').textContent)" data-tt-id="chart-c1"><h3 id="ch1-title">Entrate vs Uscite</h3><div class="ch-wrap"><canvas id="ch1"></canvas></div></div>
     </div>
     <div class="g2">
-      <div class="ch-card" onclick="openChModal('c3','Spese per area — mese corrente')" data-tt-id="chart-c3"><h3>Spese per area — mese corrente</h3><div class="ch-wrap"><canvas id="ch3"></canvas></div></div>
-      <div class="ch-card" onclick="openChModal('c4','Spese per area — andamento 6 mesi')" data-tt-id="chart-c4"><h3>Spese per area — andamento 6 mesi</h3><div class="ch-wrap"><canvas id="ch4"></canvas></div></div>
+      <div class="ch-card" onclick="openChModal('c3',document.getElementById('ch3-title').textContent)" data-tt-id="chart-c3"><h3 id="ch3-title">Spese per area</h3><div class="ch-wrap"><canvas id="ch3"></canvas></div></div>
+      <div class="ch-card" onclick="openChModal('c4',document.getElementById('ch4-title').textContent)" data-tt-id="chart-c4"><h3 id="ch4-title">Andamento spese per area</h3><div class="ch-wrap"><canvas id="ch4"></canvas></div></div>
     </div>
   </div>
 
   <div id="sec-alltx" class="sec-panel">
     <div class="card" style="margin-bottom:12px;padding:12px 16px">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
         <select class="filter-chip inp" id="cl-type" onchange="drawConsAll()" style="width:auto">
           <option value="">Tutti i tipi</option>
           <option value="income">Solo entrate</option>
@@ -1285,9 +1424,17 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
         <select class="filter-chip inp" id="cl-cat" onchange="drawConsAll()" style="width:auto">
           <option value="">Tutte le categorie</option>
         </select>
-        <input type="text" class="filter-chip inp" id="cl-search" placeholder="🔍 Cerca nelle note…" oninput="drawConsAll()" style="width:auto;flex:1;min-width:160px">
+        <select class="filter-chip inp" id="cl-sort" onchange="drawConsAll()" style="width:auto">
+          <option value="date-desc">📅 Data ↓</option>
+          <option value="date-asc">📅 Data ↑</option>
+          <option value="amount-desc">💰 Importo ↓</option>
+          <option value="amount-asc">💰 Importo ↑</option>
+          <option value="cat-asc">🔤 Categoria A→Z</option>
+          <option value="insert-desc">🕐 Inserimento ↓</option>
+        </select>
         <span id="cl-count" style="font-size:.78rem;color:var(--sub)"></span>
       </div>
+      <input type="text" class="inp" id="cl-search" placeholder="🔍 Cerca per categoria, nota, data (gg/mm/aaaa), importo…" oninput="drawConsAll()" style="font-size:.83rem">
     </div>
     <div class="card" style="padding:0;overflow:hidden">
       <div id="cons-all-list"></div>
@@ -1367,23 +1514,43 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
 
       <div class="field">
         <label>Periodo da analizzare</label>
-        <div style="display:flex;gap:0;border:1.5px solid var(--border);border-radius:var(--r-s);overflow:hidden;background:var(--surface2)">
-          <button class="type-btn" id="ai-per-month" onclick="setAiPeriod('month',this)" style="border-radius:0" data-tt-id="ai-per-month">Mensile</button>
-          <button class="type-btn" id="ai-per-range" onclick="setAiPeriod('range',this)" style="border-radius:0" data-tt-id="ai-per-range">Intervallo</button>
-          <button class="type-btn" id="ai-per-all" onclick="setAiPeriod('all',this)" style="border-radius:0" data-tt-id="ai-per-all">Globale</button>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          <button class="period-btn act" id="ai-per-current" onclick="setAiPeriod('current',this)">📅 Mese corrente</button>
+          <button class="period-btn" id="ai-per-pick-month" onclick="setAiPeriod('pick-month',this)">🗓 Mese a scelta</button>
+          <button class="period-btn" id="ai-per-range" onclick="setAiPeriod('range',this)">📆 Periodo</button>
+          <button class="period-btn" id="ai-per-all" onclick="setAiPeriod('all',this)">🗂 Tutto</button>
         </div>
       </div>
 
-      <div id="ai-month-sel" class="field">
-        <label>Mese</label>
+      <div id="ai-month-sel" class="field" style="display:none">
+        <label>Seleziona mese</label>
         <input type="month" class="inp" id="ai-month-in">
       </div>
 
       <div id="ai-range-sel" class="field" style="display:none">
-        <label>Dal</label>
-        <input type="date" class="inp" id="ai-from" style="margin-bottom:8px">
-        <label>Al</label>
-        <input type="date" class="inp" id="ai-to">
+        <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap">
+          <button class="rng-tab act" id="ai-rng-year-btn" onclick="setAiRangeMode('year')">📅 Anno</button>
+          <button class="rng-tab" id="ai-rng-month-btn" onclick="setAiRangeMode('month')">🗓 Mese</button>
+          <button class="rng-tab" id="ai-rng-day-btn" onclick="setAiRangeMode('day')">📆 Date</button>
+        </div>
+        <div id="ai-rng-year-sel">
+          <label>Anno</label>
+          <select class="inp" id="ai-year"></select>
+        </div>
+        <div id="ai-rng-month-sel" style="display:none">
+          <label>Anno e mese</label>
+          <input type="month" class="inp" id="ai-range-month">
+        </div>
+        <div id="ai-rng-day-sel" style="display:none">
+          <div class="field" style="margin:0;margin-bottom:8px">
+            <label>Dal</label>
+            <input type="date" class="inp" id="ai-from">
+          </div>
+          <div class="field" style="margin:0">
+            <label>Al</label>
+            <input type="date" class="inp" id="ai-to">
+          </div>
+        </div>
       </div>
 
       <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
@@ -1431,7 +1598,40 @@ var S = {
   defEmail:''
 };
 
-function save(){ try{ localStorage.setItem('bc4',JSON.stringify(S)); }catch(e){} }
+var _debugMode=false;
+var _debugSnapshot=null;
+
+function enterDebugMode(){
+  if(_debugMode) return;
+  bcAlert(
+    'Stai per entrare in Modalità Debug.\n\nIn questa modalità puoi inserire, modificare o eliminare qualsiasi dato liberamente — nulla verrà salvato.\n\nAll\'uscita, tutti i cambiamenti verranno annullati e i tuoi dati reali verranno ripristinati esattamente com\'erano.\n\nIl banner rosso lampeggiante in cima alla pagina ti ricorderà che il debug è attivo.',
+    'Modalità Debug','🧪'
+  ).then(function(){
+    _debugMode=true;
+    _debugSnapshot=JSON.stringify(S);
+    var b=document.getElementById('debug-banner'); if(b) b.style.display='inline-block';
+    closeSettings();
+    toast('🧪 Modalità debug attiva — i dati non vengono salvati');
+  });
+}
+
+function exitDebugMode(){
+  bcConfirm(
+    'Uscire dalla modalità debug?\n\nTutti i cambiamenti fatti durante il debug verranno annullati e i dati reali verranno ripristinati.',
+    'Esci dal debug','⚠️','Esci e ripristina','Rimani in debug'
+  ).then(function(ok){
+    if(!ok) return;
+    _debugMode=false;
+    // Restore real data
+    if(_debugSnapshot){ try{ S=JSON.parse(_debugSnapshot); }catch(e){} _debugSnapshot=null; }
+    var b=document.getElementById('debug-banner'); if(b) b.style.display='none';
+    renderAll();
+    drawDashboard();
+    toast('✅ Modalità debug terminata — dati ripristinati');
+  });
+}
+
+function save(){ if(_debugMode) return; try{ localStorage.setItem('bc4',JSON.stringify(S)); }catch(e){} }
 function load(){
   try{
     var d=localStorage.getItem('bc4');
@@ -1467,13 +1667,13 @@ function showPage(id, btn){
 
   // lazy renders
   if(id==='home') drawDashboard();
-  if(id==='comp'){ fillTxCat(); fillFCat(); drawTxList(); }
+  if(id==='comp'){ setType('expense'); fillTxCat(); fillFCat(); drawTxList(); }
   if(id==='prog') updateSendCatsBar();
   if(id==='wallet') drawWA();
   if(id==='partner'){ drawPartner(); drawMyCoupleCosts(); }
   if(id==='cons') setTimeout(updateCons, 80);
   if(id==='coppia') drawCoppia();
-  if(id==='ai'){ updateAiBanner(); setAiPeriod('month',document.getElementById('ai-per-month')); }
+  if(id==='ai'){ updateAiBanner(); setAiPeriod('current',document.getElementById('ai-per-current')); }
   // close mobile nav
   document.getElementById('nav').classList.remove('mob-open');
   window.scrollTo(0,0);
@@ -1542,11 +1742,433 @@ function toast(msg, err){
   setTimeout(function(){ if(t.parentNode) t.parentNode.removeChild(t); },2600);
 }
 
+// ── Custom alert/confirm modals (sostituiscono alert/confirm di sistema) ──
+function bcAlert(msg, title, icon){
+  return new Promise(function(resolve){
+    var overlay=document.createElement('div');
+    overlay.className='bc-alert-overlay';
+    overlay.innerHTML='<div class="bc-alert-box">'
+      +'<div class="bc-alert-hdr"><span class="bc-alert-icon">'+(icon||'ℹ️')+'</span>'
+      +'<span class="bc-alert-title">'+(title||'Avviso')+'</span></div>'
+      +'<div class="bc-alert-body">'+escH(msg)+'</div>'
+      +'<div class="bc-alert-footer">'
+      +'<button class="btn btn-primary" id="bc-alert-ok">OK</button>'
+      +'</div></div>';
+    document.body.appendChild(overlay);
+    overlay.querySelector('#bc-alert-ok').addEventListener('click',function(){
+      overlay.remove(); resolve(true);
+    });
+  });
+}
+function bcConfirm(msg, title, icon, confirmLabel, cancelLabel){
+  return new Promise(function(resolve){
+    var overlay=document.createElement('div');
+    overlay.className='bc-alert-overlay';
+    overlay.innerHTML='<div class="bc-alert-box">'
+      +'<div class="bc-alert-hdr"><span class="bc-alert-icon">'+(icon||'❓')+'</span>'
+      +'<span class="bc-alert-title">'+(title||'Conferma')+'</span></div>'
+      +'<div class="bc-alert-body">'+escH(msg)+'</div>'
+      +'<div class="bc-alert-footer">'
+      +'<button class="btn btn-ghost" id="bc-conf-no">'+(cancelLabel||'Annulla')+'</button>'
+      +'<button class="btn btn-primary" id="bc-conf-yes">'+(confirmLabel||'Conferma')+'</button>'
+      +'</div></div>';
+    document.body.appendChild(overlay);
+    overlay.querySelector('#bc-conf-yes').addEventListener('click',function(){ overlay.remove(); resolve(true); });
+    overlay.querySelector('#bc-conf-no').addEventListener('click',function(){ overlay.remove(); resolve(false); });
+    overlay.addEventListener('click',function(e){ if(e.target===overlay){ overlay.remove(); resolve(false); } });
+  });
+}
+
+function resetWAFields(){
+  S.wCats.forEach(function(c){
+    var e=document.getElementById('wa-'+slug(wcatName(c)));
+    if(e) e.value='0';
+  });
+  calcWTot();
+  toast('Campi azzerati.');
+}
+
 function zF(i){ if(parseFloat(i.value)===0) i.value=''; }
 function zB(i){ if(i.value===''||i.value===null) i.value='0'; }
 
 // ═══════════════════════════════════════
-// BACKUP / RESTORE
+// CUSTOM DATE / MONTH PICKER
+// ═══════════════════════════════════════
+(function(){
+  var MN_IT=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  var MN_SHORT=['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+  var DN_SHORT=['Lu','Ma','Me','Gi','Ve','Sa','Do'];
+
+  var _active=null; // currently open picker instance
+
+  // Shared modal overlay for all pickers
+  var _overlay=null;
+  function getOverlay(){
+    if(_overlay) return _overlay;
+    _overlay=document.createElement('div');
+    _overlay.id='cp-modal-overlay';
+    _overlay.style.cssText='position:fixed;inset:0;z-index:9100;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px;overflow:auto;animation:fadeIn .18s ease';
+    _overlay.addEventListener('mousedown',function(e){
+      if(e.target===_overlay) { _active&&_active.close(); }
+    });
+    document.body.appendChild(_overlay);
+    return _overlay;
+  }
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&_active) _active.close();
+  });
+
+  // ── Picker factory ──────────────────────────────────────────
+  function Picker(opts){
+    var self=this;
+    self.mode=opts.mode||'date';
+    self.targetId=opts.id;
+    self.onChange=opts.onChange||function(){};
+    self.value=opts.value||'';
+    self.label=opts.label||'';        // e.g. "📅 Dal — Statistiche"
+    self.linkedPicker=null;            // paired picker (for from/to)
+    self._primaryPicker=null;          // set on secondary picker of a pair
+    self._pending='';
+
+    var now=new Date();
+    self._view='month';
+    self._navYear=now.getFullYear();
+    self._navMonth=now.getMonth();
+
+    if(self.value){
+      var p=self.value.split('-');
+      self._navYear=parseInt(p[0])||now.getFullYear();
+      self._navMonth=(parseInt(p[1])-1)||now.getMonth();
+    }
+
+    // Trigger button
+    self.root=document.createElement('div');
+    self.root.className='cp-wrap';
+    self.display=document.createElement('div');
+    self.display.className='cp-input';
+    self.display.innerHTML='<span class="cp-ico">'+(self.mode==='date'?'📅':'🗓')+'</span><span class="cp-val"></span><span style="font-size:.7rem;color:var(--sub);flex-shrink:0">▾</span>';
+    self.valSpan=self.display.querySelector('.cp-val');
+    self.root.appendChild(self.display);
+
+    // Modal content box
+    self.drop=document.createElement('div');
+    self.drop.className='cp-drop';
+    self.drop.style.cssText='position:relative;width:300px;max-width:100%;border-radius:14px;';
+
+    self._updateDisplay();
+
+    self.display.addEventListener('click',function(e){
+      e.stopPropagation();
+      if(_active&&_active!==self) _active.close();
+      self.open(e);
+    });
+  }
+
+  Picker.prototype._updateDisplay=function(){
+    if(!this.value){ this.valSpan.textContent='Seleziona...'; this.valSpan.className='cp-val placeholder'; return; }
+    this.valSpan.className='cp-val';
+    if(this.mode==='month'){
+      var p=this.value.split('-');
+      this.valSpan.textContent=MN_IT[parseInt(p[1])-1]+' '+p[0];
+    } else {
+      var parts=this.value.split('-');
+      this.valSpan.textContent=parts[2]+'/'+parts[1]+'/'+parts[0];
+    }
+  };
+
+  Picker.prototype.open=function(mouseEvent){
+    _active=this;
+    this._pending=this.value;
+    this.display.classList.add('open');
+    if(this.mode==='month') this._view='month';
+    else this._view='day';
+
+    var ov=getOverlay();
+    var isDark=document.body.classList.contains('dark');
+
+    function makeCalBox(picker, lbl, roundCorners){
+      var box=document.createElement('div');
+      box.style.cssText='display:flex;flex-direction:column;flex:1;min-width:0;';
+      var hdr=document.createElement('div');
+      var bc=isDark?'#2a2f45':'#d0d3da';
+      hdr.style.cssText='display:flex;align-items:center;justify-content:space-between;'
+        +'background:'+(isDark?'#1e2232':'#ffffff')+';'
+        +'border:1.5px solid '+bc+';border-bottom:none;'
+        +'border-radius:'+roundCorners.top+';padding:9px 12px 7px;';
+      var lspan=document.createElement('span');
+      lspan.style.cssText='font-family:\'Sora\',sans-serif;font-weight:700;font-size:.78rem;'
+        +'color:'+(isDark?'#c9d0e4':'#374151')+';letter-spacing:.01em;';
+      lspan.textContent=lbl||(picker.mode==='date'?'📅 Seleziona data':'🗓 Seleziona mese');
+      var xb=document.createElement('button');
+      xb.style.cssText='background:none;border:none;cursor:pointer;font-size:.95rem;'
+        +'color:'+(isDark?'#8891a8':'#9ca3af')+';padding:0 4px;line-height:1;';
+      xb.textContent='✕';
+      xb.addEventListener('click',function(){ _active&&_active.close(); });
+      hdr.appendChild(lspan); hdr.appendChild(xb);
+      picker.drop.style.borderRadius=roundCorners.bot;
+      picker.drop.style.borderTop='none';
+      box.appendChild(hdr);
+      box.appendChild(picker.drop);
+      return box;
+    }
+
+    if(this.linkedPicker){
+      // Dal/Al: always centered on screen
+      ov.style.alignItems='center';
+      ov.style.justifyContent='center';
+      ov.style.padding='20px';
+
+      var linked=this.linkedPicker;
+      linked._pending=linked.value;
+      if(linked.mode==='month') linked._view='month'; else linked._view='day';
+      linked.display.classList.add('open');
+
+      var container=document.createElement('div');
+      container.style.cssText='display:flex;gap:16px;max-width:calc(100vw - 40px);'
+        +'animation:fadeIn .14s ease;align-items:flex-start;flex-wrap:wrap;';
+      var boxA=makeCalBox(this, this.label, {top:'14px 14px 0 0',bot:'0 0 14px 14px'});
+      var boxB=makeCalBox(linked, linked.label, {top:'14px 14px 0 0',bot:'0 0 14px 14px'});
+      container.appendChild(boxA);
+      container.appendChild(boxB);
+      linked._render();
+      ov.innerHTML='';
+      ov.appendChild(container);
+      ov.style.display='flex';
+      this._render();
+    } else {
+      // Single picker: position centered on mouse, clamped to viewport
+      ov.style.alignItems='flex-start';
+      ov.style.justifyContent='flex-start';
+      ov.style.padding='0';
+
+      var box=makeCalBox(this, this.label, {top:'14px 14px 0 0',bot:'0 0 14px 14px'});
+      var posWrap=document.createElement('div');
+      posWrap.style.cssText='position:absolute;animation:fadeIn .14s ease;';
+      posWrap.appendChild(box);
+      ov.innerHTML='';
+      ov.appendChild(posWrap);
+      ov.style.display='flex';
+      this._render();
+
+      // Measure after render, then position centered on mouse
+      var dropW=posWrap.offsetWidth||310;
+      var dropH=posWrap.offsetHeight||400;
+      var vw=window.innerWidth, vh=window.innerHeight;
+      var mx=mouseEvent?mouseEvent.clientX:vw/2;
+      var my=mouseEvent?mouseEvent.clientY:vh/2;
+      var left=Math.min(Math.max(mx-dropW/2, 12), vw-dropW-12);
+      var top=Math.min(Math.max(my-dropH/2, 12), vh-dropH-12);
+      posWrap.style.left=left+'px';
+      posWrap.style.top=top+'px';
+    }
+  };
+
+  Picker.prototype.close=function(){
+    if(_active===this) _active=null;
+    this.display.classList.remove('open');
+    if(this.linkedPicker) this.linkedPicker.display.classList.remove('open');
+    var ov=document.getElementById('cp-modal-overlay');
+    if(ov) ov.style.display='none';
+  };
+
+  Picker.prototype._confirm=function(){
+    if(this._pending!==undefined&&this._pending!==''){
+      this.value=this._pending;
+      this._updateDisplay();
+      var inp=document.getElementById(this.targetId);
+      if(inp){ inp.value=this.value; inp.dispatchEvent(new Event('change')); }
+      this.onChange(this.value);
+    }
+    // Also confirm linked picker if present
+    if(this.linkedPicker){
+      var lk=this.linkedPicker;
+      if(lk._pending!==undefined&&lk._pending!==''){
+        lk.value=lk._pending;
+        lk._updateDisplay();
+        var linp=document.getElementById(lk.targetId);
+        if(linp){ linp.value=lk.value; linp.dispatchEvent(new Event('change')); }
+        lk.onChange(lk.value);
+      }
+    }
+    this.close();
+  };
+
+  // Set value silently without opening the modal
+  Picker.prototype.setSilent=function(v){
+    this.value=v;
+    this._pending=v;
+    this._updateDisplay();
+    // Update nav state
+    if(v){
+      var p=v.split('-');
+      this._navYear=parseInt(p[0])||new Date().getFullYear();
+      this._navMonth=(parseInt(p[1])-1)||new Date().getMonth();
+    }
+    var inp=document.getElementById(this.targetId);
+    if(inp) inp.value=v;
+  };
+
+
+
+  Picker.prototype._render=function(){
+    var self=this;
+    var h='';
+    if(self._view==='year') h=self._renderYears();
+    else if(self._view==='month') h=self._renderMonths();
+    else h=self._renderDays();
+    self.drop.innerHTML=h;
+    // Bind buttons
+    self.drop.querySelectorAll('[data-cp]').forEach(function(el){
+      el.addEventListener('click',function(e){
+        e.stopPropagation();
+        var action=el.getAttribute('data-cp');
+        var val=el.getAttribute('data-val');
+        if(action==='prev-year'){ self._navYear--; self._render(); }
+        else if(action==='next-year'){ self._navYear++; self._render(); }
+        else if(action==='prev-month'){ self._navMonth--; if(self._navMonth<0){self._navMonth=11;self._navYear--;} self._render(); }
+        else if(action==='next-month'){ self._navMonth++; if(self._navMonth>11){self._navMonth=0;self._navYear++;} self._render(); }
+        else if(action==='show-year'){ self._view='year'; self._render(); }
+        else if(action==='show-month'){ self._view='month'; self._render(); }
+        else if(action==='pick-year'){ self._navYear=parseInt(val); self._view=self.mode==='month'?'month':'day'; self._render(); }
+        else if(action==='pick-month'){
+          self._navMonth=parseInt(val);
+          if(self.mode==='month'){
+            self._pending=self._navYear+'-'+String(self._navMonth+1).padStart(2,'0');
+            self._render();
+          } else {
+            self._view='day'; self._render();
+          }
+        }
+        else if(action==='pick-day'){ self._pending=val; self._render(); }
+        else if(action==='today'){
+          var n=new Date();
+          if(self.mode==='month') self._pending=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0');
+          else self._pending=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
+          self._render();
+        }
+        else if(action==='clear'){ self._pending=''; self._render(); }
+        else if(action==='ok'){ if(self._primaryPicker) self._primaryPicker._confirm(); else self._confirm(); }
+      });
+    });
+  };
+
+  Picker.prototype._renderYears=function(){
+    var self=this;
+    var selY=(self._pending||self.value)?parseInt((self._pending||self.value).slice(0,4)):0;
+    var base=Math.floor(self._navYear/12)*12;
+    var cells='';
+    for(var y=base;y<base+12;y++){
+      cells+='<div class="cp-yr'+(y===selY?' act':'')+'" data-cp="pick-year" data-val="'+y+'">'+y+'</div>';
+    }
+    return '<div class="cp-nav">'
+      +'<button class="cp-nav-btn" data-cp="prev-year">‹</button>'
+      +'<span class="cp-nav-lbl" data-cp="show-year">'+base+'–'+(base+11)+'</span>'
+      +'<button class="cp-nav-btn" data-cp="next-year">›</button>'
+      +'</div>'
+      +'<div class="cp-years">'+cells+'</div>'
+      +'<div class="cp-footer"><button class="cp-clear" data-cp="clear">Cancella</button><button class="cp-today-btn" data-cp="today">Oggi</button><button class="cp-ok-btn" data-cp="ok">✓ OK</button></div>';
+  };
+
+  Picker.prototype._renderMonths=function(){
+    var self=this;
+    var selStr2=self._pending||self.value;
+    var selY=selStr2?parseInt(selStr2.slice(0,4)):0;
+    var selM=selStr2?parseInt(selStr2.split('-')[1])-1:-1;
+    var nowD=new Date();
+    var cells='';
+    for(var m=0;m<12;m++){
+      var isAct=self._navYear===selY&&m===selM;
+      var isCur=self._navYear===nowD.getFullYear()&&m===nowD.getMonth();
+      cells+='<div class="cp-mo'+(isAct?' act':isCur?' today-mo':'')+'" data-cp="pick-month" data-val="'+m+'">'+MN_SHORT[m]+'</div>';
+    }
+    return '<div class="cp-nav">'
+      +'<button class="cp-nav-btn" data-cp="prev-year">‹</button>'
+      +'<span class="cp-nav-lbl" data-cp="show-year">'+self._navYear+'</span>'
+      +'<button class="cp-nav-btn" data-cp="next-year">›</button>'
+      +'</div>'
+      +'<div class="cp-months">'+cells+'</div>'
+      +'<div class="cp-footer"><button class="cp-clear" data-cp="clear">Cancella</button><button class="cp-today-btn" data-cp="today">Questo mese</button><button class="cp-ok-btn" data-cp="ok">✓ OK</button></div>';
+  };
+
+  Picker.prototype._renderDays=function(){
+    var self=this;
+    var y=self._navYear, m=self._navMonth;
+    var selStr=self._pending||self.value;
+    var selParts=selStr?selStr.split('-'):null;
+    var selD=selParts?{y:parseInt(selParts[0]),m:parseInt(selParts[1])-1,d:parseInt(selParts[2])}:null;
+    var now=new Date();
+    var firstDay=new Date(y,m,1).getDay(); // 0=Sun
+    firstDay=(firstDay+6)%7; // Monday-first
+    var daysInMonth=new Date(y,m+1,0).getDate();
+    var daysInPrev=new Date(y,m,0).getDate();
+    var hdrs=DN_SHORT.map(function(d){return '<div class="cp-dh">'+d+'</div>';}).join('');
+    var cells='';
+    // Prev month tail
+    for(var i=0;i<firstDay;i++){
+      var pd=daysInPrev-firstDay+1+i;
+      cells+='<div class="cp-day other-mo empty">'+pd+'</div>';
+    }
+    // Current month
+    for(var d=1;d<=daysInMonth;d++){
+      var isAct=selD&&selD.y===y&&selD.m===m&&selD.d===d;
+      var isToday=now.getFullYear()===y&&now.getMonth()===m&&now.getDate()===d;
+      var dateStr=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      cells+='<div class="cp-day'+(isAct?' act':isToday?' today':'')+'" data-cp="pick-day" data-val="'+dateStr+'">'+d+'</div>';
+    }
+    // Next month head — sempre fino a 6 righe totali (42 celle)
+    var total=firstDay+daysInMonth;
+    var rem=42-total; // always fill to 6 rows
+    for(var nd=1;nd<=rem;nd++){
+      cells+='<div class="cp-day other-mo empty">'+nd+'</div>';
+    }
+    return '<div class="cp-nav">'
+      +'<button class="cp-nav-btn" data-cp="prev-month">‹</button>'
+      +'<span class="cp-nav-lbl" data-cp="show-month">'+MN_IT[m]+' </span>'
+      +'<span class="cp-nav-lbl" data-cp="show-year">'+y+'</span>'
+      +'<button class="cp-nav-btn" data-cp="next-month">›</button>'
+      +'</div>'
+      +'<div class="cp-days-hdr">'+hdrs+'</div>'
+      +'<div class="cp-days">'+cells+'</div>'
+      +'<div class="cp-footer"><button class="cp-clear" data-cp="clear">Cancella</button><button class="cp-today-btn" data-cp="today">Oggi</button><button class="cp-ok-btn" data-cp="ok">✓ OK</button></div>';
+  };
+
+  // ── Public API ──────────────────────────────────────────────
+  var _pickers={};
+
+  window.CP={
+    init:function(id, mode, onChange, alignRight, label){
+      var hidden=document.getElementById(id); if(!hidden) return;
+      var p=new Picker({mode:mode,id:id,onChange:onChange||function(){},value:hidden.value||'',label:label||''});
+      hidden.style.display='none';
+      hidden.parentNode.insertBefore(p.root,hidden.nextSibling);
+      _pickers[id]=p;
+      return p;
+    },
+    // Link two pickers so they open together side by side
+    linkPickers:function(fromId, toId){
+      var from=_pickers[fromId], to=_pickers[toId];
+      if(from&&to){
+        from.linkedPicker=to;
+        to._primaryPicker=from; // so "OK" on linked picker confirms both via primary
+      }
+    },
+    get:function(id){ return _pickers[id]; },
+    setValue:function(id,v){
+      if(_pickers[id]) _pickers[id].setSilent(v);
+      else { var el=document.getElementById(id); if(el) el.value=v; }
+    },
+    setAndTrigger:function(id,v){
+      if(_pickers[id]){
+        _pickers[id].setSilent(v);
+        _pickers[id].onChange(v);
+      } else { var el=document.getElementById(id); if(el){ el.value=v; el.dispatchEvent(new Event('change')); } }
+    },
+    getValue:function(id){ if(_pickers[id]) return _pickers[id].value; var el=document.getElementById(id); return el?el.value:''; }
+  };
+})();
+
+
 // ═══════════════════════════════════════
 // Keys stored in localStorage (outside S) that are included in backup
 var PREF_KEYS=['bc_theme','bc_tt','bc_net_hidden','bc_cats_sent_hash','bc_apikey','bc_privacy'];
@@ -1585,6 +2207,16 @@ async function backupJSON(){
 }
 
 function applyBackup(p){
+  if(_debugMode){
+    // In debug mode: apply to S in memory only, never touch localStorage
+    if(p.data && typeof p.data==='object'){
+      for(var k in p.data) if(S.hasOwnProperty(k)) S[k]=p.data[k];
+    } else {
+      for(var k in p) if(S.hasOwnProperty(k)) S[k]=p[k];
+    }
+    S.wCats=S.wCats.map(function(c){ return typeof c==='string'?{name:c,type:'deposit'}:c; });
+    return;
+  }
   if(p.data && typeof p.data==='object'){
     for(var k in p.data) if(S.hasOwnProperty(k)) S[k]=p.data[k];
     if(p.prefs) applyPrefs(p.prefs);
@@ -1670,7 +2302,9 @@ function delWcat(i){ S.wCats.splice(i,1); save(); drawWCats(); drawWA(); }
 
 function drawECats(){
   var el=document.getElementById('ecat-list'); if(!el) return;
-  el.innerHTML=S.eCats.map(function(c,i){
+  var sorted=S.eCats.slice().sort(function(a,b){return a.localeCompare(b,'it');});
+  el.innerHTML=sorted.map(function(c){
+    var i=S.eCats.indexOf(c);
     var shared=S.cCats.indexOf(c)!==-1;
     var sharedBadge=shared?'<span title="Presente anche in Spese di Coppia" style="background:var(--amber-s);color:var(--amber);border:1px solid var(--amber);border-radius:8px;font-size:.62rem;font-weight:700;padding:1px 6px;margin-left:3px;cursor:default">MISTA</span>':'';
     var tagStyle=shared?'border-color:var(--amber);background:var(--amber-s)':'';
@@ -1684,7 +2318,9 @@ function delEcat(i){ S.eCats.splice(i,1); save(); drawECats(); drawCCats(); fill
 function drawICats(){
   var el=document.getElementById('icat-list'); if(!el) return;
   if(!S.iCats.length){ el.innerHTML='<p style="color:var(--sub);font-size:.8rem;margin-bottom:8px">Nessuna categoria entrata ancora.</p>'; return; }
-  el.innerHTML=S.iCats.map(function(c,i){
+  var sorted=S.iCats.slice().sort(function(a,b){return a.localeCompare(b,'it');});
+  el.innerHTML=sorted.map(function(c){
+    var i=S.iCats.indexOf(c);
     return '<span class="tag" style="border-color:var(--green);background:var(--green-s);color:var(--text)">'+escH(c)
       +' <button class="tag-x" onclick="delIcat('+i+')" style="color:inherit">✕</button></span>';
   }).join('');
@@ -1694,7 +2330,9 @@ function delIcat(i){ S.iCats.splice(i,1); save(); drawICats(); fillTxCat(); fill
 
 function drawCCats(){
   var el=document.getElementById('ccat-list'); if(!el) return;
-  el.innerHTML=S.cCats.map(function(c,i){
+  var sorted=S.cCats.slice().sort(function(a,b){return a.localeCompare(b,'it');});
+  el.innerHTML=sorted.map(function(c){
+    var i=S.cCats.indexOf(c);
     var shared=S.eCats.indexOf(c)!==-1;
     var sharedBadge=shared?'<span title="Presente anche in Spese Personali" style="background:var(--amber-s);color:var(--amber);border:1px solid var(--amber);border-radius:8px;font-size:.62rem;font-weight:700;padding:1px 6px;margin-left:3px;cursor:default">MISTA</span>':'';
     var tagStyle=shared?'border-color:var(--amber);background:var(--amber-s)':'';
@@ -1774,29 +2412,126 @@ function getWAValues(){
   });
   return {amounts:amounts, total:tot};
 }
+// Calcola il patrimonio netto reale:
+// snapshot più recente con data <= oggi + somma algebrica di tutte le tx successive
+function getNetWorth(refDateStr){
+  var ref=refDateStr||today();
+  // Trova lo snapshot più recente con snapDate <= ref
+  var baseSnap=null;
+  S.wHist.forEach(function(s){
+    var snapDate=(s.snapDate||s.date.slice(0,10));
+    if(snapDate<=ref){
+      if(!baseSnap||(s.snapDate||s.date.slice(0,10))>=(baseSnap.snapDate||baseSnap.date.slice(0,10))){
+        baseSnap=s;
+      }
+    }
+  });
+  if(!baseSnap) return 0;
+  var snapDate=baseSnap.snapDate||baseSnap.date.slice(0,10);
+  // Somma algebrica di tutte le tx con data > snapDate e <= ref
+  var flow=S.txs.filter(function(t){ return t.date>snapDate&&t.date<=ref; })
+    .reduce(function(a,t){ return a+(t.type==='income'?t.amount:-t.amount); },0);
+  return baseSnap.total+flow;
+}
+
+function _doSaveSnap(editIdx, oldSnap, snapDate, snap, newTotal, expected, isEdit){
+  if(isEdit){
+    S.wHist[editIdx]={date:oldSnap.date, snapDate:snapDate, amounts:snap.amounts, total:newTotal};
+  } else {
+    S.wHist.push({date:new Date().toISOString(), snapDate:snapDate, amounts:snap.amounts, total:newTotal});
+  }
+  S.wHist.sort(function(a,b){
+    return (a.snapDate||a.date.slice(0,10)).localeCompare(b.snapDate||b.date.slice(0,10));
+  });
+  cancelSnapEdit();
+  resetWAFields();
+  save(); drawWHist(); updateCons(); drawDashboard();
+  if(Math.abs(newTotal-expected)>0.01 && (isEdit||S.wHist.length>1)){
+    var diff=newTotal-expected;
+    var diffStr=(diff>0?'+':'')+fmt(diff);
+    bcAlert(
+      'Snapshot inserito:  €'+fmt(newTotal)+'\nPatrimonio stimato: €'+fmt(expected)+'\nDifferenza:         €'+diffStr+'\n\nPossibili cause: transazioni non registrate, importi errati, o debiti futuri da aggiornare.',
+      'Snapshot non coincide','⚠️');
+  } else {
+    toast(isEdit?'Snapshot aggiornato!':'Snapshot salvato!');
+  }
+}
+
 function saveWSnap(){
   if(!S.wCats.length){ toast('Aggiungi prima i depositi!',true); return; }
-  // blur any active input so value is committed
-  if(document.activeElement && document.activeElement.type==='number'){
-    zB(document.activeElement);
-  }
+  if(document.activeElement&&document.activeElement.type==='number') zB(document.activeElement);
+  var snapDate=document.getElementById('snap-date').value||today();
   var snap=getWAValues();
-  S.wHist.push({date:new Date().toISOString(), amounts:snap.amounts, total:snap.total});
-  save(); drawWHist(); updateCons(); drawDashboard(); toast('Snapshot salvato!');
+  var newTotal=snap.total;
+  var editIdxRaw=document.getElementById('snap-edit-idx').value;
+  var editIdx=editIdxRaw!==''?parseInt(editIdxRaw):-1;
+  var isEdit=editIdx>=0;
+  var histBackup=S.wHist.slice();
+  if(isEdit) S.wHist.splice(editIdx,1);
+  var expected=getNetWorth(snapDate);
+  S.wHist=histBackup;
+  if(isEdit){
+    var oldSnap=S.wHist[editIdx];
+    var oldDate=oldSnap.snapDate||oldSnap.date.slice(0,10);
+    var txAfter=S.txs.filter(function(t){return t.date>oldDate;});
+    if(txAfter.length){
+      bcConfirm(
+        'Questo snapshot ha '+txAfter.length+' transazion'+(txAfter.length===1?'e':'i')+' registrat'+(txAfter.length===1?'a':'e')+' dopo la sua data.\nModificarlo cambierà il calcolo del patrimonio netto dal '+fmtShort(oldDate)+' in poi.\n\nVuoi continuare?',
+        'Modifica snapshot','⚠️','Sì, modifica','Annulla'
+      ).then(function(ok){ if(ok) _doSaveSnap(editIdx,oldSnap,snapDate,snap,newTotal,expected,true); });
+      return;
+    }
+    _doSaveSnap(editIdx,oldSnap,snapDate,snap,newTotal,expected,true);
+  } else {
+    _doSaveSnap(-1,null,snapDate,snap,newTotal,expected,false);
+  }
 }
+
+function editSnap(idx){
+  var s=S.wHist[idx]; if(!s) return;
+  var snapDate=s.snapDate||s.date.slice(0,10);
+  S.wCats.forEach(function(c){
+    var n=wcatName(c);
+    var e=document.getElementById('wa-'+slug(n));
+    if(!e) return;
+    var v=s.amounts[n]||0;
+    e.value=wcatType(c)==='debt'?Math.abs(v):v;
+  });
+  calcWTot();
+  CP.setValue('snap-date',snapDate);
+  document.getElementById('snap-edit-idx').value=idx;
+  document.getElementById('snap-save-btn').textContent='💾 Aggiorna snapshot';
+  document.getElementById('snap-cancel-btn').style.display='';
+  var txAfter=S.txs.filter(function(t){return t.date>snapDate;});
+  if(txAfter.length){
+    toast('⚠️ '+txAfter.length+' tx successive a questo snapshot — il patrimonio netto sarà ricalcolato.',true);
+  }
+  document.getElementById('wa-list').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function cancelSnapEdit(){
+  document.getElementById('snap-edit-idx').value='';
+  document.getElementById('snap-save-btn').textContent='💾 Salva snapshot';
+  document.getElementById('snap-cancel-btn').style.display='none';
+}
+
 function deleteSnap(idx){
-  // idx is index in the original (non-reversed) array
-  if(!confirm('Eliminare questo snapshot?')) return;
-  S.wHist.splice(idx,1);
-  save(); drawWHist(); updateCons(); drawDashboard();
-  toast('Snapshot eliminato.');
+  bcConfirm('Eliminare questo snapshot?','Elimina snapshot','🗑','Elimina','Annulla').then(function(ok){
+    if(!ok) return;
+    S.wHist.splice(idx,1);
+    save(); drawWHist(); updateCons(); drawDashboard();
+    toast('Snapshot eliminato.');
+  });
 }
+
 function drawWHist(){
   var el=document.getElementById('w-hist'); if(!el) return;
   if(!S.wHist.length){ el.innerHTML='<p style="color:var(--sub);font-size:.82rem">Nessuno snapshot salvato.</p>'; return; }
-  // show all, reversed (most recent first), store real index for deletion
   el.innerHTML=S.wHist.map(function(s,i){ return {s:s,i:i}; }).reverse().slice(0,20).map(function(entry){
     var s=entry.s, i=entry.i;
+    var displayDate=s.snapDate||s.date.slice(0,10);
+    // Calcola patrimonio netto stimato a quella data (senza snapshot successivi)
+    var txAfter=S.txs.filter(function(t){return t.date>displayDate;}).length;
     var tags=S.wCats.filter(function(c){var n=wcatName(c);return (s.amounts[n]||0)!==0;}).map(function(c){
       var n=wcatName(c), isDebt=wcatType(c)==='debt', v=s.amounts[n]||0;
       var style='font-size:.73rem;background:'+(isDebt?'var(--red-s)':'var(--green-s)')+';color:var(--text);padding:2px 7px;border-radius:8px;border:1px solid '+(isDebt?'var(--red)':'var(--green)');
@@ -1805,10 +2540,14 @@ function drawWHist(){
     return '<div class="hist-row" style="align-items:flex-start;gap:10px">'
       +'<div style="flex:1">'
       +'<div style="font-weight:700;font-size:.9rem;margin-bottom:2px" class="privacy-blur">€ '+fmt(s.total)+'</div>'
-      +'<div style="font-size:.74rem;color:var(--sub);margin-bottom:6px">'+fmtDateFull(s.date)+'</div>'
+      +'<div style="font-size:.74rem;color:var(--sub);margin-bottom:4px">📅 '+fmtShort(displayDate)+'</div>'
+      +(txAfter?'<div style="font-size:.7rem;color:var(--amber);margin-bottom:4px">'+txAfter+' tx successive</div>':'')
       +(tags?'<div style="display:flex;flex-wrap:wrap;gap:4px">'+tags+'</div>':'')
       +'</div>'
-      +'<button onclick="deleteSnap('+i+')" class="btn btn-ghost btn-xs" style="flex-shrink:0;margin-top:2px" title="Elimina snapshot">🗑</button>'
+      +'<div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">'
+      +'<button onclick="editSnap('+i+')" class="btn btn-ghost btn-xs" title="Modifica snapshot">✏️</button>'
+      +'<button onclick="deleteSnap('+i+')" class="btn btn-ghost btn-xs" style="color:var(--red-d)" title="Elimina snapshot">🗑</button>'
+      +'</div>'
       +'</div>';
   }).join('');
 }
@@ -1826,7 +2565,7 @@ function fillTxCat(){
       if(lbl) lbl.style.display='none';
       var curI=sel.value;
       sel.innerHTML='';
-      S.iCats.forEach(function(c){
+      S.iCats.slice().sort(function(a,b){return a.localeCompare(b,'it');}).forEach(function(c){
         var o=document.createElement('option');
         o.value=c; o.textContent=c; sel.appendChild(o);
       });
@@ -1846,7 +2585,7 @@ function fillTxCat(){
     if(S.eCats.length){
       var g1=document.createElement('optgroup');
       g1.label='— Spese personali';
-      S.eCats.forEach(function(c){
+      S.eCats.slice().sort(function(a,b){return a.localeCompare(b,'it');}).forEach(function(c){
         var o=document.createElement('option');
         o.value=c; o.textContent=c; g1.appendChild(o);
       });
@@ -1855,7 +2594,7 @@ function fillTxCat(){
     if(S.cCats.length){
       var g2=document.createElement('optgroup');
       g2.label='— Spese di coppia 💑';
-      S.cCats.forEach(function(c){
+      S.cCats.slice().sort(function(a,b){return a.localeCompare(b,'it');}).forEach(function(c){
         var o=document.createElement('option');
         o.value=c+' 💑'; o.textContent=c+' 💑'; g2.appendChild(o);
       });
@@ -1916,6 +2655,20 @@ function addTx(){
     cancelEdit();
     save(); drawTxList(); updateCons(); drawDashboard(); toast('Transazione aggiornata!');
   } else {
+    // Duplicate check: same date, category, amount
+    var dup=S.txs.find(function(t){
+      return t.date===date && t.cat===cat && t.amount===amt && t.type===S.txType;
+    });
+    if(dup){
+      var dupMsg=fmtShort(dup.date)+' — '+dup.cat+' — €'+fmt(dup.amount)+(dup.note?'\nNota: "'+dup.note+'"':'');
+      bcConfirm('Esiste già una transazione simile:\n'+dupMsg+'\n\nVuoi aggiungerla comunque?','Transazione duplicata','⚠️','Aggiungi comunque','Annulla').then(function(ok){
+        if(!ok) return;
+        S.txs.push({id:Date.now(),date:date,cat:cat,amount:amt,note:note,type:S.txType,isCouple:isC});
+        document.getElementById('tx-a').value='';
+        document.getElementById('tx-n').value='';
+        save(); drawTxList(); updateCons(); drawDashboard(); toast('Aggiunta!');
+      }); return;
+    }
     S.txs.push({id:Date.now(),date:date,cat:cat,amount:amt,note:note,type:S.txType,isCouple:isC});
     document.getElementById('tx-a').value='';
     document.getElementById('tx-n').value='';
@@ -1924,12 +2677,14 @@ function addTx(){
 }
 function editTx(id){
   var t=S.txs.find(function(t){ return t.id===id; }); if(!t) return;
-  document.getElementById('tx-d').value=t.date;
+  CP.setValue('tx-d',t.date);
   document.getElementById('tx-a').value=t.amount;
   document.getElementById('tx-n').value=t.note||'';
   document.getElementById('tx-edit-id').value=t.id;
+  // setType calls fillTxCat which rebuilds the select — set category after
   setType(t.type);
-  setTimeout(function(){ var s=document.getElementById('tx-c'); if(s) s.value=t.cat; },15);
+  var s=document.getElementById('tx-c');
+  if(s){ s.value=t.cat; if(!s.value&&s.options.length) s.selectedIndex=0; }
   document.getElementById('tx-add-btn').textContent='💾 Salva modifiche';
   document.getElementById('tx-cancel-btn').style.display='';
   document.getElementById('tx-form-title').textContent='✏️ Modifica transazione';
@@ -1943,27 +2698,51 @@ function cancelEdit(){
   document.getElementById('tx-cancel-btn').style.display='none';
   document.getElementById('tx-form-title').textContent='Nuova transazione';
   document.getElementById('tx-form-card').classList.remove('form-editing');
-  document.getElementById('tx-d').value=today();
+  CP.setValue('tx-d',today());
   document.getElementById('tx-a').value='';
   document.getElementById('tx-n').value='';
   setType('income');
 }
 function delTx(id){
-  if(!confirm('Eliminare questa transazione?')) return;
-  S.txs=S.txs.filter(function(t){ return t.id!==id; });
-  save(); drawTxList(); updateCons(); drawDashboard(); if(currentPage==='coppia') drawCoppia();
+  bcConfirm('Eliminare questa transazione?','Elimina','🗑','Elimina','Annulla').then(function(ok){
+    if(!ok) return;
+    S.txs=S.txs.filter(function(t){ return t.id!==id; });
+    save(); drawTxList(); updateCons(); drawDashboard(); if(currentPage==='coppia') drawCoppia();
+  });
 }
 function drawTxList(){
   fillFCat();
   var el=document.getElementById('tx-list'); if(!el) return;
   var mo=(document.getElementById('f-mo')||{}).value||'';
   var ca=(document.getElementById('f-ca')||{}).value||'';
+  var sortVal=(document.getElementById('f-sort')||{}).value||'date-desc';
+  var search=((document.getElementById('f-search')||{}).value||'').toLowerCase().trim();
+
   var list=S.txs.filter(function(t){
     if(mo && !t.date.startsWith(mo)) return false;
     if(ca && t.cat!==ca) return false;
+    if(search){
+      var dateStr=fmtShort(t.date).toLowerCase();
+      var match=t.cat.toLowerCase().indexOf(search)!==-1
+        ||(t.note||'').toLowerCase().indexOf(search)!==-1
+        ||dateStr.indexOf(search)!==-1
+        ||String(t.amount).indexOf(search)!==-1;
+      if(!match) return false;
+    }
     return true;
-  }).sort(function(a,b){ return b.date.localeCompare(a.date); });
-  if(!list.length){ el.innerHTML='<div class="empty-state"><span class="ei">📭</span><p>Nessuna transazione nel periodo selezionato.</p></div>'; return; }
+  });
+
+  list.sort(function(a,b){
+    if(sortVal==='date-desc') return b.date.localeCompare(a.date)||b.id-a.id;
+    if(sortVal==='date-asc')  return a.date.localeCompare(b.date)||a.id-b.id;
+    if(sortVal==='amount-desc') return b.amount-a.amount;
+    if(sortVal==='amount-asc')  return a.amount-b.amount;
+    if(sortVal==='cat-asc')  return a.cat.localeCompare(b.cat,'it');
+    if(sortVal==='insert-desc') return b.id-a.id;
+    return b.date.localeCompare(a.date);
+  });
+
+  if(!list.length){ el.innerHTML='<div class="empty-state"><span class="ei">📭</span><p>Nessuna transazione trovata.</p></div>'; return; }
   el.innerHTML=list.map(function(t){
     var isC=isCopCat(t.cat);
     var cl=t.type==='income'?'inc':isC?'cop':'exp';
@@ -2039,8 +2818,12 @@ function drawMyCoupleCosts(){
       var v=catTotals[c]||0;
       grandTotal+=v;
       return '<div style="background:var(--surface);border:1.5px solid '+(v>0?'var(--red)':'var(--border)')
-        +';border-radius:var(--r-s);padding:12px">'
-        +'<div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--sub);margin-bottom:4px">'+escH(c)+'</div>'
+        +';border-radius:var(--r-s);padding:12px;cursor:'+(v>0?'pointer':'default')+'"'
+        +(v>0?' onclick="showCoupleCostDetail(\''+escH(c).replace(/'/g,"\\'")+'\')" title="Vedi dettaglio spese"':'')+'>'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
+        +'<div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--sub)">'+escH(c)+'</div>'
+        +(v>0?'<span style="font-size:.7rem;color:var(--sub);opacity:.6">🔍</span>':'')
+        +'</div>'
         +'<div style="font-family:\'Sora\',sans-serif;font-size:1.1rem;font-weight:700;color:'+(v>0?'var(--text)':'var(--placeholder)')+'">€'+fmt(v)+'</div>'
         +'</div>';
     }).join('')
@@ -2053,6 +2836,46 @@ function drawMyCoupleCosts(){
       +'<span style="font-family:\'Sora\',sans-serif;font-size:1.2rem;font-weight:700">€'+fmt(grandTotal)+'</span>'
       +'</div>';
   }
+}
+
+function showCoupleCostDetail(cat){
+  var mo=(document.getElementById('pt-mo')||{}).value||today().slice(0,7);
+  var txs=S.txs.filter(function(t){
+    if(!t.date.startsWith(mo)) return false;
+    if(t.type!=='expense') return false;
+    var base=t.cat.replace(' 💑','');
+    return (t.isCouple||t.cat.indexOf('💑')!==-1) && base===cat;
+  }).sort(function(a,b){return a.date.localeCompare(b.date);});
+
+  var tot=txs.reduce(function(a,t){return a+t.amount;},0);
+  var rows=txs.length?txs.map(function(t){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border)">'
+      +'<div style="font-size:.78rem;color:var(--sub);flex-shrink:0;width:68px">'+fmtShort(t.date)+'</div>'
+      +'<div style="flex:1;font-size:.86rem">'+escH(t.note||'—')+'</div>'
+      +'<div style="font-family:\'Sora\',sans-serif;font-weight:700;color:var(--red-d);flex-shrink:0">€'+fmt(t.amount)+'</div>'
+      +'</div>';
+  }).join('')
+  :'<div style="padding:20px;text-align:center;color:var(--sub);font-size:.85rem">Nessuna transazione trovata.</div>';
+
+  var modal=document.createElement('div');
+  modal.id='cop-detail-modal';
+  modal.style.cssText='position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.innerHTML='<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);max-width:480px;width:100%;box-shadow:var(--sh-lg);max-height:85vh;display:flex;flex-direction:column;overflow:hidden">'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--border);flex-shrink:0">'
+    +'<div>'
+    +'<div style="font-weight:700;font-size:.95rem">💑 '+escH(cat)+'</div>'
+    +'<div style="font-size:.76rem;color:var(--sub)">'+escH(fmtMon(mo))+' — '+txs.length+' transazion'+(txs.length===1?'e':'i')+'</div>'
+    +'</div>'
+    +'<button onclick="document.getElementById(\'cop-detail-modal\').remove()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--sub);padding:4px">✕</button>'
+    +'</div>'
+    +'<div style="overflow-y:auto;flex:1">'+rows+'</div>'
+    +'<div style="padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--surface2)">'
+    +'<span style="font-size:.82rem;color:var(--sub)">Totale</span>'
+    +'<span style="font-family:\'Sora\',sans-serif;font-weight:700;font-size:1.1rem;color:var(--red-d)">€'+fmt(tot)+'</span>'
+    +'</div>'
+    +'</div>';
+  modal.addEventListener('click',function(e){ if(e.target===modal) modal.remove(); });
+  document.body.appendChild(modal);
 }
 
 function copyMyCoupleCosts(){
@@ -2092,15 +2915,17 @@ function savePartner(){
   save(); drawPtHist(); updateCons(); drawCoppia(); toast('Salvato!');
 }
 function deletePartner(m){
-  if(!confirm('Eliminare i dati di '+fmtMonShort(m)+'?')) return;
-  delete S.partnerData[m];
-  save(); drawPtHist(); updateCons(); drawCoppia();
-  var mo=document.getElementById('pt-mo');
-  if(mo&&mo.value===m) drawPartner();
-  toast('Eliminato.');
+  bcConfirm('Eliminare i dati di '+fmtMonShort(m)+'?','Elimina dati partner','🗑','Elimina','Annulla').then(function(ok){
+    if(!ok) return;
+    delete S.partnerData[m];
+    save(); drawPtHist(); updateCons(); drawCoppia();
+    var mo=document.getElementById('pt-mo');
+    if(mo&&mo.value===m) drawPartner();
+    toast('Eliminato.');
+  });
 }
 function loadPartnerMonth(m){
-  var mo=document.getElementById('pt-mo'); if(mo){ mo.value=m; drawPartner(); }
+  CP.setAndTrigger('pt-mo',m); drawPartner();
   toast('Mese caricato — modifica e salva.');
 }
 function drawPtHist(){
@@ -2126,27 +2951,106 @@ function drawPtHist(){
 // ═══════════════════════════════════════
 // PERIOD / HELPERS
 // ═══════════════════════════════════════
+var _rangeMode='year'; // 'year' | 'month' | 'day'
+
 function setPer(p,btn){
   S.period=p;
   document.querySelectorAll('.period-btn').forEach(function(b){b.classList.remove('act');});
   if(btn) btn.classList.add('act');
+  // Show/hide sub-controls
+  document.getElementById('per-pick-month').style.display=(p==='pick-month')?'':'none';
+  document.getElementById('per-range').style.display=(p==='range')?'':'none';
+  if(p==='range') setRangeMode(_rangeMode);
+  // Populate year selector
+  if(p==='range') populateYearSel();
   updateCons();
 }
 
-function getPeriodTxs(){
-  var refStr=(document.getElementById('cons-dt')||{}).value||today();
-  var ref=parseLD(refStr); var p=S.period;
-  return S.txs.filter(function(t){
-    var d=parseLD(t.date);
-    if(p==='all') return true;
-    if(p==='week'){ var ws=new Date(ref); ws.setDate(ref.getDate()-ref.getDay()); var we=new Date(ws); we.setDate(ws.getDate()+6); return d>=ws&&d<=we; }
-    if(p==='month') return d.getFullYear()===ref.getFullYear()&&d.getMonth()===ref.getMonth();
-    if(p==='bimonth'){ var m=ref.getMonth(),y=ref.getFullYear(); return d.getFullYear()===y&&(d.getMonth()===m||d.getMonth()===m-1); }
-    if(p==='quarter'){ var q=Math.floor(ref.getMonth()/3); return d.getFullYear()===ref.getFullYear()&&Math.floor(d.getMonth()/3)===q; }
-    if(p==='semester'){ var s=ref.getMonth()<6?0:1; return d.getFullYear()===ref.getFullYear()&&(d.getMonth()<6?0:1)===s; }
-    if(p==='year') return d.getFullYear()===ref.getFullYear();
-    return true;
+function setRangeMode(mode){
+  _rangeMode=mode;
+  ['year','month','day'].forEach(function(m){
+    var btn=document.getElementById('rng-'+m+'-btn');
+    if(btn) btn.classList.toggle('act',m===mode);
+    var sel=document.getElementById('rng-'+m+'-sel');
+    if(sel) sel.style.display=(m===mode)?'':'none';
   });
+  updateCons();
+}
+
+function populateYearSel(){
+  var sel=document.getElementById('cons-year'); if(!sel) return;
+  var cur=sel.value;
+  var years=[];
+  var thisY=new Date().getFullYear();
+  S.txs.forEach(function(t){ var y=t.date.slice(0,4); if(years.indexOf(y)===-1) years.push(y); });
+  if(!years.length) years=[String(thisY)];
+  years.sort().reverse();
+  if(years.indexOf(String(thisY))===-1) years.unshift(String(thisY));
+  sel.innerHTML=years.map(function(y){ return '<option value="'+y+'"'+(y===String(thisY)||y===cur?' selected':'')+'>'+y+'</option>'; }).join('');
+}
+
+function getPeriodTxs(){
+  var p=S.period;
+  if(p==='all') return S.txs.slice();
+  if(p==='current'){
+    var now=new Date(); var ym=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+    return S.txs.filter(function(t){return t.date.startsWith(ym);});
+  }
+  if(p==='pick-month'){
+    var pm=(document.getElementById('cons-pick-month')||{}).value||today().slice(0,7);
+    return S.txs.filter(function(t){return t.date.startsWith(pm);});
+  }
+  if(p==='range'){
+    if(_rangeMode==='year'){
+      var y=(document.getElementById('cons-year')||{}).value||String(new Date().getFullYear());
+      return S.txs.filter(function(t){return t.date.startsWith(y);});
+    }
+    if(_rangeMode==='month'){
+      var rm=(document.getElementById('cons-range-month')||{}).value||today().slice(0,7);
+      return S.txs.filter(function(t){return t.date.startsWith(rm);});
+    }
+    if(_rangeMode==='day'){
+      var from=(document.getElementById('cons-from')||{}).value||'';
+      var to=(document.getElementById('cons-to')||{}).value||'';
+      return S.txs.filter(function(t){
+        if(from && t.date<from) return false;
+        if(to && t.date>to) return false;
+        return true;
+      });
+    }
+  }
+  return S.txs.slice();
+}
+
+function getPeriodLabel(){
+  var p=S.period;
+  var MN=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  if(p==='all') return 'Tutto il periodo';
+  if(p==='current'){
+    var now=new Date(); return MN[now.getMonth()]+' '+now.getFullYear();
+  }
+  if(p==='pick-month'){
+    var pm=(document.getElementById('cons-pick-month')||{}).value||today().slice(0,7);
+    var pms=pm.split('-'); return MN[parseInt(pms[1])-1]+' '+pms[0];
+  }
+  if(p==='range'){
+    if(_rangeMode==='year'){
+      return (document.getElementById('cons-year')||{}).value||String(new Date().getFullYear());
+    }
+    if(_rangeMode==='month'){
+      var rm=(document.getElementById('cons-range-month')||{}).value||today().slice(0,7);
+      var rms=rm.split('-'); return MN[parseInt(rms[1])-1]+' '+rms[0];
+    }
+    if(_rangeMode==='day'){
+      var from=(document.getElementById('cons-from')||{}).value||'';
+      var to=(document.getElementById('cons-to')||{}).value||'';
+      if(from&&to) return fmtShort(from)+' → '+fmtShort(to);
+      if(from) return 'Dal '+fmtShort(from);
+      if(to) return 'Fino al '+fmtShort(to);
+      return 'Periodo personalizzato';
+    }
+  }
+  return '';
 }
 
 function getPartnerHers(cat, ym){
@@ -2154,19 +3058,13 @@ function getPartnerHers(cat, ym){
 }
 
 function getPartnerHersForPeriod(cat){
-  var refStr=(document.getElementById('cons-dt')||{}).value||today();
-  var ref=parseLD(refStr); var p=S.period; var hers=0;
-  Object.keys(S.partnerData).forEach(function(m){
-    var pp=m.split('-'); var y=parseInt(pp[0]),mo=parseInt(pp[1])-1;
-    var ok=false;
-    if(p==='all') ok=true;
-    else if(p==='month') ok=(y===ref.getFullYear()&&mo===ref.getMonth());
-    else if(p==='year') ok=(y===ref.getFullYear());
-    else if(p==='quarter') ok=(y===ref.getFullYear()&&Math.floor(mo/3)===Math.floor(ref.getMonth()/3));
-    else if(p==='semester') ok=(y===ref.getFullYear()&&(mo<6?0:1)===(ref.getMonth()<6?0:1));
-    else ok=true;
-    if(ok) hers+=(S.partnerData[m][cat]||0);
-  });
+  var p=S.period; var hers=0;
+  var txsInPeriod=getPeriodTxs(); // reuse same logic
+  // Get set of year-months that appear in the period
+  var yms={};
+  txsInPeriod.forEach(function(t){ yms[t.date.slice(0,7)]=true; });
+  if(p==='all') Object.keys(S.partnerData).forEach(function(m){ hers+=(S.partnerData[m][cat]||0); });
+  else Object.keys(yms).forEach(function(ym){ hers+=((S.partnerData[ym]&&S.partnerData[ym][cat])||0); });
   return hers;
 }
 
@@ -2212,11 +3110,14 @@ function drawDashboard(){
   var ym=today().slice(0,7);
   var txMonth=S.txs.filter(function(t){return t.date.startsWith(ym);});
   var inc=txMonth.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+t.amount;},0);
-  var exp=txMonth.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
-  var bal=inc-exp;
+  var rawExp=txMonth.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
+  // Build catMap for this month to get realExp (with partner data)
+  var catMapDash=buildCatMap(txMonth);
+  var realExp=Object.values(catMapDash).reduce(function(a,d){return a+d.personal+d.coupleTotal/2;},0);
+  var hasCouple=Object.values(catMapDash).some(function(d){return d.coupleMe>0||d.coupleHers>0;});
+  var bal=inc-realExp;
+  var net=getNetWorth();
   var lastW=S.wHist.length?S.wHist[S.wHist.length-1]:null;
-  var wt=lastW?lastW.total:0;
-  var net=wt+bal;
   var netHidden=localStorage.getItem('bc_net_hidden')==='1';
   var strip=document.getElementById('home-strip');
   if(strip){
@@ -2236,7 +3137,7 @@ function drawDashboard(){
     };
     var others=[
       ['Entrate '+months[now.getMonth()],'+€'+fmt(inc),'v-green','#22c55e'],
-      ['Uscite '+months[now.getMonth()],'-€'+fmt(exp),'v-red','#ef4444'],
+      [hasCouple?'Uscite nette '+months[now.getMonth()]:'Uscite '+months[now.getMonth()],'-€'+fmt(hasCouple?realExp:rawExp),'v-red','#ef4444'],
       ['Saldo mese',(bal>=0?'+':'-')+'€'+fmt(Math.abs(bal)),bal>=0?'v-blue':'v-red',bal>=0?'#3b82f6':'#ef4444']
     ].map(function(r){
       return '<div class="hs-item" style="--hs-accent:'+r[3]+'">'
@@ -2298,25 +3199,35 @@ function togglePrivacy(){
   applyPrivacy(on);
 }
 
-function getPeriodLabel(){
-  var refStr=(document.getElementById('cons-dt')||{}).value||today();
-  var ref=parseLD(refStr);
+
+// Restituisce la data di fine del periodo selezionato (YYYY-MM-DD)
+// usata per calcolare il patrimonio netto coerente con il periodo visualizzato
+function getPeriodEndDate(){
   var p=S.period;
-  var MN=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
-  var QN=['Gen–Mar','Apr–Giu','Lug–Set','Ott–Dic'];
-  var SN=['Gen–Giu','Lug–Dic'];
-  var BMN=['',MN[1]+'-'+MN[0],MN[2]+'-'+MN[1],MN[3]+'-'+MN[2],MN[4]+'-'+MN[3],MN[5]+'-'+MN[4],MN[6]+'-'+MN[5],MN[7]+'-'+MN[6],MN[8]+'-'+MN[7],MN[9]+'-'+MN[8],MN[10]+'-'+MN[9],MN[11]+'-'+MN[10]];
-  if(p==='month') return MN[ref.getMonth()]+' '+ref.getFullYear();
-  if(p==='year') return String(ref.getFullYear());
-  if(p==='all') return 'Totale';
-  if(p==='quarter') return QN[Math.floor(ref.getMonth()/3)]+' '+ref.getFullYear();
-  if(p==='semester') return SN[ref.getMonth()<6?0:1]+' '+ref.getFullYear();
-  if(p==='bimonth'){
-    var m=ref.getMonth();
-    var prev=m>0?MN[m-1]:null;
-    return (prev?prev+'–':'')+MN[m]+' '+ref.getFullYear();
+  if(p==='current'||p==='all') return today();
+  if(p==='pick-month'){
+    var pm=(document.getElementById('cons-pick-month')||{}).value||today().slice(0,7);
+    var pms=pm.split('-');
+    var lastDay=new Date(parseInt(pms[0]),parseInt(pms[1]),0).getDate();
+    return pm+'-'+String(lastDay).padStart(2,'0');
   }
-  return '';
+  if(p==='range'){
+    if(_rangeMode==='year'){
+      var y=(document.getElementById('cons-year')||{}).value||String(new Date().getFullYear());
+      return y+'-12-31';
+    }
+    if(_rangeMode==='month'){
+      var rm=(document.getElementById('cons-range-month')||{}).value||today().slice(0,7);
+      var rms=rm.split('-');
+      var lastDayR=new Date(parseInt(rms[0]),parseInt(rms[1]),0).getDate();
+      return rm+'-'+String(lastDayR).padStart(2,'0');
+    }
+    if(_rangeMode==='day'){
+      var to=(document.getElementById('cons-to')||{}).value||today();
+      return to||today();
+    }
+  }
+  return today();
 }
 
 function updateCons(){
@@ -2324,44 +3235,41 @@ function updateCons(){
   var catMap=buildCatMap(txs);
   var inc=txs.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+t.amount;},0);
   var rawExp=txs.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
-  // realExp uses catMap which already correctly splits personal vs couple
   var realExp=Object.values(catMap).reduce(function(a,d){return a+d.personal+d.coupleTotal/2;},0);
-  var lastW=S.wHist.length?S.wHist[S.wHist.length-1]:null;
-  var wt=lastW?lastW.total:0;
-  var bal=inc-rawExp;
+  var bal=inc-realExp;
+  // Usa la data di fine periodo per non rendere retroattivo lo snapshot
+  var net=getNetWorth(getPeriodEndDate());
 
   var g=document.getElementById('cons-stats'); if(!g) return;
-  var net=wt+bal;
   var periodLabel=getPeriodLabel();
   var netHidden=localStorage.getItem('bc_net_hidden')==='1';
   // check if there are any couple expenses with partner data → show Uscite Nette
   var hasCoupleSplit = Object.values(catMap).some(function(d){ return d.coupleHers>0 || d.coupleMe>0; });
 
   // Patrimonio Netto — always first, gold, with eye toggle
-  var netCard='<div class="stat-card stat-net'+(netHidden?' stat-net-hidden':'')+'" data-tooltip="'+escH('Il tuo patrimonio complessivo stimato: snapshot del patrimonio più o meno il flusso del periodo corrente.')+'" style="position:relative">'
+  var netCard='<div class="stat-card stat-net'+(netHidden?' stat-net-hidden':'')+'" data-tooltip="'+escH('Snapshot più recente + tutte le entrate e uscite successive alla sua data.')+'" style="position:relative">'
     +'<button class="net-eye-btn" onclick="toggleNetVisibility()" title="'+(netHidden?'Mostra patrimonio netto':'Nascondi patrimonio netto')+'">'+(netHidden?'🙈':'👁')+'</button>'
     +'<div class="sc-label">Patrimonio netto</div>'
     +'<div class="sc-net-mask">'
     +'<div class="sc-value v-net-gold privacy-blur">€'+fmt(net)+'</div>'
-    +'<div class="sc-note">Snapshot + saldo periodo</div>'
+    +'<div class="sc-note">Snapshot + movimenti successivi</div>'
     +'</div>'
     +'</div>';
 
   var otherStats=[
     ['Entrate','+€'+fmt(inc),'v-green','stat-inc',
       'Totale di tutte le entrate (stipendi, rimborsi, ecc.) nel periodo selezionato.'],
-    ['Uscite','-€'+fmt(rawExp),'v-red','stat-exp',
-      'Tutto quello che hai fisicamente pagato nel periodo: spese personali + spese comuni che hai anticipato tu.']
+    ['Uscite pagate','-€'+fmt(rawExp),'v-red','stat-exp',
+      'Tutto quello che hai fisicamente pagato nel periodo: spese personali + spese comuni che hai anticipato tu (50% tornerà dalla tua compagna).']
   ];
   if(hasCoupleSplit) otherStats.push(
-    ['Uscite Nette'+(periodLabel?' '+periodLabel:''),'-€'+fmt(realExp),'v-red','stat-exp',
-      'Quello che hai speso davvero a tuo carico: spese personali + il tuo 50% delle spese comuni.']
+    ['Uscite nette','-€'+fmt(realExp),'v-red','stat-exp',
+      'Il tuo costo reale: spese personali + 50% delle spese comuni tue + 50% delle spese comuni della tua compagna.']
   );
-  // Saldo with period label appended
-  var saldoLabel='Saldo'+(periodLabel?' '+periodLabel:'');
+  var saldoLabel='Saldo netto'+(periodLabel?' '+periodLabel:'');
   otherStats.push(
     [saldoLabel,(bal>=0?'+':'-')+'€'+fmt(Math.abs(bal)),bal>=0?'v-green':'v-red','stat-bal',
-      'Entrate meno uscite pagate nel periodo. È il flusso di cassa reale: quanti soldi ti sono entrati o usciti di tasca.']
+      'Entrate meno uscite nette. Rappresenta il risparmio reale tenendo conto della quota a tuo carico delle spese di coppia.']
   );
 
   g.innerHTML=netCard+otherStats.map(function(r){
@@ -2373,80 +3281,347 @@ function updateCons(){
   }).join('');
 
   var c=gC();
-  var ms=last6Mo();
+  var periodLabel=getPeriodLabel();
+  var p=S.period;
 
-  // Helper: total expenses per month (personal + couple me)
-  function monthExp(m){
-    return S.txs.filter(function(t){return t.date.startsWith(m)&&t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
-  }
-  function monthInc(m){
-    return S.txs.filter(function(t){return t.date.startsWith(m)&&t.type==='income';}).reduce(function(a,t){return a+t.amount;},0);
-  }
+  // ── Determina le colonne temporali del grafico in base al periodo ──
+  // Ogni modo produce etichette + funzioni aggregazione coerenti con la selezione
+  var chartLabels=[], chartInc=[], chartExp=[];
 
-  // Chart 1 – Andamento entrate e uscite ultimi 6 mesi (linee)
-  killChart('c1');
-  var cv1=document.getElementById('ch1');
-  if(cv1){ CH['c1']=new Chart(cv1,{type:'line',
-    data:{labels:ms.map(fmtMonShort),datasets:[
-      {label:'Entrate',data:ms.map(monthInc),borderColor:c.green,backgroundColor:c.green+'18',fill:true,tension:.4,borderWidth:2,pointRadius:4,pointBackgroundColor:c.green},
-      {label:'Uscite', data:ms.map(monthExp),borderColor:c.red,  backgroundColor:c.red+'18',  fill:true,tension:.4,borderWidth:2,pointRadius:4,pointBackgroundColor:c.red}
-    ]},options:Object.assign({},bO(c),{plugins:{legend:{display:true,labels:{color:c.txt,font:{family:'Inter',size:11}}},tooltip:{callbacks:{label:function(x){return ' €'+fmt(x.parsed.y);}}}}})}); }
-
-  // Chart 2 – Risparmio mensile (entrate - uscite) ultimi 6 mesi (barre, verde/rosso)
-  killChart('c2');
-  var cv2=document.getElementById('ch2');
-  if(cv2){
-    var savData=ms.map(function(m){ return monthInc(m)-monthExp(m); });
-    var savColors=savData.map(function(v){ return v>=0?c.green+'99':c.red+'99'; });
-    var savBorders=savData.map(function(v){ return v>=0?c.green:c.red; });
-    CH['c2']=new Chart(cv2,{type:'bar',
-      data:{labels:ms.map(fmtMonShort),datasets:[{
-        label:'Risparmio',data:savData,
-        backgroundColor:savColors,borderColor:savBorders,borderWidth:2,borderRadius:6
-      }]},
-      options:Object.assign({},bO(c),{plugins:{legend:{display:false},tooltip:{callbacks:{label:function(x){return (x.parsed.y>=0?' +€':' -€')+fmt(Math.abs(x.parsed.y));}}}}})}); }
-
-  // Chart 3 – Spese per area mese corrente (doughnut)
-  killChart('c3');
-  var cv3=document.getElementById('ch3');
-  if(cv3){
-    var curYm=today().slice(0,7);
-    var areaMap={};
-    S.txs.filter(function(t){return t.type==='expense'&&t.date.startsWith(curYm);}).forEach(function(t){
-      var k=t.cat.replace(' 💑','');
-      areaMap[k]=(areaMap[k]||0)+t.amount;
+  function sumInc(predicate){ return S.txs.filter(function(t){return t.type==='income'&&predicate(t);}).reduce(function(a,t){return a+t.amount;},0); }
+  // sumExp uses realCost: personal + 50% couple me + 50% couple hers (from partnerData for that month-set)
+  function sumExp(predicate){
+    // Get txs matching predicate
+    var filtered=S.txs.filter(function(t){return t.type==='expense'&&predicate(t);});
+    // Build mini catMap for this subset
+    var mini={};
+    function ens(k){ if(!mini[k]) mini[k]={personal:0,coupleMe:0,coupleHers:0}; }
+    filtered.forEach(function(t){
+      if(t.isCouple||t.cat.indexOf('💑')!==-1){
+        var b=t.cat.replace(' 💑',''); ens(b); mini[b].coupleMe+=t.amount;
+      } else {
+        ens(t.cat); mini[t.cat].personal+=t.amount;
+      }
     });
-    var aLbls=Object.keys(areaMap), aVals=Object.values(areaMap);
-    CH['c3']=new Chart(cv3,{type:'doughnut',
-      data:{labels:aLbls,datasets:[{data:aVals,backgroundColor:c.pal.map(function(x){return x+'cc';}),borderColor:c.pal,borderWidth:2}]},
-      options:dO(c)}); }
-
-  // Chart 4 – Spese per area: andamento 6 mesi (barre raggruppate per area)
-  killChart('c4');
-  var cv4=document.getElementById('ch4');
-  if(cv4){
-    // collect all expense categories that appear in 6 months
-    var allAreas={};
-    ms.forEach(function(m){
-      S.txs.filter(function(t){return t.type==='expense'&&t.date.startsWith(m);}).forEach(function(t){
-        var k=t.cat.replace(' 💑',''); allAreas[k]=true;
+    // Add partner data for months represented in filtered txs
+    var yms={};
+    filtered.forEach(function(t){ yms[t.date.slice(0,7)]=true; });
+    Object.keys(yms).forEach(function(ym){
+      if(!S.partnerData[ym]) return;
+      S.cCats.forEach(function(cat){
+        var v=S.partnerData[ym][cat]||0;
+        if(v>0){ ens(cat); mini[cat].coupleHers+=v; }
       });
     });
-    var areaKeys=Object.keys(allAreas);
-    var datasets=areaKeys.map(function(area,ai){
-      return {
-        label:area,
-        data:ms.map(function(m){
-          return S.txs.filter(function(t){return t.type==='expense'&&t.date.startsWith(m)&&t.cat.replace(' 💑','')===area;}).reduce(function(a,t){return a+t.amount;},0);
-        }),
-        backgroundColor:c.pal[ai%c.pal.length]+'99',
-        borderColor:c.pal[ai%c.pal.length],
-        borderWidth:1.5,borderRadius:4
-      };
+    return Object.values(mini).reduce(function(a,d){
+      return a+d.personal+(d.coupleMe+d.coupleHers)/2;
+    },0);
+  }
+
+  var isSingleMonth=(p==='current'||p==='pick-month'||(p==='range'&&_rangeMode==='month'));
+
+  if(isSingleMonth){
+    // Mostra i giorni del mese selezionato, raggruppati per settimana (lun-dom)
+    var ym='';
+    if(p==='current'){ var now=new Date(); ym=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0'); }
+    else if(p==='pick-month') ym=(document.getElementById('cons-pick-month')||{}).value||today().slice(0,7);
+    else ym=(document.getElementById('cons-range-month')||{}).value||today().slice(0,7);
+    var ymp=ym.split('-'); var ymYear=parseInt(ymp[0]), ymMon=parseInt(ymp[1])-1;
+    var daysInMon=new Date(ymYear,ymMon+1,0).getDate();
+    // Group by week within the month (W1=1-7, W2=8-14, W3=15-21, W4=22-28, W5=29+)
+    var weeks=[[1,7],[8,14],[15,21],[22,28]];
+    if(daysInMon>28) weeks.push([29,daysInMon]);
+    weeks.forEach(function(w){
+      chartLabels.push(w[0]+'-'+w[1]);
+      var from=ym+'-'+String(w[0]).padStart(2,'0');
+      var to=ym+'-'+String(w[1]).padStart(2,'0');
+      chartInc.push(sumInc(function(t){return t.date>=from&&t.date<=to;}));
+      chartExp.push(sumExp(function(t){return t.date>=from&&t.date<=to;}));
     });
-    CH['c4']=new Chart(cv4,{type:'bar',
-      data:{labels:ms.map(fmtMonShort),datasets:datasets},
-      options:Object.assign({},bO(c),{scales:Object.assign({},bO(c).scales,{x:Object.assign({},bO(c).scales.x,{stacked:true}),y:Object.assign({},bO(c).scales.y,{stacked:true})}),plugins:{legend:{display:true,position:'bottom',labels:{color:c.txt,font:{family:'Inter',size:10},boxWidth:10,padding:8}},tooltip:{callbacks:{label:function(x){return ' '+x.dataset.label+': €'+fmt(x.parsed.y);}}}}})}); }
+  } else if(p==='range'&&_rangeMode==='year'){
+    // 12 mesi dell'anno selezionato
+    var y=(document.getElementById('cons-year')||{}).value||String(new Date().getFullYear());
+    for(var mi=0;mi<12;mi++){
+      var ymi=y+'-'+String(mi+1).padStart(2,'0');
+      chartLabels.push(fmtMonShort(ymi));
+      chartInc.push(sumInc(function(t){return t.date.startsWith(ymi);}));
+      chartExp.push(sumExp(function(t){return t.date.startsWith(ymi);}));
+    }
+  } else if(p==='range'&&_rangeMode==='day'){
+    // Raggruppa per mese se span > 31 giorni, per settimana se < 31, per giorno se < 8
+    var from2=(document.getElementById('cons-from')||{}).value||'';
+    var to2=(document.getElementById('cons-to')||{}).value||'';
+    if(!from2||!to2){
+      // Se mancano date, usa tutti i mesi con dati
+      var yms2={}; txs.forEach(function(t){yms2[t.date.slice(0,7)]=true;});
+      var sortedYms=Object.keys(yms2).sort();
+      sortedYms.forEach(function(ym2){
+        chartLabels.push(fmtMonShort(ym2));
+        chartInc.push(sumInc(function(t){return t.date.startsWith(ym2);}));
+        chartExp.push(sumExp(function(t){return t.date.startsWith(ym2);}));
+      });
+    } else {
+      var d1=parseLD(from2), d2=parseLD(to2);
+      var spanDays=Math.round((d2-d1)/(1000*60*60*24));
+      if(spanDays<=31){
+        // per giorno
+        var cur2=new Date(d1);
+        while(cur2<=d2){
+          var ds=cur2.getFullYear()+'-'+String(cur2.getMonth()+1).padStart(2,'0')+'-'+String(cur2.getDate()).padStart(2,'0');
+          chartLabels.push(cur2.getDate()+'/'+String(cur2.getMonth()+1).padStart(2,'0'));
+          chartInc.push(sumInc(function(t){return t.date===ds;}));
+          chartExp.push(sumExp(function(t){return t.date===ds;}));
+          cur2.setDate(cur2.getDate()+1);
+        }
+      } else {
+        // per mese
+        var yms3={}; txs.forEach(function(t){yms3[t.date.slice(0,7)]=true;});
+        Object.keys(yms3).sort().forEach(function(ym3){
+          chartLabels.push(fmtMonShort(ym3));
+          chartInc.push(sumInc(function(t){return t.date.startsWith(ym3);}));
+          chartExp.push(sumExp(function(t){return t.date.startsWith(ym3);}));
+        });
+      }
+    }
+  } else {
+    // p==='all': raggruppa per anno se >2 anni, altrimenti per mese
+    var yms4={}; S.txs.forEach(function(t){yms4[t.date.slice(0,7)]=true;});
+    var allYms=Object.keys(yms4).sort();
+    var firstYear=allYms.length?parseInt(allYms[0].slice(0,4)):new Date().getFullYear();
+    var lastYear=allYms.length?parseInt(allYms[allYms.length-1].slice(0,4)):new Date().getFullYear();
+    if(lastYear-firstYear>=2){
+      // per anno
+      for(var ay=firstYear;ay<=lastYear;ay++){
+        var ays=String(ay);
+        chartLabels.push(ays);
+        chartInc.push(sumInc(function(t){return t.date.startsWith(ays);}));
+        chartExp.push(sumExp(function(t){return t.date.startsWith(ays);}));
+      }
+    } else {
+      allYms.forEach(function(ym4){
+        chartLabels.push(fmtMonShort(ym4));
+        chartInc.push(sumInc(function(t){return t.date.startsWith(ym4);}));
+        chartExp.push(sumExp(function(t){return t.date.startsWith(ym4);}));
+      });
+    }
+  }
+
+  // Se non ci sono etichette, placeholder
+  if(!chartLabels.length){ chartLabels=['(nessun dato)']; chartInc=[0]; chartExp=[0]; }
+
+  // Titoli grafici
+  var t1=document.getElementById('ch1-title'), t2=document.getElementById('ch2-title');
+  var t3=document.getElementById('ch3-title'), t4=document.getElementById('ch4-title');
+  if(t1) t1.textContent='Entrate vs Uscite — '+periodLabel;
+  if(t2) t2.textContent='Risparmio — '+periodLabel;
+  if(t3) t3.textContent='Spese per area — '+periodLabel;
+  if(t4) t4.textContent='Dettaglio categorie — '+periodLabel;
+
+  // Chart 1 — Entrate vs Uscite
+  killChart('c1');
+  (function(){ var w=document.querySelector('[data-tt-id="chart-c1"] .ch-wrap'); if(w&&!w.querySelector('canvas')){w.innerHTML='<canvas id="ch1"></canvas>';} })();
+  var cv1=document.getElementById('ch1');
+  if(cv1){
+    var ch1type=chartLabels.length>8?'line':'bar';
+    CH['c1']=new Chart(cv1,{type:ch1type,
+      data:{labels:chartLabels,datasets:[
+        {label:'Entrate',data:chartInc,borderColor:c.green,backgroundColor:c.green+(ch1type==='line'?'18':'88'),fill:ch1type==='line',tension:.4,borderWidth:2,pointRadius:ch1type==='line'?3:0,borderRadius:ch1type==='bar'?5:0},
+        {label:'Uscite', data:chartExp,borderColor:c.red,  backgroundColor:c.red  +(ch1type==='line'?'18':'88'),fill:ch1type==='line',tension:.4,borderWidth:2,pointRadius:ch1type==='line'?3:0,borderRadius:ch1type==='bar'?5:0}
+      ]},options:Object.assign({},bO(c),{plugins:{legend:{display:true,labels:{color:c.txt,font:{family:'Inter',size:11}}},tooltip:{callbacks:{label:function(x){return ' €'+fmt(x.parsed.y);}}}}})}); }
+
+  // Chart 2 — Risparmio cumulativo — verde/rosso split esatto allo zero
+  killChart('c2');
+  (function(){ var w=document.querySelector('[data-tt-id="chart-c2"] .ch-wrap'); if(w&&!w.querySelector('canvas')){w.innerHTML='<canvas id="ch2"></canvas>';} })();
+  var cv2=document.getElementById('ch2');
+  if(t2) t2.textContent='Andamento risparmio — '+periodLabel;
+  if(cv2){
+    var savTxs=txs.slice().sort(function(a,b){return a.date.localeCompare(b.date);});
+    var savDates=[], savCum=[], cumVal=0;
+    if(savTxs.length){ savDates.push(savTxs[0].date); savCum.push(0); }
+    savTxs.forEach(function(t){
+      var cost;
+      if(t.type==='income') cost=t.amount;
+      else if(t.isCouple||t.cat.indexOf('💑')!==-1) cost=-t.amount*0.5;
+      else cost=-t.amount;
+      cumVal+=cost;
+      savDates.push(t.date);
+      savCum.push(cumVal);
+    });
+    if(savDates.length>1){
+      var ptR=savDates.length>40?0:savDates.length>15?2:4;
+      var minV=Math.min.apply(null,savCum);
+      var maxV=Math.max.apply(null,savCum);
+      var savGreen=c.green, savRed=c.red;
+      var savCumRef=savCum; // closure reference
+      // Plugin that builds gradient after chart layout (canvas sized correctly)
+      var gradPlugin={
+        id:'savGrad',
+        afterLayout:function(chart){
+          var ctx=chart.ctx;
+          var yAxis=chart.scales.y;
+          if(!yAxis) return;
+          var top=yAxis.top, bottom=yAxis.bottom, h=bottom-top;
+          if(h<=0) return;
+          var zeroY=yAxis.getPixelForValue(0);
+          // Clamp zero line within chart area
+          var zeroFrac=Math.max(0,Math.min(1,(zeroY-top)/h));
+          // Fill gradient: green above zero, red below
+          var fillG=ctx.createLinearGradient(0,top,0,bottom);
+          if(minV>=0){
+            fillG.addColorStop(0,savGreen+'55'); fillG.addColorStop(1,savGreen+'11');
+          } else if(maxV<=0){
+            fillG.addColorStop(0,savRed+'11'); fillG.addColorStop(1,savRed+'55');
+          } else {
+            fillG.addColorStop(0,savGreen+'55');
+            fillG.addColorStop(Math.max(0,zeroFrac-0.001),savGreen+'22');
+            fillG.addColorStop(Math.min(1,zeroFrac),savRed+'22');
+            fillG.addColorStop(1,savRed+'55');
+          }
+          chart.data.datasets[1].backgroundColor=fillG;
+        }
+      };
+      CH['c2']=new Chart(cv2,{
+        type:'line',
+        plugins:[gradPlugin],
+        data:{labels:savDates.map(fmtShort),datasets:[
+          // Zero baseline tratteggiata
+          {label:'',data:savDates.map(function(){return 0;}),
+           borderColor:c.grid,borderWidth:1.5,borderDash:[5,4],
+           pointRadius:0,fill:false,tension:0,order:2},
+          // Linea principale — segment coloring per la linea, fill gradient via plugin
+          {label:'Risparmio netto',data:savCum,
+           borderColor:c.green, // default, sovrascritto da segment
+           backgroundColor:'transparent', // sovrascritto da plugin
+           fill:'origin',tension:.35,borderWidth:2.5,
+           pointRadius:ptR,pointHoverRadius:6,
+           pointBackgroundColor:savCum.map(function(v){return v>=0?savGreen:savRed;}),
+           pointBorderColor:savCum.map(function(v){return v>=0?savGreen:savRed;}),
+           pointBorderWidth:1.5,
+           segment:{
+             borderColor:function(ctx){
+               var v0=savCumRef[ctx.p0DataIndex]||0;
+               var v1=savCumRef[ctx.p1DataIndex]||0;
+               return (v0+v1)/2>=0?savGreen:savRed;
+             }
+           },
+           order:1}
+        ]},
+        options:Object.assign({},bO(c),{
+          plugins:{
+            legend:{display:true,labels:{
+              color:c.txt,font:{family:'Inter',size:11},boxWidth:14,padding:12,
+              generateLabels:function(chart){var tc=chart.options.plugins.legend.labels.color;return [
+                {text:'Risparmio netto',fillStyle:savGreen,strokeStyle:savGreen,lineWidth:2,hidden:false,datasetIndex:1,fontColor:tc},
+                {text:'Perdita netta',fillStyle:savRed,strokeStyle:savRed,lineWidth:2,hidden:false,datasetIndex:1,fontColor:tc}
+              ];}
+            }},
+            tooltip:{
+              filter:function(item){return item.datasetIndex===1;},
+              callbacks:{
+                label:function(x){var v=x.parsed.y;return (v>=0?' +€':' -€')+fmt(Math.abs(v));},
+                labelColor:function(x){var col=x.parsed.y>=0?savGreen:savRed;return {borderColor:col,backgroundColor:col};}
+              }
+            }
+          },
+          scales:Object.assign({},bO(c).scales,{
+            y:Object.assign({},bO(c).scales.y,{
+              ticks:Object.assign({},bO(c).scales.y.ticks||{},{
+                callback:function(v){return (v>0?'+':'')+'€'+fmt(v);}
+              })
+            })
+          })
+        })
+      });
+      // Store data needed for modal recreation
+      CH['c2']._savGradData={savCum:savCum,minV:minV,maxV:maxV};
+    } else {
+      cv2.parentElement.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--sub);font-size:.82rem">Nessuna transazione nel periodo</div>';
+    }
+  }
+
+  // Chart 3 — Patrimonio netto nel tempo (linea ancorata allo snapshot)
+  killChart('c3');
+  (function(){ var w=document.querySelector('[data-tt-id="chart-c3"] .ch-wrap'); if(w&&!w.querySelector('canvas')){w.innerHTML='<canvas id="ch3"></canvas>';} })();
+  var cv3=document.getElementById('ch3');
+  if(t3) t3.textContent='Patrimonio netto — '+periodLabel;
+  if(cv3){
+    // Costruisce serie temporale: per ogni data con tx nel periodo, calcola getNetWorth(data)
+    // Aggiungi anche le date degli snapshot nel periodo
+    var netDates={};
+    // Punti dalle tx del periodo
+    txs.forEach(function(t){ netDates[t.date]=true; });
+    // Punti dagli snapshot ≤ fine periodo
+    var periodEnd=getPeriodEndDate();
+    S.wHist.forEach(function(s){
+      var sd=s.snapDate||s.date.slice(0,10);
+      if(sd<=periodEnd) netDates[sd]=true;
+    });
+    var sortedDates=Object.keys(netDates).sort();
+    if(sortedDates.length){
+      var netSeries=sortedDates.map(function(d){ return getNetWorth(d); });
+      var netColors=netSeries.map(function(v){ return v>=0?c.green:c.red; });
+      CH['c3']=new Chart(cv3,{type:'line',
+        data:{labels:sortedDates.map(fmtShort),datasets:[{
+          label:'Patrimonio netto',
+          data:netSeries,
+          borderColor:c.blue,
+          backgroundColor:c.blue+'18',
+          fill:true,tension:.3,borderWidth:2,
+          pointRadius:sortedDates.length>30?0:3,
+          pointBackgroundColor:netColors
+        }]},
+        options:Object.assign({},bO(c),{plugins:{legend:{display:false},tooltip:{callbacks:{label:function(x){return ' €'+fmt(x.parsed.y);}}}}})});
+    } else {
+      cv3.parentElement.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--sub);font-size:.82rem">Nessun dato nel periodo</div>';
+    }
+  }
+
+  // Chart 4 — Dettaglio categorie (barre orizzontali) — usa costi netti reali
+  killChart('c4');
+  (function(){ var w=document.querySelector('[data-tt-id="chart-c4"] .ch-wrap'); if(w&&!w.querySelector('canvas')){w.innerHTML='<canvas id="ch4"></canvas>';} })();
+  var cv4=document.getElementById('ch4');
+  if(t4) t4.textContent='Dettaglio categorie — '+periodLabel;
+  if(cv4){
+    // Use catMap realCost for accurate per-category real cost
+    var catMap4=buildCatMap(txs);
+    var cat4Entries=Object.keys(catMap4)
+      .map(function(k){ return {name:k, val:catMap4[k].realCost+catMap4[k].income}; })
+      .filter(function(e){ return e.val>0; })
+      .sort(function(a,b){ return b.val-a.val; })
+      .slice(0,10);
+    var cat4Keys=cat4Entries.map(function(e){ return e.name; });
+    var c4vals=cat4Entries.map(function(e){ return e.val; });
+    if(cat4Keys.length){
+      CH['c4']=new Chart(cv4,{type:'bar',
+        data:{labels:cat4Keys,datasets:[{
+          label:'Spesa',data:c4vals,
+          backgroundColor:c.pal.slice(0,cat4Keys.length).map(function(x){return x+'cc';}),
+          borderColor:c.pal.slice(0,cat4Keys.length),
+          borderWidth:1.5,borderRadius:5
+        }]},
+        options:{
+          responsive:true,maintainAspectRatio:false,
+          indexAxis:'y',
+          plugins:{
+            legend:{display:false},
+            tooltip:{callbacks:{label:function(x){return ' €'+fmt(x.parsed.x);}}}
+          },
+          scales:{
+            x:{
+              grid:{color:c.grid,drawBorder:false},
+              ticks:{color:c.txt,font:{family:'Inter',size:11},callback:function(v){return '€'+fmt(v);}},
+              beginAtZero:true
+            },
+            y:{
+              grid:{display:false},
+              ticks:{color:c.txt,font:{family:'Inter',size:11}}
+            }
+          }
+        }});
+    } else {
+      cv4.parentElement.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--sub);font-size:.82rem">Nessuna spesa nel periodo</div>';
+    }
+  }
 
   // update visible sub-sections
   var curSec=document.querySelector('.sec-panel.act');
@@ -2472,21 +3647,48 @@ function drawConsAll(txsIn){
   var txs=txsIn||getPeriodTxs();
   var tf=(document.getElementById('cl-type')||{}).value||'';
   var cf=(document.getElementById('cl-cat')||{}).value||'';
-  var sf=((document.getElementById('cl-search')||{}).value||'').toLowerCase();
+  var sf=((document.getElementById('cl-search')||{}).value||'').toLowerCase().trim();
+  var sortVal=(document.getElementById('cl-sort')||{}).value||'date-desc';
+
   var list=txs.filter(function(t){
     if(tf&&t.type!==tf) return false;
     if(cf&&t.cat!==cf) return false;
-    if(sf&&(t.note||'').toLowerCase().indexOf(sf)===-1&&t.cat.toLowerCase().indexOf(sf)===-1) return false;
+    if(sf){
+      var dateStr=fmtShort(t.date).toLowerCase();
+      var match=t.cat.toLowerCase().indexOf(sf)!==-1
+        ||(t.note||'').toLowerCase().indexOf(sf)!==-1
+        ||dateStr.indexOf(sf)!==-1
+        ||String(t.amount).indexOf(sf)!==-1;
+      if(!match) return false;
+    }
     return true;
-  }).sort(function(a,b){return b.date.localeCompare(a.date);});
+  });
+
+  list.sort(function(a,b){
+    if(sortVal==='date-desc') return b.date.localeCompare(a.date)||b.id-a.id;
+    if(sortVal==='date-asc')  return a.date.localeCompare(b.date)||a.id-b.id;
+    if(sortVal==='amount-desc') return b.amount-a.amount;
+    if(sortVal==='amount-asc')  return a.amount-b.amount;
+    if(sortVal==='cat-asc')  return a.cat.localeCompare(b.cat,'it');
+    if(sortVal==='insert-desc') return b.id-a.id;
+    return b.date.localeCompare(a.date);
+  });
   var cnt=document.getElementById('cl-count'); if(cnt) cnt.textContent=list.length+' voci';
   if(!list.length){ el.innerHTML='<div class="empty-state"><span class="ei">🔍</span><p>Nessun risultato.</p></div>'; return; }
   var inc=list.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+t.amount;},0);
-  var exp=list.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
+  var rawExpAll=list.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
+  var catMapAll=buildCatMap(list);
+  var realExpAll=Object.values(catMapAll).reduce(function(a,d){return a+d.personal+d.coupleTotal/2;},0);
+  var hasC=Object.values(catMapAll).some(function(d){return d.coupleMe>0||d.coupleHers>0;});
   var h='<div style="display:flex;gap:16px;padding:12px 16px;border-bottom:1.5px solid var(--border);background:var(--surface2);font-size:.8rem;font-weight:600;flex-wrap:wrap">'
     +'<span style="color:var(--green-d)">↑ Entrate: €'+fmt(inc)+'</span>'
-    +'<span style="color:var(--red-d)">↓ Uscite: €'+fmt(exp)+'</span>'
-    +'<span style="color:var(--blue)">⇆ Saldo: €'+fmt(inc-exp)+'</span>'
+    +(hasC
+      ?'<span style="color:var(--red-d)">↓ Pagate: €'+fmt(rawExpAll)+'</span>'
+       +'<span style="color:var(--amber)">↓ Nette: €'+fmt(realExpAll)+'</span>'
+       +'<span style="color:var(--blue)">⇆ Saldo netto: €'+fmt(inc-realExpAll)+'</span>'
+      :'<span style="color:var(--red-d)">↓ Uscite: €'+fmt(rawExpAll)+'</span>'
+       +'<span style="color:var(--blue)">⇆ Saldo: €'+fmt(inc-rawExpAll)+'</span>'
+    )
     +'</div>';
   h+='<div style="overflow-x:auto"><table class="tx-table"><thead><tr>'
     +'<th>Data</th><th>Tipo</th><th>Categoria</th><th>Nota</th><th>Importo</th>'
@@ -2513,7 +3715,13 @@ function drawConsCat(txsIn){
   var shown={}, h='', idx=0;
   var allCats=S.eCats.map(function(c){return{name:c,cop:false,inc:false};});
   S.cCats.forEach(function(c){ if(S.eCats.indexOf(c)===-1) allCats.push({name:c,cop:true,inc:false}); });
-  allCats.push({name:'Stipendio / Entrata',cop:false,inc:true});
+  // Income categories: use iCats if defined, else fallback to generic
+  var incomeCats=S.iCats&&S.iCats.length?S.iCats:['Entrata'];
+  incomeCats.forEach(function(c){ allCats.push({name:c,cop:false,inc:true}); });
+  // Also catch income txs that use 'Stipendio / Entrata' (legacy)
+  if(txs.some(function(t){return t.type==='income'&&t.cat==='Stipendio / Entrata';})){
+    allCats.push({name:'Stipendio / Entrata',cop:false,inc:true});
+  }
 
   allCats.forEach(function(cat){
     var pTxs=txs.filter(function(t){return t.cat===cat.name&&!t.isCouple;}).sort(function(a,b){return b.date.localeCompare(a.date);});
@@ -2675,23 +3883,49 @@ function updateAiBanner(){
   load();
   document.body.classList.add('is-home');
   var td=today();
+
+  // Set hidden input values first (pickers read them on init)
   document.getElementById('tx-d').value=td;
+  document.getElementById('snap-date').value=td;
   document.getElementById('pt-mo').value=td.slice(0,7);
-  document.getElementById('cons-dt').value=td;
   document.getElementById('f-mo').value=td.slice(0,7);
   document.getElementById('cop-month').value=td.slice(0,7);
-  // sync theme checkbox with saved preference
+  document.getElementById('cons-pick-month').value=td.slice(0,7);
+  document.getElementById('cons-range-month').value=td.slice(0,7);
+  document.getElementById('cons-from').value=td.slice(0,8)+'01';
+  document.getElementById('cons-to').value=td;
+  document.getElementById('ai-month-in').value=td.slice(0,7);
+  document.getElementById('ai-range-month').value=td.slice(0,7);
+  document.getElementById('ai-from').value=td.slice(0,8)+'01';
+  document.getElementById('ai-to').value=td;
+
+  S.period='current';
+
+  // Init custom pickers
+  CP.init('tx-d','date',function(){ drawTxList&&drawTxList(); },false,'📅 Transazione — Data');
+  CP.init('snap-date','date',function(){},false,'📅 Patrimonio — Data snapshot');
+  CP.init('pt-mo','month',function(){ drawPartner(); drawMyCoupleCosts(); },false,'🗓 Spese Partner — Mese');
+  CP.init('f-mo','month',function(){ drawTxList(); },false,'🗓 Spese & Entrate — Mese');
+  CP.init('cop-month','month',function(){ drawCoppia(); },false,'🗓 Analisi Coppia — Mese');
+  CP.init('cons-pick-month','month',function(){ updateCons(); },false,'🗓 Statistiche — Mese');
+  CP.init('cons-range-month','month',function(){ updateCons(); },false,'🗓 Statistiche — Mese');
+  CP.init('cons-from','date',function(){ updateCons(); },false,'📅 Statistiche — Dal');
+  CP.init('cons-to','date',function(){ updateCons(); },false,'📅 Statistiche — Al');
+  CP.linkPickers('cons-from','cons-to');
+  CP.init('ai-month-in','month',function(){},false,'🗓 Riepiloghi AI — Mese');
+  CP.init('ai-range-month','month',function(){},false,'🗓 Riepiloghi AI — Mese');
+  CP.init('ai-from','date',function(){},false,'📅 Riepiloghi AI — Dal');
+  CP.init('ai-to','date',function(){},false,'📅 Riepiloghi AI — Al');
+  CP.linkPickers('ai-from','ai-to');
+
+  // sync theme
   var isDark=localStorage.getItem('bc_theme')==='dark';
   document.getElementById('th-chk').checked=isDark;
   var c2=document.getElementById('th-chk2');
   if(c2){ c2.checked=isDark; c2.addEventListener('change', function(){ applyTheme(this.checked); }); }
-  // sync theme label
   document.getElementById('th-lbl').textContent=isDark?'☀️':'🌙';
-  document.getElementById('ai-month-in').value=td.slice(0,7);
-  document.getElementById('ai-from').value=td.slice(0,8)+'01';
-  document.getElementById('ai-to').value=td;
+
   updateAiBanner();
-  // restore privacy mode
   applyPrivacy(localStorage.getItem('bc_privacy')==='1');
   renderAll();
   drawDashboard();
@@ -2737,7 +3971,12 @@ function updateAiBanner(){
           <button class="btn btn-primary" id="btn-check-updates" onclick="checkForUpdates()">🔄 Verifica aggiornamenti</button>
           <div id="sw-update-status" style="font-size:.8rem;margin-top:10px"></div>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.0.1</div>
+        <div class="card" style="margin:0;border-color:var(--red);background:var(--red-s)">
+          <div class="card-title" style="color:var(--red-d)">🧪 Modalità Debug</div>
+          <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
+          <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()">🧪 Entra in modalità debug</button>
+        </div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1.1</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -2943,13 +4182,13 @@ function importFromMobileResolve(overwrite){
 var _catsSentHash=localStorage.getItem('bc_cats_sent_hash')||'';
 
 function dismissSendCatsBar(){
-  if(!confirm('Confermi di aver già inviato le categorie al telefono?\n\nPremendo OK l\'avviso sparirà. Riapparirà automaticamente solo se aggiungerai nuove categorie.')){
-    return;
-  }
-  _catsSentHash=getCatsHash();
-  localStorage.setItem('bc_cats_sent_hash',_catsSentHash);
-  updateSendCatsBar();
-  toast('Avviso rimosso. Riapparirà se aggiungi nuove categorie.');
+  bcConfirm('Confermi di aver già inviato le categorie al telefono?\n\nL\'avviso sparirà e riapparirà automaticamente solo se aggiungerai nuove categorie.','Categorie inviate','📤','Sì, ho inviato','Annulla').then(function(ok){
+    if(!ok) return;
+    _catsSentHash=getCatsHash();
+    localStorage.setItem('bc_cats_sent_hash',_catsSentHash);
+    updateSendCatsBar();
+    toast('Avviso rimosso. Riapparirà se aggiungi nuove categorie.');
+  });
 }
 
 function getCatsHash(){
@@ -3055,54 +4294,128 @@ function loadApiKeyUI(){
 // ═══════════════════════════════════════
 // AI – PERIOD
 // ═══════════════════════════════════════
-var aiPeriod='month';
+var aiPeriod='current';
+var _aiRangeMode='year';
+
 function setAiPeriod(p,btn){
   aiPeriod=p;
-  ['ai-per-month','ai-per-range','ai-per-all'].forEach(function(id){
-    var b=document.getElementById(id);
-    if(b) b.className='type-btn'+(b.id==='ai-per-'+p?' t-in':'');
+  ['ai-per-current','ai-per-pick-month','ai-per-range','ai-per-all'].forEach(function(id){
+    var b=document.getElementById(id); if(b) b.classList.remove('act');
   });
-  document.getElementById('ai-month-sel').style.display=p==='month'?'':'none';
-  document.getElementById('ai-range-sel').style.display=p==='range'?'':'none';
+  if(btn) btn.classList.add('act');
+  document.getElementById('ai-month-sel').style.display=(p==='pick-month')?'':'none';
+  document.getElementById('ai-range-sel').style.display=(p==='range')?'':'none';
+  if(p==='range'){ populateAiYearSel(); setAiRangeMode(_aiRangeMode); }
 }
 
-// ═══════════════════════════════════════
-// AI – BUILD DATA SUMMARY
-// ═══════════════════════════════════════
+function setAiRangeMode(mode){
+  _aiRangeMode=mode;
+  ['year','month','day'].forEach(function(m){
+    var btn=document.getElementById('ai-rng-'+m+'-btn');
+    if(btn) btn.classList.toggle('act',m===mode);
+    var sel=document.getElementById('ai-rng-'+m+'-sel');
+    if(sel) sel.style.display=(m===mode)?'':'none';
+  });
+}
+
+function populateAiYearSel(){
+  var sel=document.getElementById('ai-year'); if(!sel) return;
+  var cur=sel.value;
+  var years=[]; var thisY=new Date().getFullYear();
+  S.txs.forEach(function(t){ var y=t.date.slice(0,4); if(years.indexOf(y)===-1) years.push(y); });
+  if(!years.length) years=[String(thisY)];
+  years.sort().reverse();
+  if(years.indexOf(String(thisY))===-1) years.unshift(String(thisY));
+  sel.innerHTML=years.map(function(y){ return '<option value="'+y+'"'+(y===String(thisY)||y===cur?' selected':'')+'>'+y+'</option>'; }).join('');
+}
+
 function getAiTxs(){
   var p=aiPeriod;
   if(p==='all') return S.txs.slice();
-  if(p==='month'){
-    var ym=(document.getElementById('ai-month-in')||{}).value||today().slice(0,7);
+  if(p==='current'){
+    var now=new Date(); var ym=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
     return S.txs.filter(function(t){ return t.date.startsWith(ym); });
   }
+  if(p==='pick-month'){
+    var ym2=(document.getElementById('ai-month-in')||{}).value||today().slice(0,7);
+    return S.txs.filter(function(t){ return t.date.startsWith(ym2); });
+  }
   if(p==='range'){
-    var from=(document.getElementById('ai-from')||{}).value||'';
-    var to=(document.getElementById('ai-to')||{}).value||'';
-    return S.txs.filter(function(t){ return (!from||t.date>=from)&&(!to||t.date<=to); });
+    if(_aiRangeMode==='year'){
+      var y=(document.getElementById('ai-year')||{}).value||String(new Date().getFullYear());
+      return S.txs.filter(function(t){ return t.date.startsWith(y); });
+    }
+    if(_aiRangeMode==='month'){
+      var rm=(document.getElementById('ai-range-month')||{}).value||today().slice(0,7);
+      return S.txs.filter(function(t){ return t.date.startsWith(rm); });
+    }
+    if(_aiRangeMode==='day'){
+      var from=(document.getElementById('ai-from')||{}).value||'';
+      var to=(document.getElementById('ai-to')||{}).value||'';
+      return S.txs.filter(function(t){ return (!from||t.date>=from)&&(!to||t.date<=to); });
+    }
   }
   return S.txs.slice();
 }
 
+function getAiPeriodLabel(){
+  var p=aiPeriod;
+  var MN=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  if(p==='all') return 'Tutti i dati';
+  if(p==='current'){ var now=new Date(); return MN[now.getMonth()]+' '+now.getFullYear(); }
+  if(p==='pick-month'){
+    var pm=(document.getElementById('ai-month-in')||{}).value||today().slice(0,7);
+    var pms=pm.split('-'); return MN[parseInt(pms[1])-1]+' '+pms[0];
+  }
+  if(p==='range'){
+    if(_aiRangeMode==='year') return (document.getElementById('ai-year')||{}).value||String(new Date().getFullYear());
+    if(_aiRangeMode==='month'){
+      var rm=(document.getElementById('ai-range-month')||{}).value||today().slice(0,7);
+      var rms=rm.split('-'); return MN[parseInt(rms[1])-1]+' '+rms[0];
+    }
+    if(_aiRangeMode==='day'){
+      var from=(document.getElementById('ai-from')||{}).value||'';
+      var to=(document.getElementById('ai-to')||{}).value||'';
+      if(from&&to) return 'Dal '+fmtShort(from)+' al '+fmtShort(to);
+      if(from) return 'Dal '+fmtShort(from);
+      if(to) return 'Fino al '+fmtShort(to);
+    }
+  }
+  return 'Periodo selezionato';
+}
+
 function buildAiContext(txs){
   var inc=txs.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+t.amount;},0);
-  var exp=txs.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
-  var catMap={};
-  txs.filter(function(t){return t.type==='expense';}).forEach(function(t){
-    var k=t.cat.replace(' 💑','')+(t.isCouple||t.cat.indexOf('💑')!==-1?' (comune)':' (personale)');
-    catMap[k]=(catMap[k]||0)+t.amount;
-  });
-  var catLines=Object.keys(catMap).sort(function(a,b){return catMap[b]-catMap[a];}).map(function(k){return '  - '+k+': €'+fmt(catMap[k]);}).join('\n');
+  var rawExp=txs.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
+
+  // Use buildCatMap for real cost calculation
+  var cm=buildCatMap(txs);
+  var realExp=Object.values(cm).reduce(function(a,d){return a+d.personal+d.coupleTotal/2;},0);
+
+  // Category breakdown with real costs
+  var catLines=Object.keys(cm).filter(function(k){ return cm[k].realCost>0||cm[k].income>0; })
+    .sort(function(a,b){ return (cm[b].realCost+cm[b].income)-(cm[a].realCost+cm[a].income); })
+    .map(function(k){
+      var d=cm[k];
+      var parts=[];
+      if(d.income>0) parts.push('entrate €'+fmt(d.income));
+      if(d.personal>0) parts.push('personale €'+fmt(d.personal));
+      if(d.coupleMe>0) parts.push('comune tuo €'+fmt(d.coupleMe));
+      if(d.coupleHers>0) parts.push('comune lei €'+fmt(d.coupleHers));
+      if(d.coupleTotal>0) parts.push('netto coppia €'+fmt(d.coupleTotal/2));
+      return '  - '+k+': €'+fmt(d.realCost||d.income)+' ('+parts.join(', ')+')';
+    }).join('\n');
 
   // partner data in period
   var partnerLines='';
-  if(aiPeriod==='month'){
-    var ym=(document.getElementById('ai-month-in')||{}).value||today().slice(0,7);
-    if(S.partnerData[ym]){
-      partnerLines='\nSpese partner ('+fmtMon(ym)+'):\n'+S.cCats.map(function(c){
-        return '  - '+c+': €'+fmt(S.partnerData[ym][c]||0);
-      }).join('\n');
-    }
+  var aiTxsYms={};
+  txs.forEach(function(t){ aiTxsYms[t.date.slice(0,7)]=true; });
+  var partnerMonths=Object.keys(aiTxsYms).filter(function(ym){ return S.partnerData[ym]; });
+  if(partnerMonths.length){
+    partnerLines='\nSpese partner ('+partnerMonths.map(fmtMon).join(', ')+'):\n'+S.cCats.map(function(c){
+      var tot=partnerMonths.reduce(function(a,ym){ return a+(S.partnerData[ym][c]||0); },0);
+      return '  - '+c+': €'+fmt(tot);
+    }).join('\n');
   }
 
   // last wallet snapshot
@@ -3112,17 +4425,19 @@ function buildAiContext(txs){
     walletLine='\nUltimo snapshot patrimonio ('+fmtDateFull(last.date)+'): €'+fmt(last.total);
   }
 
-  var periodLabel=aiPeriod==='all'?'Tutti i dati':aiPeriod==='month'?'Mese: '+fmtMon((document.getElementById('ai-month-in')||{}).value||today().slice(0,7)):'Dal '+(document.getElementById('ai-from')||{}).value+' al '+(document.getElementById('ai-to')||{}).value;
+  var periodLabel=getAiPeriodLabel();
 
   return 'RIEPILOGO FINANZIARIO — '+periodLabel+'\n\n'
     +'Entrate totali: €'+fmt(inc)+'\n'
-    +'Uscite totali: €'+fmt(exp)+'\n'
-    +'Saldo: €'+fmt(inc-exp)+'\n\n'
-    +'Uscite per categoria:\n'+catLines
+    +'Uscite pagate (cassa): €'+fmt(rawExp)+'\n'
+    +'Uscite nette reali (tua quota): €'+fmt(realExp)+'\n'
+    +'Saldo netto: €'+fmt(inc-realExp)+'\n\n'
+    +'Dettaglio per categoria (costo netto reale):\n'+catLines
     +partnerLines
     +walletLine
-    +'\n\nCategorie personali configurate: '+S.eCats.join(', ')
-    +'\nCategorie di coppia configurate: '+S.cCats.join(', ')
+    +'\n\nCategorie personali: '+S.eCats.join(', ')
+    +'\nCategorie di coppia: '+S.cCats.join(', ')
+    +'\nNota: le uscite nette includono 50% spese comuni tue + 50% spese comuni della partner.'
     +'\nNumero transazioni nel periodo: '+txs.length;
 }
 
@@ -3219,6 +4534,27 @@ function copyAndOpenClaude(){
   });
 }
 
+function _finishReset(label, resetProg, resetSettings, msg){
+  if(resetProg){
+    S.wCats=[]; S.eCats=[]; S.cCats=[]; S.iCats=[]; S.wHist=[];
+    label+=' Progettazione azzerata.';
+  }
+  if(resetSettings){
+    localStorage.removeItem('bc_theme');
+    localStorage.removeItem('bc_apikey');
+    S.defEmail='';
+    applyTheme(false);
+    label+=' Impostazioni eliminate.';
+  }
+  save();
+  document.getElementById('reset-pwd').value='';
+  document.getElementById('reset-prog').checked=false;
+  document.getElementById('reset-settings').checked=false;
+  if(msg) msg.innerHTML='<span style="color:var(--green)">✓ '+escH(label)+'</span>';
+  renderAll(); updateCons(); drawDashboard();
+  toast(label);
+}
+
 // ═══════════════════════════════════════
 // SETTINGS MODAL
 // ═══════════════════════════════════════
@@ -3236,6 +4572,7 @@ function openSettings(){
 }
 
 function doReset(){
+  if(_debugMode){ bcAlert('Il reset non è disponibile in modalità debug.','Modalità Debug','🧪'); return; }
   var pwd=document.getElementById('reset-pwd').value;
   var msg=document.getElementById('reset-msg');
   if(pwd!=='ADMINADMIN'){
@@ -3243,59 +4580,40 @@ function doReset(){
     return;
   }
   var scope=document.getElementById('reset-scope').value;
-  var label='';
   var now=new Date();
   var ym=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
   var year=String(now.getFullYear());
+  var resetProg=document.getElementById('reset-prog').checked;
+  var resetSettings=document.getElementById('reset-settings').checked;
 
   if(scope==='all'){
-    if(!confirm('Sei sicuro di voler cancellare TUTTI i dati? Questa azione è irreversibile.')) return;
-    S.txs=[]; S.wHist=[]; S.partnerData={};
-    label='Tutti i dati resettati.';
-  } else if(scope==='month'){
-    S.txs=S.txs.filter(function(t){ return !t.date.startsWith(ym); });
-    delete S.partnerData[ym];
-    label='Dati di '+fmtMon(ym)+' eliminati.';
-  } else if(scope==='year'){
-    S.txs=S.txs.filter(function(t){ return !t.date.startsWith(year); });
-    Object.keys(S.partnerData).forEach(function(m){ if(m.startsWith(year)) delete S.partnerData[m]; });
-    label='Dati dell\'anno '+year+' eliminati.';
+    bcConfirm('Sei sicuro di voler cancellare TUTTI i dati? Questa azione è irreversibile.','Reset totale','🗑','Sì, cancella tutto','Annulla').then(function(ok){
+      if(!ok) return;
+      S.txs=[]; S.wHist=[]; S.partnerData={};
+      _finishReset('Tutti i dati resettati.',resetProg,resetSettings,msg);
+    });
   } else if(scope==='range'){
     var from=document.getElementById('reset-from').value;
     var to=document.getElementById('reset-to').value;
     if(!from||!to){ msg.innerHTML='<span style="color:var(--red)">Inserisci entrambe le date.</span>'; return; }
-    if(!confirm('Eliminare tutte le transazioni dal '+fmtShort(from)+' al '+fmtShort(to)+'?')) return;
-    S.txs=S.txs.filter(function(t){ return t.date<from||t.date>to; });
-    Object.keys(S.partnerData).forEach(function(m){
-      // remove partner months that fall within the range
-      var mStart=m+'-01', mEnd=m+'-31';
-      if(mStart>=from && mEnd<=to) delete S.partnerData[m];
+    bcConfirm('Eliminare tutte le transazioni dal '+fmtShort(from)+' al '+fmtShort(to)+'?','Elimina intervallo','🗑','Elimina','Annulla').then(function(ok){
+      if(!ok) return;
+      S.txs=S.txs.filter(function(t){ return t.date<from||t.date>to; });
+      Object.keys(S.partnerData).forEach(function(m){
+        var mStart=m+'-01', mEnd=m+'-31';
+        if(mStart>=from && mEnd<=to) delete S.partnerData[m];
+      });
+      _finishReset('Transazioni dal '+fmtShort(from)+' al '+fmtShort(to)+' eliminate.',resetProg,resetSettings,msg);
     });
-    label='Transazioni dal '+fmtShort(from)+' al '+fmtShort(to)+' eliminate.';
+  } else if(scope==='month'){
+    S.txs=S.txs.filter(function(t){ return !t.date.startsWith(ym); });
+    delete S.partnerData[ym];
+    _finishReset('Dati di '+fmtMon(ym)+' eliminati.',resetProg,resetSettings,msg);
+  } else if(scope==='year'){
+    S.txs=S.txs.filter(function(t){ return !t.date.startsWith(year); });
+    Object.keys(S.partnerData).forEach(function(m){ if(m.startsWith(year)) delete S.partnerData[m]; });
+    _finishReset('Dati dell\'anno '+year+' eliminati.',resetProg,resetSettings,msg);
   }
-
-  var resetProg=document.getElementById('reset-prog').checked;
-  if(resetProg){
-    S.wCats=[]; S.eCats=[]; S.cCats=[]; S.wHist=[];
-    label+=' Progettazione azzerata.';
-  }
-
-  var resetSettings=document.getElementById('reset-settings').checked;
-  if(resetSettings){
-    localStorage.removeItem('bc_theme');
-    localStorage.removeItem('bc_apikey');
-    S.defEmail='';
-    applyTheme(false); // reset to light
-    label+=' Impostazioni eliminate.';
-  }
-
-  save();
-  document.getElementById('reset-pwd').value='';
-  document.getElementById('reset-prog').checked=false;
-  document.getElementById('reset-settings').checked=false;
-  msg.innerHTML='<span style="color:var(--green)">✓ '+escH(label)+'</span>';
-  renderAll(); updateCons(); drawDashboard();
-  toast(label);
 }
 function closeSettings(e){
   if(e && e.target!==document.getElementById('settings-overlay')) return;
@@ -3324,25 +4642,72 @@ function openChModal(chartId, title){
 
   var c = gC();
   var type = src.config.type;
-  // Deep-copy only the data (safe — no functions)
   var data = JSON.parse(JSON.stringify(src.config.data));
-  // Rebuild options fresh so callbacks are intact, with legend always shown
   var baseOpts = type === 'doughnut' ? dO(c) : bO(c);
   baseOpts.maintainAspectRatio = false;
   baseOpts.responsive = true;
   if(!baseOpts.plugins) baseOpts.plugins = {};
-  // legend: always show in modal
   baseOpts.plugins.legend = { display: true, position: type==='doughnut'?'right':'top', labels:{ color:c.txt, font:{family:'Inter',size:12}, boxWidth:14, padding:12 } };
-  // stacked axes for ch4
   if(chartId === 'c4' && baseOpts.scales){
     baseOpts.scales.x = Object.assign({}, baseOpts.scales.x, {stacked:true});
     baseOpts.scales.y = Object.assign({}, baseOpts.scales.y, {stacked:true});
   }
-  // tooltip callback
   if(!baseOpts.plugins.tooltip) baseOpts.plugins.tooltip = {};
   baseOpts.plugins.tooltip.callbacks = { label: function(ctx){ return ' ' + (ctx.dataset.label ? ctx.dataset.label+': ' : '') + '€' + fmt(ctx.parsed.y !== undefined ? ctx.parsed.y : ctx.parsed); } };
 
   var canvas = document.getElementById('ch-modal-canvas');
+
+  // Special handling for c2 (savings chart): re-apply gradient plugin and segment coloring
+  if(chartId==='c2' && src._savGradData){
+    var sd=src._savGradData;
+    var savGreen=c.green, savRed=c.red;
+    var savCumModal=sd.savCum;
+    // Restore segment borderColor function (lost in JSON serialization)
+    data.datasets[1].borderColor=savGreen;
+    data.datasets[1].segment={borderColor:function(ctx){
+      var v0=savCumModal[ctx.p0DataIndex]||0;
+      var v1=savCumModal[ctx.p1DataIndex]||0;
+      return (v0+v1)/2>=0?savGreen:savRed;
+    }};
+    data.datasets[1].pointBackgroundColor=savCumModal.map(function(v){return v>=0?savGreen:savRed;});
+    data.datasets[1].pointBorderColor=savCumModal.map(function(v){return v>=0?savGreen:savRed;});
+    var gradPlugin={
+      id:'savGradModal',
+      afterLayout:function(chart){
+        var yAxis=chart.scales.y; if(!yAxis) return;
+        var top=yAxis.top, bottom=yAxis.bottom, h=bottom-top; if(h<=0) return;
+        var zeroY=yAxis.getPixelForValue(0);
+        var zeroFrac=Math.max(0,Math.min(1,(zeroY-top)/h));
+        var ctx2=chart.ctx;
+        var fillG=ctx2.createLinearGradient(0,top,0,bottom);
+        if(sd.minV>=0){ fillG.addColorStop(0,savGreen+'55'); fillG.addColorStop(1,savGreen+'11'); }
+        else if(sd.maxV<=0){ fillG.addColorStop(0,savRed+'11'); fillG.addColorStop(1,savRed+'55'); }
+        else {
+          fillG.addColorStop(0,savGreen+'55');
+          fillG.addColorStop(Math.max(0,zeroFrac-0.001),savGreen+'22');
+          fillG.addColorStop(Math.min(1,zeroFrac),savRed+'22');
+          fillG.addColorStop(1,savRed+'55');
+        }
+        chart.data.datasets[1].backgroundColor=fillG;
+      }
+    };
+    baseOpts.plugins.tooltip={filter:function(item){return item.datasetIndex===1;},callbacks:{
+      label:function(x){var v=x.parsed.y;return (v>=0?' +€':' -€')+fmt(Math.abs(v));},
+      labelColor:function(x){var col=x.parsed.y>=0?savGreen:savRed;return {borderColor:col,backgroundColor:col};}
+    }};
+    baseOpts.plugins.legend={display:true,labels:{color:c.txt,font:{family:'Inter',size:11},boxWidth:14,padding:12,
+      generateLabels:function(chart){var tc=chart.options.plugins.legend.labels.color;return [
+        {text:'Risparmio netto',fillStyle:savGreen,strokeStyle:savGreen,lineWidth:2,hidden:false,fontColor:tc},
+        {text:'Perdita netta',fillStyle:savRed,strokeStyle:savRed,lineWidth:2,hidden:false,fontColor:tc}
+      ];}
+    }};
+    if(baseOpts.scales&&baseOpts.scales.y){
+      baseOpts.scales.y.ticks=Object.assign({},baseOpts.scales.y.ticks||{},{callback:function(v){return (v>0?'+':'')+'€'+fmt(v);}});
+    }
+    modalChart = new Chart(canvas, { type: type, data: data, options: baseOpts, plugins:[gradPlugin] });
+    return;
+  }
+
   modalChart = new Chart(canvas, { type: type, data: data, options: baseOpts });
 }
 
@@ -3461,9 +4826,9 @@ function closeChModal(e){
       ex:'"Mese" + 15/03 → tutto marzo. "Trimestre" + 15/03 → gennaio–marzo. "Anno" + qualsiasi data 2025 → tutto il 2025. "Semestre" + 01/09 → luglio–dicembre.'
     },
     'cons-dt':{
-      title:'📅 Data di riferimento del periodo',
-      body:'Sposta questa data per navigare tra periodi diversi. Il periodo selezionato a sinistra si adatta automaticamente alla data che inserisci.',
-      ex:'Periodo "Mese" attivo: metti 01/01 → vedi gennaio, metti 01/02 → vedi febbraio, metti 01/03 → vedi marzo. Facile per confrontare mesi passati.'
+      title:'📅 Selettore periodo',
+      body:'Scegli come vuoi visualizzare i dati: Mese corrente (aggiornato in automatico), Mese a scelta, Periodo personalizzato (per anno, mese o date specifiche) oppure Tutto per vedere l\'intera storia.',
+      ex:'Vuoi confrontare marzo e aprile? Usa "Mese a scelta" e cambia il mese. Vuoi vedere tutto il 2025? Usa "Periodo a scelta → Per anno".'
     },
 
     // ─── ANALISI COPPIA ───────────────────────────────────────
@@ -3759,7 +5124,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.0.1';
+  var APP_VERSION = '1.1.1';
 
   if(!('serviceWorker' in navigator)) return;
 
