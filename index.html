@@ -1012,78 +1012,82 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
         <div class="instr-section">
           <h3>⚙️ Configura — da fare una volta sola</h3>
           <ul>
-            <li>Vai in <strong>Progettazione</strong> e aggiungi i <strong>depositi</strong> (conti e risparmi) o i <strong>debiti futuri</strong> (spese non ancora addebitate), le <strong>categorie di spesa personali</strong>, le <strong>categorie di coppia</strong> (condivise al 50%) e le <strong>categorie di entrata</strong>.</li>
-            <li>Le categorie con 💑 sono spese di coppia — se una categoria appare sia tra le Personali che tra le Coppia diventa <strong>MISTA</strong>: puoi registrare spese personali e condivise sotto lo stesso nome separatamente.</li>
-            <li>Quando modifichi le categorie appare il banner <strong>"Categorie aggiornate"</strong>. Premi <strong>📤 Invia categorie</strong> per aggiornare l'app mobile, poi <strong>✓ Inviate</strong> per nascondere il banner.</li>
+            <li>Vai in <strong>Progettazione</strong> e aggiungi: <strong>Depositi</strong> (conti, wallet, contanti) e <strong>Debiti futuri</strong> (spese non ancora addebitate), <strong>Categorie entrata</strong> (es. Stipendio, Rimborsi), <strong>Categorie personali</strong> e <strong>Categorie di coppia 💑</strong> (condivise al 50%).</li>
+            <li>Una categoria con lo stesso nome in Personali e Coppia diventa <strong>MISTA</strong>: puoi registrare sia spese solo tue che condivise sotto lo stesso nome.</li>
+            <li>Quando modifichi le categorie appare il banner <strong>"Categorie aggiornate"</strong>. Premi <strong>📤 Invia categorie</strong> per aggiornare l'app mobile.</li>
           </ul>
         </div>
 
         <div class="instr-section">
-          <h3>🏦 Snapshot Patrimonio — tieni traccia dei saldi reali</h3>
+          <h3>🏦 Snapshot Patrimonio</h3>
           <ul>
-            <li>Aggiorna i saldi di ogni voce: <strong>depositi</strong> (verde, positivi) e <strong>debiti futuri</strong> (rosso, negativi). Seleziona la data dello snapshot (default: oggi).</li>
-            <li>Premi <strong>💾 Salva snapshot</strong> per fissare il totale netto — usato nelle Statistiche per il <strong>Patrimonio Netto</strong>. Puoi modificare snapshot esistenti con ✏️.</li>
-            <li>Gli snapshot sono <strong>non retroattivi</strong>: uno snapshot futuro non influenza i calcoli dei periodi passati.</li>
+            <li>Aggiorna i saldi di ogni voce e premi <strong>💾 Salva snapshot</strong> per fissare il totale netto alla data scelta (default oggi). Il patrimonio netto in Statistiche = snapshot + tutti i movimenti successivi.</li>
+            <li>Gli snapshot sono <strong>non retroattivi</strong>: non influenzano i calcoli di periodi precedenti. Puoi modificare snapshot esistenti con ✏️.</li>
+            <li>Al salvataggio, se il totale inserito differisce dal valore stimato, l'app mostra entrambe le stime: <strong>con rimborsi 💑</strong> (costo netto) e <strong>senza rimborsi 💑</strong> (cash flow reale).</li>
           </ul>
         </div>
 
         <div class="instr-section">
-          <h3>✏️ Spese &amp; Entrate — registro quotidiano</h3>
+          <h3>✏️ Spese & Entrate</h3>
           <ul>
-            <li>Registra ogni movimento: scegli <strong>Entrata</strong> o <strong>Uscita</strong>, seleziona categoria, importo e nota. Le categorie 💑 sono spese condivise.</li>
-            <li>Filtra, ordina e cerca tra le transazioni per categoria, nota, data o importo. Puoi modificare (✏️) o eliminare (🗑) qualsiasi voce.</li>
-            <li>Il pulsante <strong>📲 Importa dati dal telefono</strong> carica il file <strong>"SPESE BILANCIO DD.MM"</strong> dall'app mobile con gestione duplicati.</li>
+            <li>Registra ogni movimento. Le categorie 💑 sono spese condivise. Puoi filtrare, ordinare e cercare per categoria, nota, data o importo.</li>
+            <li><strong>Ricorrenza automatica 🔁</strong>: spunta "Imposta ricorrenza" per pagamenti periodici. Scegli frequenza (mensile, annuale, settimanale, ogni X giorni, date specifiche) e fine (mai, dopo N volte, fino a data). Le occorrenze già maturate entrano nei calcoli; quelle future appaiono nel box separato "non contabilizzate".</li>
+            <li><strong>Movimenti futuri</strong>: qualsiasi transazione con data > oggi appare nel box "non contabilizzati" e viene esclusa da statistiche, grafici e patrimonio netto fino al suo giorno.</li>
+            <li>Modificando un elemento di una serie ricorrente, l'app chiede se aggiornare <em>solo questo</em> o <em>tutta la serie</em>. Lo stesso per l'eliminazione.</li>
           </ul>
         </div>
 
         <div class="instr-section">
-          <h3>👫 Spese Partner — coordinarsi con la compagna</h3>
+          <h3>👫 Spese Partner</h3>
           <ul>
-            <li>Seleziona il mese: a sinistra inserisci quanto ha speso la tua compagna in ogni categoria comune; a destra vedi le <strong>tue spese da comunicare a lei</strong>.</li>
-            <li>Premi <strong>📋 Copia riepilogo</strong> per un messaggio pronto da inviare su WhatsApp.</li>
+            <li>A fine mese inserisci quanto ha speso la tua compagna in ogni categoria comune. Necessario per le <strong>Uscite Nette reali</strong> in Statistiche e per l'Analisi Coppia.</li>
+            <li>Premi <strong>📋 Copia riepilogo</strong> per generare un messaggio pronto da inviare su WhatsApp.</li>
           </ul>
         </div>
 
         <div class="instr-section">
-          <h3>📊 Statistiche — capire l'andamento</h3>
+          <h3>📊 Statistiche</h3>
           <ul>
-            <li>Scegli il periodo: <strong>Mese corrente</strong>, <strong>Mese a scelta</strong>, <strong>Periodo a scelta</strong> (anno / mese / date libere), o <strong>Tutto</strong>.</li>
-            <li><strong>Uscite pagate</strong> = quanto hai fisicamente speso. <strong>Uscite nette</strong> = personale + 50% spese comuni tue + 50% spese comuni della partner. Il <strong>Saldo netto</strong> = entrate − uscite nette.</li>
-            <li>Quattro grafici interattivi — <strong>clicca per ingrandire</strong>. Il grafico <em>Andamento risparmio</em> mostra la curva cumulativa: verde sopra lo zero (risparmio), rossa sotto (perdita).</li>
-            <li>Tre sezioni: <strong>Panoramica</strong> (card riepilogative), <strong>Tutte le transazioni</strong> (con filtri, ordinamento e ricerca), <strong>Per categoria</strong> (dettaglio per ogni categoria con logica coppia).</li>
+            <li>Scegli il periodo: <strong>Mese corrente</strong>, <strong>Mese a scelta</strong>, <strong>Periodo a scelta</strong> (anno / mese / date libere) o <strong>Tutto</strong>.</li>
+            <li><strong>Switch "💑 Con rimborsi / 💸 Senza rimborsi"</strong>: cambia la vista di patrimonio netto, uscite, saldo e tutti i grafici. "Con rimborsi" = costo netto reale (50% coppia). "Senza rimborsi" = cash flow fisico.</li>
+            <li><strong>Card cliccabili</strong>: premi su qualsiasi card (Patrimonio, Entrate, Uscite, Saldo) per aprire il dettaglio del calcolo con le somme per categoria.</li>
+            <li>Tre sezioni: <strong>Panoramica</strong>, <strong>Tutte le transazioni</strong> (con filtri, ordinamento, ricerca), <strong>Per categoria</strong> (con dettaglio coppia e categorie entrata).</li>
+            <li>Quattro grafici interattivi — <strong>clicca per ingrandire</strong>. Tutti si adattano allo switch con/senza rimborsi.</li>
           </ul>
         </div>
 
         <div class="instr-section">
-          <h3>💑 Analisi Coppia — chi deve cosa</h3>
+          <h3>💑 Analisi Coppia</h3>
           <ul>
             <li>Seleziona il mese: l'app confronta le spese 💑 tue con quelle della partner (da Spese Partner) e calcola il rimborso per pareggiare al 50%.</li>
           </ul>
         </div>
 
         <div class="instr-section">
-          <h3>🤖 Riepiloghi AI — analisi automatica</h3>
+          <h3>🤖 Riepiloghi AI</h3>
           <ul>
-            <li><strong>Modalità diretta</strong> — inserisci la chiave API Anthropic nelle Impostazioni e premi <strong>✨ Genera riepilogo AI</strong>.</li>
-            <li><strong>Modalità manuale</strong> — premi <strong>📋 Genera prompt</strong> poi <strong>🔗 Copia e apri Claude</strong>: si apre claude.ai, incolla il prompt e ottieni l'analisi in italiano.</li>
+            <li><strong>Modalità prompt</strong>: <em>Sintetico</em> (totali + categorie + tx con nota + top 10 importi) per periodi lunghi; <em>Completo</em> (tutte le transazioni) per periodi brevi. Il sintetico gestisce anche anni di dati senza appesantire.</li>
+            <li><strong>Modalità diretta</strong>: inserisci la chiave API Anthropic in Impostazioni → premi <strong>✨ Genera riepilogo AI</strong>.</li>
+            <li><strong>Modalità manuale</strong>: premi <strong>📋 Genera prompt</strong> → <strong>🔗 Copia e apri Claude</strong> → incolla su claude.ai.</li>
           </ul>
         </div>
 
         <div class="instr-section">
-          <h3>⚙️ Impostazioni — accessibili dalla topbar</h3>
+          <h3>⚙️ Impostazioni</h3>
           <ul>
-            <li><strong>Backup / Ripristino</strong> — esporta e importa tutti i dati e preferenze in JSON.</li>
-            <li><strong>Modalità Debug</strong> — entra in una sandbox: puoi modificare qualsiasi dato liberamente senza che venga salvato. All'uscita, tutto viene ripristinato. Il banner rosso lampeggiante in topbar indica che il debug è attivo.</li>
-            <li><strong>Email di default</strong>, <strong>Chiave API Anthropic</strong>, <strong>Resetta dati</strong> (per periodo, con opzione di resettare anche progettazione e impostazioni).</li>
+            <li><strong>Backup / Ripristino</strong>: esporta e importa tutti i dati (incluse regole ricorrenti) in JSON.</li>
+            <li><strong>🧪 Modalità Debug</strong>: sandbox sicura dove puoi smanettare liberamente senza toccare i dati reali. Banner rosso lampeggiante indica che è attiva. All'uscita tutto viene ripristinato.</li>
+            <li><strong>Email di default</strong>, <strong>Chiave API Anthropic</strong>, <strong>Resetta dati</strong> (per periodo, con opzione resetta progettazione e impostazioni).</li>
           </ul>
         </div>
 
         <div class="instr-section">
-          <h3>💡 Barra in alto e calendari</h3>
+          <h3>💡 Note generali</h3>
           <ul>
-            <li>Tieni il mouse fermo 3 secondi su qualsiasi elemento per vedere un tooltip. Il pulsante <strong>💡</strong> attiva/disattiva i tooltip.</li>
-            <li>Il pulsante <strong>👁</strong> nasconde tutti i valori monetari con blur — utile quando mostri l'app ad altri.</li>
-            <li>I calendari di selezione data appaiono centrati sul cursore del mouse. I calendari <strong>Dal / Al</strong> si aprono entrambi insieme affiancati. Ogni calendario mostra il nome del campo e dell'area — premi ✕ o clicca fuori per chiudere senza confermare, <strong>OK</strong> per applicare la selezione.</li>
+            <li><strong>Tieni il mouse fermo 3 secondi</strong> su qualsiasi elemento per vedere un tooltip con spiegazione ed esempio. Il pulsante 💡 in topbar attiva/disattiva i tooltip.</li>
+            <li>Il pulsante <strong>👁</strong> in topbar nasconde tutti i valori monetari con blur — utile quando mostri l'app ad altri.</li>
+            <li>I <strong>calendari</strong> si aprono centrati sul cursore. I calendari <strong>Dal/Al</strong> si aprono entrambi insieme. Ogni calendario mostra area e campo — premi ✕ o clicca fuori per chiudere senza confermare, <strong>OK</strong> per applicare.</li>
+            <li>Il <strong>localStorage</strong> è separato tra versione locale (file://) e GitHub Pages (https://) — usa il backup JSON per trasferire i dati tra le due versioni.</li>
           </ul>
         </div>
 
@@ -1091,7 +1095,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
-  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.1.4</div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.1.5</div>
 </div>
 <div id="page-prog" class="page">
   <div class="pg-head">
@@ -1101,7 +1105,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
   <div class="g3">
     <!-- Snapshot Patrimonio -->
     <div class="card" data-tt-id="prog-wcats">
-      <div class="card-title">💰 Depositi / Portafoglio</div>
+      <div class="card-title" data-tt-id="prog-wcats">💰 Depositi / Portafoglio</div>
       <p style="font-size:.78rem;color:var(--sub);margin-bottom:12px">Aggiungi <strong>depositi</strong> (dove tieni i soldi) o <strong>debiti futuri</strong> (spese già sostenute non ancora addebitate). I depositi appaiono in verde, i debiti in rosso sia qui che nello Snapshot Patrimonio.</p>
       <div id="wcat-list" style="margin-bottom:12px"></div>
       <div style="display:flex;gap:6px;margin-bottom:8px">
@@ -1115,7 +1119,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
     <!-- Entrate personali -->
     <div class="card">
-      <div class="card-title" style="color:var(--green-d)">📥 Categorie Entrate Personali</div>
+      <div class="card-title" style="color:var(--green-d)" data-tt-id="prog-icats">📥 Categorie Entrate Personali</div>
       <p style="font-size:.78rem;color:var(--sub);margin-bottom:12px">Le sorgenti delle tue entrate (es. Stipendio, Freelance, Bonus…)</p>
       <div class="tags" id="icat-list"></div>
       <div class="inp-row">
@@ -1125,7 +1129,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
     <!-- Spese personali -->
     <div class="card" data-tt-id="prog-ecats">
-      <div class="card-title">📋 Categorie Spese Personali</div>
+      <div class="card-title" data-tt-id="prog-ecats">📋 Categorie Spese Personali</div>
       <p style="font-size:.78rem;color:var(--sub);margin-bottom:12px">Spese solo tue — o anche condivise con la tua compagna</p>
       <div class="tags" id="ecat-list"></div>
       <div class="inp-row">
@@ -1135,7 +1139,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
     <!-- Spese coppia -->
     <div class="card" data-tt-id="prog-ccats">
-      <div class="card-title">💑 Categorie Spese di Coppia <span class="pill pill-cop">COPPIA</span></div>
+      <div class="card-title" data-tt-id="prog-ccats">💑 Categorie Spese di Coppia <span class="pill pill-cop">COPPIA</span></div>
       <p style="font-size:.78rem;color:var(--sub);margin-bottom:12px">Spese sempre condivise al 50% con la tua compagna</p>
       <div class="tags" id="ccat-list"></div>
       <div class="inp-row">
@@ -1155,12 +1159,12 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn btn-sm btn-send-cats-pulse" style="background:var(--teal);color:#fff;box-shadow:0 3px 10px rgba(20,184,166,.35)" onclick="sendCatsToPhone()" data-tt-id="btn-send-cats">📤 Invia</button>
-          <button class="btn btn-sm btn-ghost" onclick="dismissSendCatsBar()" style="border-color:var(--teal);color:var(--teal)">✓ Già inviate</button>
+          <button class="btn btn-sm btn-ghost" onclick="dismissSendCatsBar()" style="border-color:var(--teal);color:var(--teal)" data-tt-id="btn-cats-sent">✓ Già inviate</button>
         </div>
       </div>
     </div>
     <!-- Logica di coppia -->
-    <div class="card" style="background:var(--blue-s);border-color:var(--blue)">
+    <div class="card" style="background:var(--blue-s);border-color:var(--blue)" data-tt-id="logica-coppia">
       <div style="display:flex;gap:10px;align-items:flex-start">
         <span style="font-size:1.1rem">💡</span>
         <div>
@@ -1183,7 +1187,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
 
     <!-- FORM -->
     <div>
-      <div class="card" id="tx-form-card" style="margin-bottom:14px">
+      <div class="card" id="tx-form-card" style="margin-bottom:14px" data-tt-id="tx-form-card">
         <div class="card-title" id="tx-form-title">Nuova transazione</div>
         <input type="hidden" id="tx-edit-id">
         <div class="field">
@@ -1218,7 +1222,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
 
         <!-- Ricorrenza -->
         <div style="margin-bottom:4px">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.83rem;font-weight:600;color:var(--text)">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.83rem;font-weight:600;color:var(--text)" data-tt-id="tx-recur">
             <input type="checkbox" id="tx-recur-chk" onchange="toggleRecurPanel()" style="width:16px;height:16px;cursor:pointer;accent-color:var(--blue)">
             🔁 Imposta ricorrenza automatica
           </label>
@@ -1286,7 +1290,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
       </div>
 
       <!-- Importa da telefono -->
-      <div class="card" style="border-color:var(--teal);background:var(--teal-s)">
+      <div class="card" style="border-color:var(--teal);background:var(--teal-s)" data-tt-id="card-import-mobile">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
           <span style="font-size:1.3rem">📲</span>
           <div class="card-title" style="margin:0;color:var(--teal)">Importa dati dal telefono</div>
@@ -1300,7 +1304,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
 
     <!-- TX LIST -->
     <div>
-      <div class="card" style="margin-bottom:14px">
+      <div class="card" style="margin-bottom:14px" data-tt-id="card-tx-filters">
         <div class="card-title">Filtra e cerca transazioni</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
           <input type="month" class="filter-chip inp" id="f-mo" onchange="drawTxList()" onclick="try{this.showPicker();}catch(e){}" style="width:auto;cursor:pointer">
@@ -1330,7 +1334,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     <p>Aggiorna i saldi e salva uno snapshot del patrimonio</p>
   </div>
   <div class="g2" style="align-items:start">
-    <div class="card">
+    <div class="card" data-tt-id="card-wallet-saldi">
       <div class="card-title">Aggiorna saldi</div>
       <p style="font-size:.8rem;color:var(--sub);margin-bottom:16px">Controlla fisicamente i tuoi conti e inserisci i valori reali. Le categorie di <strong style="color:var(--green-d)">deposito</strong> (verde) vanno inserite con valore positivo. Le categorie di <strong style="color:var(--red-d)">debito futuro</strong> (rosso) vanno inserite con valore negativo: rappresentano spese già sostenute ma non ancora addebitate.</p>
       <div id="wa-list" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px"></div>
@@ -1345,11 +1349,11 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
         </div>
         <input type="hidden" id="snap-edit-idx" value="">
         <button class="btn btn-primary" id="snap-save-btn" onclick="saveWSnap()" data-tt-id="wallet-snap-btn">💾 Salva snapshot</button>
-        <button class="btn btn-ghost" id="snap-cancel-btn" onclick="cancelSnapEdit()" style="display:none">✕ Annulla modifica</button>
-        <button class="btn btn-ghost" onclick="resetWAFields()" title="Azzera tutti i campi">🔄 Azzera campi</button>
+        <button class="btn btn-ghost" id="snap-cancel-btn" onclick="cancelSnapEdit()" style="display:none" data-tt-id="btn-snap-cancel">✕ Annulla modifica</button>
+        <button class="btn btn-ghost" onclick="resetWAFields()" data-tt-id="btn-reset-wallet">🔄 Azzera campi</button>
       </div>
     </div>
-    <div class="card">
+    <div class="card" data-tt-id="card-wallet-hist">
       <div class="card-title">Storico snapshot</div>
       <div id="w-hist"><p style="color:var(--sub);font-size:.83rem">Nessuno snapshot salvato.</p></div>
     </div>
@@ -1372,7 +1376,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
   <div class="g2" style="align-items:start;margin-bottom:22px">
 
     <!-- Spese partner -->
-    <div class="card" style="border-color:var(--purple);background:var(--purple-s)">
+    <div class="card" style="border-color:var(--purple);background:var(--purple-s)" data-tt-id="card-partner-her">
       <div class="card-title" style="color:var(--purple)">👫 Spese della tua compagna</div>
       <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Inserisci quanto ha speso lei in ogni categoria comune questo mese.</p>
       <div id="pt-list" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"></div>
@@ -1382,7 +1386,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
     <!-- Mie spese da comunicare -->
-    <div class="card" style="border-color:var(--red);background:var(--red-s)">
+    <div class="card" style="border-color:var(--red);background:var(--red-s)" data-tt-id="card-partner-mine">
       <div class="card-title" style="color:var(--red-d)">📢 Mie spese da comunicare</div>
       <p style="font-size:.82rem;color:var(--sub);margin-bottom:16px">Le tue spese nelle categorie comuni per il mese selezionato — da comunicare alla tua compagna affinché possa compilare la sua parte.</p>
       <div id="my-couple-costs"></div>
@@ -1395,7 +1399,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
   </div>
 
   <!-- Storico -->
-  <div class="card">
+  <div class="card" data-tt-id="card-partner-hist">
     <div class="card-title">📅 Storico inserimenti partner</div>
     <div id="pt-hist"><p style="color:var(--sub);font-size:.83rem">Nessun dato inserito.</p></div>
   </div>
@@ -1410,12 +1414,21 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
   </div>
 
   <!-- Period selector -->
-  <div class="card" style="margin-bottom:20px;padding:16px 18px">
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
-      <button class="period-btn act" id="pbtn-current" onclick="setPer('current',this)">📅 Mese corrente</button>
-      <button class="period-btn" id="pbtn-pick-month" onclick="setPer('pick-month',this)">🗓 Mese a scelta</button>
-      <button class="period-btn" id="pbtn-range" onclick="setPer('range',this)">📆 Periodo a scelta</button>
-      <button class="period-btn" id="pbtn-all" onclick="setPer('all',this)">🗂 Tutto</button>
+  <div class="card" style="margin-bottom:20px;padding:16px 18px" data-tt-id="card-cons-period">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="period-btn act" id="pbtn-current" onclick="setPer('current',this)">📅 Mese corrente</button>
+        <button class="period-btn" id="pbtn-pick-month" onclick="setPer('pick-month',this)">🗓 Mese a scelta</button>
+        <button class="period-btn" id="pbtn-range" onclick="setPer('range',this)">📆 Periodo a scelta</button>
+        <button class="period-btn" id="pbtn-all" onclick="setPer('all',this)">🗂 Tutto</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+        <span style="font-size:.74rem;font-weight:600;color:var(--sub)">Vista:</span>
+        <div style="display:flex;gap:4px">
+          <button id="cons-view-net" class="recur-chip act" onclick="setConsView('net',this)" data-tt-id="cons-view-net">💑 Con rimborsi</button>
+          <button id="cons-view-cash" class="recur-chip" onclick="setConsView('cash',this)" data-tt-id="cons-view-cash">💸 Senza rimborsi</button>
+        </div>
+      </div>
     </div>
 
     <!-- Mese a scelta -->
@@ -1532,7 +1545,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     <h1>💑 Analisi Coppia</h1>
     <p>Bilancio mensile delle spese condivise</p>
   </div>
-  <div class="card" style="margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+  <div class="card" style="margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap" data-tt-id="card-coppia-month">
     <div>
       <div style="font-size:.78rem;font-weight:600;color:var(--sub);margin-bottom:5px">Mese da analizzare</div>
       <input type="month" class="inp" id="cop-month" onchange="drawCoppia()" style="width:180px" data-tt-id="cop-month">
@@ -1544,7 +1557,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
 
   <div id="cop-stats" class="g4" style="margin-bottom:20px"></div>
 
-  <div class="card" style="margin-bottom:16px;overflow:hidden;padding:0">
+  <div class="card" style="margin-bottom:16px;overflow:hidden;padding:0" data-tt-id="card-coppia-table">
     <div style="padding:16px 18px;border-bottom:1px solid var(--border)">
       <div class="card-title" style="margin:0">Riepilogo per categoria</div>
     </div>
@@ -1575,7 +1588,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
   </div>
 
   <!-- API key banner -->
-  <div id="ai-key-banner" class="card" style="margin-bottom:20px;border-color:var(--amber);background:var(--amber-s)">
+  <div id="ai-key-banner" class="card" data-tt-id="card-ai-apikey" style="margin-bottom:20px;border-color:var(--amber);background:var(--amber-s)">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
       <span style="font-size:1.2rem">🔑</span>
       <div style="flex:1">
@@ -1589,7 +1602,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
   <div class="g2" style="align-items:start">
 
     <!-- SINISTRA: configurazione riepilogo -->
-    <div class="card">
+    <div class="card" data-tt-id="card-ai-config">
       <div class="card-title">Configura il riepilogo</div>
 
       <div class="field">
@@ -1636,8 +1649,8 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
       <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap">
         <span style="font-size:.8rem;font-weight:600;color:var(--sub)">Dettaglio prompt:</span>
         <div style="display:flex;gap:4px">
-          <button id="ai-mode-syn" class="recur-chip act" onclick="setAiMode('synth',this)">📊 Sintetico</button>
-          <button id="ai-mode-full" class="recur-chip" onclick="setAiMode('full',this)">📋 Completo</button>
+          <button id="ai-mode-syn" class="recur-chip act" onclick="setAiMode('synth',this)" data-tt-id="ai-mode-syn">📊 Sintetico</button>
+          <button id="ai-mode-full" class="recur-chip" onclick="setAiMode('full',this)" data-tt-id="ai-mode-full">📋 Completo</button>
         </div>
         <span id="ai-mode-hint" style="font-size:.74rem;color:var(--sub)">Totali + categorie + tx con nota</span>
       </div>
@@ -2531,7 +2544,7 @@ function getNetWorth(refDateStr){
   return baseSnap.total+flow;
 }
 
-function _doSaveSnap(editIdx, oldSnap, snapDate, snap, newTotal, expected, isEdit){
+function _doSaveSnap(editIdx, oldSnap, snapDate, snap, newTotal, expected, expectedNet, isEdit){
   if(isEdit){
     S.wHist[editIdx]={date:oldSnap.date, snapDate:snapDate, amounts:snap.amounts, total:newTotal};
   } else {
@@ -2546,9 +2559,15 @@ function _doSaveSnap(editIdx, oldSnap, snapDate, snap, newTotal, expected, isEdi
   if(Math.abs(newTotal-expected)>0.01 && (isEdit||S.wHist.length>1)){
     var diff=newTotal-expected;
     var diffStr=(diff>0?'+':'')+fmt(diff);
-    bcAlert(
-      'Snapshot inserito:  €'+fmt(newTotal)+'\nPatrimonio stimato: €'+fmt(expected)+'\nDifferenza:         €'+diffStr+'\n\nPossibili cause: transazioni non registrate, importi errati, o debiti futuri da aggiornare.',
-      'Snapshot non coincide','⚠️');
+    var diffNet=newTotal-expectedNet;
+    var diffNetStr=(diffNet>0?'+':'')+fmt(diffNet);
+    var msg='Snapshot inserito:              €'+fmt(newTotal)
+      +'\n\nPatrimonio stimato (senza rimborsi 💑):   €'+fmt(expected)
+      +'\n  Differenza:                       €'+diffStr
+      +'\n\nPatrimonio stimato (con rimborsi 💑): €'+fmt(expectedNet)
+      +'\n  Differenza:                       €'+diffNetStr
+      +'\n\nPossibili cause: transazioni non registrate, importi errati, o debiti futuri da aggiornare.';
+    bcAlert(msg,'Snapshot non coincide','⚠️');
   } else {
     toast(isEdit?'Snapshot aggiornato!':'Snapshot salvato!');
   }
@@ -2566,6 +2585,7 @@ function saveWSnap(){
   var histBackup=S.wHist.slice();
   if(isEdit) S.wHist.splice(editIdx,1);
   var expected=getNetWorth(snapDate);
+  var expectedNet=getNetWorthNet(snapDate);
   S.wHist=histBackup;
   if(isEdit){
     var oldSnap=S.wHist[editIdx];
@@ -2575,12 +2595,12 @@ function saveWSnap(){
       bcConfirm(
         'Questo snapshot ha '+txAfter.length+' transazion'+(txAfter.length===1?'e':'i')+' registrat'+(txAfter.length===1?'a':'e')+' dopo la sua data.\nModificarlo cambierà il calcolo del patrimonio netto dal '+fmtShort(oldDate)+' in poi.\n\nVuoi continuare?',
         'Modifica snapshot','⚠️','Sì, modifica','Annulla'
-      ).then(function(ok){ if(ok) _doSaveSnap(editIdx,oldSnap,snapDate,snap,newTotal,expected,true); });
+      ).then(function(ok){ if(ok) _doSaveSnap(editIdx,oldSnap,snapDate,snap,newTotal,expected,expectedNet,true); });
       return;
     }
-    _doSaveSnap(editIdx,oldSnap,snapDate,snap,newTotal,expected,true);
+    _doSaveSnap(editIdx,oldSnap,snapDate,snap,newTotal,expected,expectedNet,true);
   } else {
-    _doSaveSnap(-1,null,snapDate,snap,newTotal,expected,false);
+    _doSaveSnap(-1,null,snapDate,snap,newTotal,expected,expectedNet,false);
   }
 }
 
@@ -3560,7 +3580,7 @@ function drawDashboard(){
     if(!S.txs.length&&!lastW){ strip.style.display='none'; return; }
     strip.style.display='';
     // Gold patrimonio netto card first
-    var netCard='<div class="hs-item" style="position:relative;background:linear-gradient(160deg,rgba(245,158,11,.14),rgba(251,191,36,.08));border-color:rgba(180,83,9,.35)">'
+    var netCard='<div class="hs-item" style="position:relative;background:linear-gradient(160deg,rgba(245,158,11,.14),rgba(251,191,36,.08));border-color:rgba(180,83,9,.35)" data-tooltip="Snapshot patrimoniale più recente aggiornato con tutti i movimenti successivi. Clicca 👁 per nascondere il valore.">'
       +'<div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#d97706,#fbbf24);border-radius:var(--r) var(--r) 0 0"></div>'
       +'<button onclick="toggleNetVisibility()" style="position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;font-size:.82rem;color:var(--amber);padding:2px;line-height:1" title="'+(netHidden?'Mostra':'Nascondi')+' patrimonio netto">'+(netHidden?'🙈':'👁')+'</button>'
       +'<div class="hs-label" style="color:var(--amber)">Patrimonio netto</div>'
@@ -3571,12 +3591,20 @@ function drawDashboard(){
       'v-red':'#ef4444',
       'v-blue':'#3b82f6'
     };
+    var homeTooltips={
+      'Entrate':'Totale degli incassi del mese corrente: stipendi, rimborsi e qualsiasi altra entrata registrata.',
+      'Uscite nette':'Costo reale del mese: spese personali + tua quota 50% delle spese comuni. Già al netto dei rimborsi della partner.',
+      'Uscite':'Tutto quello che hai fisicamente pagato questo mese, incluse le spese di coppia per intero.',
+      'Saldo mese':'Entrate meno uscite nette del mese corrente. Positivo = stai risparmiando, negativo = stai spendendo più di quanto guadagni.'
+    };
     var others=[
       ['Entrate '+months[now.getMonth()],'+€'+fmt(inc),'v-green','#22c55e'],
       [hasCouple?'Uscite nette '+months[now.getMonth()]:'Uscite '+months[now.getMonth()],'-€'+fmt(hasCouple?realExp:rawExp),'v-red','#ef4444'],
       ['Saldo mese',(bal>=0?'+':'-')+'€'+fmt(Math.abs(bal)),bal>=0?'v-blue':'v-red',bal>=0?'#3b82f6':'#ef4444']
     ].map(function(r){
-      return '<div class="hs-item" style="--hs-accent:'+r[3]+'">'
+      var ttKey=r[0].split(' ')[0]; // 'Entrate', 'Uscite', 'Saldo'
+      var tt=homeTooltips[r[0]]||homeTooltips[ttKey]||'';
+      return '<div class="hs-item" style="--hs-accent:'+r[3]+'"'+(tt?' data-tooltip="'+tt+'"':'')+'>'
         +'<div style="position:absolute;top:0;left:0;right:0;height:3px;background:'+r[3]+';border-radius:var(--r) var(--r) 0 0"></div>'
         +'<div class="hs-label">'+r[0]+'</div>'
         +'<div class="hs-value '+r[2]+' privacy-blur">'+r[1]+'</div>'
@@ -3692,7 +3720,11 @@ function setC4Type(t){
   if(t4) t4.textContent='Dettaglio categorie — '+periodLabel;
   var catMap4=buildCatMap(txs);
   var cat4Entries=Object.keys(catMap4)
-    .map(function(k){ return {name:k, val:catMap4[k].realCost+catMap4[k].income}; })
+    .map(function(k){
+      var d=catMap4[k];
+      var val=_consView==='cash'?(d.personal+d.coupleMe+d.income):(d.realCost+d.income);
+      return {name:k, val:val};
+    })
     .filter(function(e){ return e.val>0; })
     .sort(function(a,b){ return b.val-a.val; })
     .slice(0,10);
@@ -3745,6 +3777,159 @@ function drawC4Chart(cv4, cat4Keys, c4vals, colors, c, periodLabel){
   }
 }
 
+var _consView='net'; // 'net' | 'cash'
+
+function setConsView(v, btn){
+  _consView=v;
+  document.querySelectorAll('#cons-view-net,#cons-view-cash').forEach(function(b){b.classList.remove('act');});
+  btn.classList.add('act');
+  updateCons();
+}
+
+// Net worth using real costs (50% couple) instead of full amounts
+function getNetWorthNet(refDateStr){
+  var ref=refDateStr||today();
+  var baseSnap=null;
+  S.wHist.forEach(function(s){
+    var sd=(s.snapDate||s.date.slice(0,10));
+    if(sd<=ref&&(!baseSnap||sd>=(baseSnap.snapDate||baseSnap.date.slice(0,10)))) baseSnap=s;
+  });
+  if(!baseSnap) return 0;
+  var snapDate=baseSnap.snapDate||baseSnap.date.slice(0,10);
+  var activeSched=getActiveScheduled().filter(function(t){
+    var rule=(S.recurringRules||[]).find(function(r){return r.id===t.ruleId;});
+    return !(rule&&rule.exceptions&&rule.exceptions.indexOf(t.date)!==-1);
+  });
+  var realTxs=S.txs.filter(function(t){return t.date<=ref;});
+  var allTxs=realTxs.concat(activeSched).filter(function(t){return t.date>=snapDate&&t.date<=ref;});
+  // Build catMap for real cost
+  var cm=buildCatMap(allTxs);
+  var totalInc=allTxs.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+t.amount;},0);
+  var totalRealExp=Object.values(cm).reduce(function(a,d){return a+d.personal+d.coupleTotal/2;},0);
+  return baseSnap.total+totalInc-totalRealExp;
+}
+
+function openStatDetail(title, bodyHtml){
+  document.getElementById('stat-detail-title').textContent=title;
+  document.getElementById('stat-detail-body').innerHTML=bodyHtml;
+  document.getElementById('stat-detail-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeStatDetail(e){
+  if(e&&e.target!==document.getElementById('stat-detail-overlay')) return;
+  document.getElementById('stat-detail-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function fmtDetailTable(rows){
+  // rows: [{label, value, sub, cls}]
+  // Truncate if > 15 rows
+  var MAX=15;
+  var truncated=rows.length>MAX;
+  var shown=truncated?rows.slice(0,MAX):rows;
+  var html='<table style="width:100%;border-collapse:collapse;font-size:.81rem">';
+  shown.forEach(function(r){
+    html+='<tr style="border-bottom:1px solid var(--border)">'
+      +'<td style="padding:6px 8px;color:var(--text)">'+(r.label||'')+(r.sub?'<div style="font-size:.72rem;color:var(--sub)">'+r.sub+'</div>':'')+'</td>'
+      +'<td style="padding:6px 8px;text-align:right;font-weight:700;white-space:nowrap;color:'+(r.cls==='pos'?'var(--green-d)':r.cls==='neg'?'var(--red-d)':'var(--text)')+'">'+r.value+'</td>'
+      +'</tr>';
+  });
+  if(truncated){
+    html+='<tr><td colspan="2" style="padding:6px 8px;color:var(--sub);font-size:.75rem;text-align:center">… e altre '+(rows.length-MAX)+' voci (apri il periodo sintetico per vedere tutto)</td></tr>';
+  }
+  html+='</table>';
+  return html;
+}
+
+function showNetWorthDetail(net, netNet, snapTotal, snapDateStr){
+  var displayNet=_consView==='net'?netNet:net;
+  var rows=[];
+  if(snapDateStr){
+    rows.push({label:'📸 Snapshot del '+fmtShort(snapDateStr), value:'€'+fmt(snapTotal), cls:'pos'});
+  } else {
+    rows.push({label:'Nessuno snapshot trovato', value:'—', cls:''});
+  }
+  var allTxs=getPeriodTxs().filter(function(t){return !snapDateStr||t.date>=snapDateStr;});
+  var totalInc=allTxs.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+t.amount;},0);
+  var cm=buildCatMap(allTxs);
+  rows.push({label:'', value:''});
+  rows.push({label:'Entrate nel periodo', value:'+€'+fmt(totalInc), cls:'pos'});
+  Object.keys(cm).sort(function(a,b){return (cm[b].personal+cm[b].coupleMe)-(cm[a].personal+cm[a].coupleMe);}).forEach(function(k){
+    var d=cm[k];
+    if(_consView==='net'){
+      if(d.realCost>0) rows.push({label:'Uscite — '+k, value:'-€'+fmt(d.realCost), sub:d.coupleMe>0?'pers. €'+fmt(d.personal)+' + 50% comune €'+fmt(d.coupleMe/2)+(d.coupleHers>0?' + 50% partner €'+fmt(d.coupleHers/2):''):'', cls:'neg'});
+    } else {
+      var paid=d.personal+d.coupleMe;
+      if(paid>0) rows.push({label:'Uscite — '+k, value:'-€'+fmt(paid), sub:d.coupleMe>0?'pers. €'+fmt(d.personal)+' + coppia €'+fmt(d.coupleMe):'', cls:'neg'});
+    }
+  });
+  rows.push({label:'', value:''});
+  rows.push({label:'= Patrimonio netto ('+(_consView==='net'?'con rimborsi 💑':'senza rimborsi 💑')+')', value:'€'+fmt(displayNet), cls:displayNet>=(snapTotal||0)?'pos':'neg'});
+  if(net!==netNet){
+    rows.push({label:'  ('+(_consView==='net'?'senza rimborsi 💑':'con rimborsi 💑')+' sarebbe)', value:'€'+fmt(_consView==='net'?net:netNet), cls:''});
+  }
+  openStatDetail('📊 Dettaglio Patrimonio Netto', fmtDetailTable(rows));
+}
+
+function showIncDetail(txs){
+  var rows=[];
+  var byCat={};
+  txs.filter(function(t){return t.type==='income';}).forEach(function(t){ byCat[t.cat]=(byCat[t.cat]||0)+t.amount; });
+  var tot=0;
+  Object.keys(byCat).sort(function(a,b){return byCat[b]-byCat[a];}).forEach(function(cat){
+    tot+=byCat[cat];
+    rows.push({label:cat, value:'+€'+fmt(byCat[cat]), cls:'pos'});
+  });
+  rows.push({label:'', value:''});
+  rows.push({label:'Totale entrate', value:'+€'+fmt(tot), cls:'pos'});
+  openStatDetail('📈 Dettaglio Entrate', fmtDetailTable(rows));
+}
+
+function showExpDetail(txs, catMap, mode){
+  var rows=[];
+  var personalTot=0, coupleTot=0;
+  Object.keys(catMap).sort(function(a,b){return catMap[b].personal-catMap[a].personal;}).forEach(function(k){
+    var d=catMap[k];
+    if(d.personal>0){ personalTot+=d.personal; rows.push({label:k+' (personale)', value:'-€'+fmt(d.personal), cls:'neg'}); }
+  });
+  if(personalTot>0){ rows.push({label:'Subtotale personali', value:'-€'+fmt(personalTot), cls:'neg'}); rows.push({label:'', value:''}); }
+  Object.keys(catMap).sort(function(a,b){return (catMap[b].coupleMe+catMap[b].coupleHers)-(catMap[a].coupleMe+catMap[a].coupleHers);}).forEach(function(k){
+    var d=catMap[k];
+    if(d.coupleMe>0||d.coupleHers>0){
+      if(mode==='net'){
+        var share=(d.coupleMe+d.coupleHers)/2;
+        coupleTot+=share;
+        rows.push({label:k+' 💑 (quota 50%)', value:'-€'+fmt(share), sub:'tu €'+fmt(d.coupleMe)+(d.coupleHers>0?' · lei €'+fmt(d.coupleHers):''), cls:'neg'});
+      } else {
+        var paid=d.coupleMe;
+        coupleTot+=paid;
+        rows.push({label:k+' 💑 (pagato da te)', value:'-€'+fmt(paid), sub:d.coupleHers>0?'lei ha pagato €'+fmt(d.coupleHers)+' sep.':'', cls:'neg'});
+      }
+    }
+  });
+  if(coupleTot>0){ rows.push({label:'Subtotale coppia', value:'-€'+fmt(coupleTot), cls:'neg'}); rows.push({label:'', value:''}); }
+  rows.push({label:'Totale '+(mode==='net'?'uscite nette':'uscite pagate'), value:'-€'+fmt(personalTot+coupleTot), cls:'neg'});
+  openStatDetail(mode==='net'?'📉 Dettaglio Uscite Nette':'📉 Dettaglio Uscite Pagate', fmtDetailTable(rows));
+}
+
+function showBalDetail(inc, rawExp, realExp, bal){
+  var rows=[];
+  rows.push({label:'Entrate totali', value:'+€'+fmt(inc), cls:'pos'});
+  rows.push({label:'', value:''});
+  if(_consView==='net'){
+    rows.push({label:'Uscite nette (tua quota reale)', value:'-€'+fmt(realExp), cls:'neg'});
+    rows.push({label:'  (uscite pagate lordo)', value:'-€'+fmt(rawExp), sub:'50% coppia tornerà dalla partner', cls:''});
+  } else {
+    rows.push({label:'Uscite pagate (senza rimborsi 💑)', value:'-€'+fmt(rawExp), cls:'neg'});
+    rows.push({label:'  (uscite nette sarebbero)', value:'-€'+fmt(realExp), sub:'con 50% coppia', cls:''});
+  }
+  rows.push({label:'', value:''});
+  var displayBal=_consView==='net'?bal:inc-rawExp;
+  rows.push({label:'= Saldo', value:(displayBal>=0?'+':'-')+'€'+fmt(Math.abs(displayBal)), cls:displayBal>=0?'pos':'neg'});
+  openStatDetail('⚖️ Dettaglio Saldo', fmtDetailTable(rows));
+}
+
 function updateCons(){
   var txs=getPeriodTxs();
   var catMap=buildCatMap(txs);
@@ -3752,46 +3937,67 @@ function updateCons(){
   var rawExp=txs.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
   var realExp=Object.values(catMap).reduce(function(a,d){return a+d.personal+d.coupleTotal/2;},0);
   var bal=inc-realExp;
-  // Usa la data di fine periodo per non rendere retroattivo lo snapshot
-  var net=getNetWorth(getPeriodEndDate());
+  var periodEndDate=getPeriodEndDate();
+  var net=getNetWorth(periodEndDate);
+  var netNet=getNetWorthNet(periodEndDate);
+  var displayNet=_consView==='net'?netNet:net;
+  var displayBal=_consView==='net'?bal:inc-rawExp;
 
   var g=document.getElementById('cons-stats'); if(!g) return;
   var periodLabel=getPeriodLabel();
   var netHidden=localStorage.getItem('bc_net_hidden')==='1';
-  // check if there are any couple expenses with partner data → show Uscite Nette
-  var hasCoupleSplit = Object.values(catMap).some(function(d){ return d.coupleHers>0 || d.coupleMe>0; });
+  var hasCoupleSplit=Object.values(catMap).some(function(d){return d.coupleHers>0||d.coupleMe>0;});
 
-  // Patrimonio Netto — always first, gold, with eye toggle
-  var netCard='<div class="stat-card stat-net'+(netHidden?' stat-net-hidden':'')+'" data-tooltip="'+escH('Snapshot più recente + tutte le entrate e uscite successive alla sua data.')+'" style="position:relative">'
-    +'<button class="net-eye-btn" onclick="toggleNetVisibility()" title="'+(netHidden?'Mostra patrimonio netto':'Nascondi patrimonio netto')+'">'+(netHidden?'🙈':'👁')+'</button>'
-    +'<div class="sc-label">Patrimonio netto</div>'
+  // Build snapshot info for detail
+  var baseSnap=null;
+  S.wHist.forEach(function(s){
+    var sd=(s.snapDate||s.date.slice(0,10));
+    if(sd<=periodEndDate&&(!baseSnap||sd>=(baseSnap.snapDate||baseSnap.date.slice(0,10)))) baseSnap=s;
+  });
+  var snapDateStr=baseSnap?(baseSnap.snapDate||baseSnap.date.slice(0,10)):'';
+  var snapTot=baseSnap?baseSnap.total:0;
+  var netTxs=baseSnap?getPeriodTxs().filter(function(t){return t.date>=snapDateStr&&t.date<=periodEndDate;}):[];
+
+  var netCard='<div class="stat-card stat-net'+(netHidden?' stat-net-hidden':'')+'" style="position:relative;cursor:pointer" onclick="showNetWorthDetail('+net+','+netNet+','+snapTot+',\''+snapDateStr+'\')" data-tooltip="'+escH('Snapshot patrimoniale più recente ('+( baseSnap?fmtShort(snapDateStr):'nessuno')+') aggiornato con tutti i movimenti successivi. Clicca per vedere il dettaglio del calcolo. Usa 👁 per nascondere il valore.')+'">'
+    +'<button class="net-eye-btn" onclick="event.stopPropagation();toggleNetVisibility()" title="'+(netHidden?'Mostra':'Nascondi')+' patrimonio netto" data-tt-id="btn-net-eye">'+(netHidden?'🙈':'👁')+'</button>'
+    +'<div class="sc-label">Patrimonio netto'+(net!==netNet?'<span style="font-size:.65rem;margin-left:6px;opacity:.6;white-space:nowrap">'+(_consView==='net'?'con rimborsi 💑':'senza rimborsi 💑')+'</span>':'')+'</div>'
     +'<div class="sc-net-mask">'
-    +'<div class="sc-value v-net-gold privacy-blur">€'+fmt(net)+'</div>'
-    +'<div class="sc-note">Snapshot + movimenti successivi</div>'
+    +'<div class="sc-value v-net-gold privacy-blur">€'+fmt(displayNet)+'</div>'
+    +'<div class="sc-note">'+(baseSnap?'Snapshot '+fmtShort(snapDateStr)+' + movimenti':'Nessuno snapshot')+' · 🔍 dettaglio</div>'
     +'</div>'
     +'</div>';
 
+  var statTooltips={
+    'Entrate':'Totale di tutte le entrate nel periodo selezionato (stipendi, rimborsi, regali…). Clicca per vedere il dettaglio per categoria.',
+    'Uscite pagate':'Tutto quello che hai fisicamente pagato: spese personali + spese di coppia per intero (prima dei rimborsi). Clicca per il dettaglio.',
+    'Uscite nette':'Il tuo costo reale: spese personali + 50% spese coppia tue + 50% spese coppia della partner. Clicca per vedere come è composto.',
+  };
+
   var otherStats=[
-    ['Entrate','+€'+fmt(inc),'v-green','stat-inc',
-      'Totale di tutte le entrate (stipendi, rimborsi, ecc.) nel periodo selezionato.'],
-    ['Uscite pagate','-€'+fmt(rawExp),'v-red','stat-exp',
-      'Tutto quello che hai fisicamente pagato nel periodo: spese personali + spese comuni che hai anticipato tu (50% tornerà dalla tua compagna).']
+    {label:'Entrate', val:'+€'+fmt(inc), cls:'v-green', cardCls:'stat-inc',
+     note:'', onclick:'showIncDetail(getPeriodTxs())'},
+    {label:'Uscite pagate', val:'-€'+fmt(rawExp), cls:'v-red', cardCls:'stat-exp',
+     note:'importi pieni pagati di tasca', onclick:'showExpDetail(getPeriodTxs(),buildCatMap(getPeriodTxs()),\'raw\')'}
   ];
   if(hasCoupleSplit) otherStats.push(
-    ['Uscite nette','-€'+fmt(realExp),'v-red','stat-exp',
-      'Il tuo costo reale: spese personali + 50% delle spese comuni tue + 50% delle spese comuni della tua compagna.']
+    {label:'Uscite nette', val:'-€'+fmt(realExp), cls:'v-red', cardCls:'stat-exp',
+     note:'personale + 50% coppia', onclick:'showExpDetail(getPeriodTxs(),buildCatMap(getPeriodTxs()),\'net\')'}
   );
   var saldoLabel='Saldo netto'+(periodLabel?' '+periodLabel:'');
   otherStats.push(
-    [saldoLabel,(bal>=0?'+':'-')+'€'+fmt(Math.abs(bal)),bal>=0?'v-green':'v-red','stat-bal',
-      'Entrate meno uscite nette. Rappresenta il risparmio reale tenendo conto della quota a tuo carico delle spese di coppia.']
+    {label:saldoLabel, val:(displayBal>=0?'+':'-')+'€'+fmt(Math.abs(displayBal)),
+     cls:displayBal>=0?'v-green':'v-red', cardCls:displayBal>=0?'stat-bal':'stat-exp',
+     note:_consView==='net'?'entrate − uscite nette':'entrate − uscite pagate',
+     tt:_consView==='net'?'Entrate meno uscite nette del periodo. Positivo = risparmio reale. Clicca per il dettaglio.':'Entrate meno uscite pagate (cash flow). Non considera i rimborsi futuri della partner. Clicca per il dettaglio.',
+     onclick:'showBalDetail('+inc+','+rawExp+','+realExp+','+(inc-realExp)+')'}
   );
 
   g.innerHTML=netCard+otherStats.map(function(r){
-    return '<div class="stat-card '+r[3]+'" data-tooltip="'+escH(r[4])+'">'
-      +'<div class="sc-label">'+r[0]+'</div>'
-      +'<div class="sc-value '+r[2]+' privacy-blur">'+r[1]+'</div>'
-      +(r[0].startsWith('Uscite Nette')?'<div class="sc-note">Tuo 50% delle spese comuni</div>':'')
+    var tt=r.tt||(statTooltips[r.label]||'');
+    return '<div class="stat-card '+r.cardCls+'" style="cursor:pointer" onclick="'+r.onclick+'"'+(tt?' data-tooltip="'+escH(tt)+'"':'')+'>'
+      +'<div class="sc-label">'+r.label+'</div>'
+      +'<div class="sc-value '+r.cls+' privacy-blur">'+r.val+'</div>'
+      +'<div class="sc-note">'+(r.note?r.note+' · ':'')+'🔍 dettaglio</div>'
       +'</div>';
   }).join('');
 
@@ -3829,7 +4035,9 @@ function updateCons(){
       });
     });
     return Object.values(mini).reduce(function(a,d){
-      return a+d.personal+(d.coupleMe+d.coupleHers)/2;
+      return a+(_consView==='cash'
+        ? d.personal+d.coupleMe
+        : d.personal+(d.coupleMe+d.coupleHers)/2);
     },0);
   }
 
@@ -3934,7 +4142,7 @@ function updateCons(){
 
   // Chart 1 — Entrate vs Uscite
   killChart('c1');
-  (function(){ var w=document.querySelector('[data-tt-id="chart-c1"] .ch-wrap'); if(w&&!w.querySelector('canvas')){w.innerHTML='<canvas id="ch1"></canvas>';} })();
+  (function(){ var w=document.querySelector('[data-tt-id="chart-c1"] .ch-wrap'); if(w){w.innerHTML='<canvas id="ch1"></canvas>';} })();
   var cv1=document.getElementById('ch1');
   if(cv1){
     var ch1type=chartLabels.length>8?'line':'bar';
@@ -3946,7 +4154,7 @@ function updateCons(){
 
   // Chart 2 — Risparmio cumulativo — verde/rosso split esatto allo zero
   killChart('c2');
-  (function(){ var w=document.querySelector('[data-tt-id="chart-c2"] .ch-wrap'); if(w&&!w.querySelector('canvas')){w.innerHTML='<canvas id="ch2"></canvas>';} })();
+  (function(){ var w=document.querySelector('[data-tt-id="chart-c2"] .ch-wrap'); if(w){w.innerHTML='<canvas id="ch2"></canvas>';} })();
   var cv2=document.getElementById('ch2');
   if(t2) t2.textContent='Andamento risparmio — '+periodLabel;
   if(cv2){
@@ -3956,7 +4164,7 @@ function updateCons(){
     savTxs.forEach(function(t){
       var cost;
       if(t.type==='income') cost=t.amount;
-      else if(t.isCouple||t.cat.indexOf('💑')!==-1) cost=-t.amount*0.5;
+      else if(t.isCouple||t.cat.indexOf('💑')!==-1) cost=-t.amount*(_consView==='cash'?1:0.5);
       else cost=-t.amount;
       cumVal+=cost;
       savDates.push(t.date);
@@ -4056,7 +4264,7 @@ function updateCons(){
 
   // Chart 3 — Patrimonio netto nel tempo (linea ancorata allo snapshot)
   killChart('c3');
-  (function(){ var w=document.querySelector('[data-tt-id="chart-c3"] .ch-wrap'); if(w&&!w.querySelector('canvas')){w.innerHTML='<canvas id="ch3"></canvas>';} })();
+  (function(){ var w=document.querySelector('[data-tt-id="chart-c3"] .ch-wrap'); if(w){w.innerHTML='<canvas id="ch3"></canvas>';} })();
   var cv3=document.getElementById('ch3');
   if(t3) t3.textContent='Patrimonio netto — '+periodLabel;
   if(cv3){
@@ -4073,7 +4281,7 @@ function updateCons(){
     });
     var sortedDates=Object.keys(netDates).sort();
     if(sortedDates.length){
-      var netSeries=sortedDates.map(function(d){ return getNetWorth(d); });
+      var netSeries=sortedDates.map(function(d){ return _consView==='net'?getNetWorthNet(d):getNetWorth(d); });
       var netColors=netSeries.map(function(v){ return v>=0?c.green:c.red; });
       CH['c3']=new Chart(cv3,{type:'line',
         data:{labels:sortedDates.map(fmtShort),datasets:[{
@@ -4093,13 +4301,17 @@ function updateCons(){
 
   // Chart 4 — Dettaglio categorie — usa costi netti reali
   killChart('c4');
-  (function(){ var w=document.querySelector('[data-tt-id="chart-c4"] .ch-wrap'); if(w&&!w.querySelector('canvas')){w.innerHTML='<canvas id="ch4"></canvas>';} })();
+  (function(){ var w=document.querySelector('[data-tt-id="chart-c4"] .ch-wrap'); if(w){w.innerHTML='<canvas id="ch4"></canvas>';} })();
   var cv4=document.getElementById('ch4');
   if(t4) t4.textContent='Dettaglio categorie — '+periodLabel;
   if(cv4){
     var catMap4=buildCatMap(txs);
     var cat4Entries=Object.keys(catMap4)
-      .map(function(k){ return {name:k, val:catMap4[k].realCost+catMap4[k].income}; })
+      .map(function(k){
+        var d=catMap4[k];
+        var val=_consView==='cash'?(d.personal+d.coupleMe+d.income):(d.realCost+d.income);
+        return {name:k, val:val};
+      })
       .filter(function(e){ return e.val>0; })
       .sort(function(a,b){ return b.val-a.val; })
       .slice(0,10);
@@ -4444,34 +4656,34 @@ function updateAiBanner(){
       <!-- TAB: Dati -->
       <div class="sm-panel act" id="sm-dati">
         <div class="sm-row">
-          <div class="card" style="margin:0">
+          <div class="card" style="margin:0" data-tt-id="card-settings-backup">
             <div class="card-title">💾 Backup</div>
             <p style="font-size:.82rem;color:var(--sub);margin-bottom:16px">Esporta tutti i tuoi dati e preferenze in un file JSON. Tienilo al sicuro come copia di riserva.</p>
             <button class="btn btn-primary" onclick="backupJSON()" data-tt-id="btn-backup">⬇️ Esporta backup</button>
           </div>
-          <div class="card" style="margin:0">
+          <div class="card" style="margin:0" data-tt-id="card-settings-restore">
             <div class="card-title">⬆️ Ripristino</div>
             <p style="font-size:.82rem;color:var(--sub);margin-bottom:16px">Importa un backup precedentemente esportato. I dati attuali verranno sostituiti.</p>
             <button class="btn btn-ghost" onclick="triggerRestore()" data-tt-id="btn-restore">⬆️ Importa backup</button>
           </div>
         </div>
-        <div class="card" style="margin:0">
+        <div class="card" style="margin:0" data-tt-id="card-settings-updates">
           <div class="card-title">🔄 Aggiornamenti app</div>
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Controlla se è disponibile una nuova versione. Se l'app è installata sul desktop, ricarica la pagina dopo l'aggiornamento.</p>
-          <button class="btn btn-primary" id="btn-check-updates" onclick="checkForUpdates()">🔄 Verifica aggiornamenti</button>
+          <button class="btn btn-primary" id="btn-check-updates" onclick="checkForUpdates()" data-tt-id="btn-check-updates">🔄 Verifica aggiornamenti</button>
           <div id="sw-update-status" style="font-size:.8rem;margin-top:10px"></div>
         </div>
         <div class="card" style="margin:0;border-color:var(--red);background:var(--red-s)">
           <div class="card-title" style="color:var(--red-d)">🧪 Modalità Debug</div>
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
-          <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()">🧪 Entra in modalità debug</button>
+          <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()" data-tt-id="btn-debug">🧪 Entra in modalità debug</button>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1.4</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1.5</div>
       </div>
 
       <!-- TAB: App mobile -->
       <div class="sm-panel" id="sm-mobile">
-        <div class="card" style="margin:0">
+        <div class="card" style="margin:0" data-tt-id="card-settings-email">
           <div class="card-title">📧 Email di default</div>
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Indirizzo pre-compilato automaticamente nelle funzioni di scambio dati con l'app mobile.</p>
           <div class="field">
@@ -4485,7 +4697,7 @@ function updateAiBanner(){
 
       <!-- TAB: AI -->
       <div class="sm-panel" id="sm-ai">
-        <div class="card" style="margin:0">
+        <div class="card" style="margin:0" data-tt-id="card-settings-api">
           <div class="card-title">🤖 Chiave API Anthropic</div>
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Necessaria per generare riepiloghi AI in modalità diretta. Ottienila su <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a>. Salvata <strong>solo nel tuo browser</strong>, mai inviata altrove.</p>
           <div class="field">
@@ -4502,7 +4714,7 @@ function updateAiBanner(){
 
       <!-- TAB: Reset -->
       <div class="sm-panel" id="sm-reset">
-        <div class="card" style="margin:0;border-color:var(--red)">
+        <div class="card" style="margin:0;border-color:var(--red)" data-tt-id="card-settings-reset">
           <div class="card-title" style="color:var(--red-d)">🗑 Resetta dati</div>
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Elimina definitivamente i dati del periodo selezionato. <strong>Operazione irreversibile.</strong> Verrà richiesta una password di conferma.</p>
           <div class="sm-row">
@@ -4542,6 +4754,16 @@ function updateAiBanner(){
       </div>
 
     </div><!-- /sm-body -->
+  </div>
+</div>
+
+<div class="ch-modal-overlay" id="stat-detail-overlay" onclick="closeStatDetail(event)">
+  <div class="ch-modal" style="max-width:560px">
+    <div class="ch-modal-hdr">
+      <h3 id="stat-detail-title"></h3>
+      <button class="ch-modal-close" onclick="closeStatDetail()">✕</button>
+    </div>
+    <div id="stat-detail-body" style="font-size:.83rem;line-height:1.6;max-height:60vh;overflow-y:auto"></div>
   </div>
 </div>
 
@@ -4820,32 +5042,41 @@ function populateAiYearSel(){
 }
 
 function getAiTxs(){
+  var todayStr=today();
+  // Include active scheduled (maturate ≤ oggi), exclude future real txs
+  var activeSched=getActiveScheduled().filter(function(t){
+    var rule=(S.recurringRules||[]).find(function(r){return r.id===t.ruleId;});
+    return !(rule&&rule.exceptions&&rule.exceptions.indexOf(t.date)!==-1);
+  });
+  var realTxs=S.txs.filter(function(t){return t.date<=todayStr;});
+  var allTxs=realTxs.concat(activeSched);
+
   var p=aiPeriod;
-  if(p==='all') return S.txs.slice();
+  if(p==='all') return allTxs;
   if(p==='current'){
     var now=new Date(); var ym=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-    return S.txs.filter(function(t){ return t.date.startsWith(ym); });
+    return allTxs.filter(function(t){ return t.date.startsWith(ym); });
   }
   if(p==='pick-month'){
     var ym2=(document.getElementById('ai-month-in')||{}).value||today().slice(0,7);
-    return S.txs.filter(function(t){ return t.date.startsWith(ym2); });
+    return allTxs.filter(function(t){ return t.date.startsWith(ym2); });
   }
   if(p==='range'){
     if(_aiRangeMode==='year'){
       var y=(document.getElementById('ai-year')||{}).value||String(new Date().getFullYear());
-      return S.txs.filter(function(t){ return t.date.startsWith(y); });
+      return allTxs.filter(function(t){ return t.date.startsWith(y); });
     }
     if(_aiRangeMode==='month'){
       var rm=(document.getElementById('ai-range-month')||{}).value||today().slice(0,7);
-      return S.txs.filter(function(t){ return t.date.startsWith(rm); });
+      return allTxs.filter(function(t){ return t.date.startsWith(rm); });
     }
     if(_aiRangeMode==='day'){
       var from=(document.getElementById('ai-from')||{}).value||'';
       var to=(document.getElementById('ai-to')||{}).value||'';
-      return S.txs.filter(function(t){ return (!from||t.date>=from)&&(!to||t.date<=to); });
+      return allTxs.filter(function(t){ return (!from||t.date>=from)&&(!to||t.date<=to); });
     }
   }
-  return S.txs.slice();
+  return allTxs;
 }
 
 function getAiPeriodLabel(){
@@ -5257,7 +5488,7 @@ function closeChModal(e){
 (function(){
   var el=document.getElementById('tt');
   var timer=null;
-  var DELAY=3000; // 3 seconds of mouse stillness before appearing
+  var DELAY=1500; // 1.5 seconds of mouse stillness before appearing
   var currentTarget = null;
 
   // Load enabled state from localStorage (default: enabled)
@@ -5288,266 +5519,415 @@ function closeChModal(e){
     // ─── NAVIGAZIONE SIDEBAR ───────────────────────────────────
     'nav-prog':{
       title:'⚙️ Progettazione',
-      body:'Punto di partenza obbligatorio. Qui definisci <b>dove tieni i soldi</b> (depositi) e <b>come classifichi le spese</b> (categorie personali e di coppia). Senza categorie non puoi registrare nulla.',
-      ex:'Prima sessione: aggiungi Banca, Satispay, Contanti come depositi. Poi Macchina, Sanità come personali; Casa, Spesa, Bollette come coppia.'
+      body:'Punto di partenza obbligatorio. Qui definisci <b>dove tieni i soldi</b> (depositi/debiti futuri), le <b>categorie di entrata</b> e le <b>categorie di spesa</b> (personali e di coppia). Senza categorie non puoi registrare nulla.',
+      ex:'Prima sessione: aggiungi Banca, Satispay come depositi; Stipendio come entrata; Macchina, Sanità come personali; Casa, Spesa, Bollette come coppia 💑.'
     },
     'nav-wallet':{
       title:'🏦 Snapshot Patrimonio',
-      body:'Ogni volta che controlli i conti, inserisci qui i saldi aggiornati di depositi (valore positivo) e debiti futuri (valore negativo), poi salva uno <b>snapshot</b>. Il totale netto è la base per calcolare il <b>Patrimonio Netto</b>.',
-      ex:'Controlli il conto a fine mese: Banca €2.870, Satispay €64, Contanti €40 → salvi lo snapshot → Patrimonio Netto si aggiorna in Statistiche.'
+      body:'Ogni volta che controlli i conti, inserisci i saldi aggiornati e salva uno <b>snapshot</b>. Il totale netto è la base per calcolare il <b>Patrimonio Netto</b> in Statistiche. Puoi scegliere la data dello snapshot.',
+      ex:'Controlli il conto il 1° aprile: Banca €2.870, Satispay €64, ConadCard -€175 → snapshot netto €2.759 → Patrimonio Netto si aggiorna in Statistiche.'
     },
     'nav-comp':{
       title:'✏️ Spese & Entrate',
-      body:'Il registro quotidiano. Ogni volta che spendi o incassi qualcosa, lo inserisci qui. Le categorie con 💑 sono spese condivise con la tua compagna: conteggiate al 50% nelle Uscite Nette.',
-      ex:'Paghi la bolletta €276 → Uscita, Bollette 💑. Prendi lo stipendio → Entrata. Fai benzina €55 → Uscita, Macchina (solo tua).'
+      body:'Il registro quotidiano. Ogni movimento (entrata o uscita) va inserito qui. Le categorie con 💑 sono spese condivise al 50%. Puoi impostare una <b>ricorrenza automatica</b> per pagamenti periodici. I movimenti futuri appaiono in un box separato e non influenzano i calcoli finché non arriva il loro giorno.',
+      ex:'Bolletta gas €276 → Uscita, Bollette 💑, ricorrenza mensile. Stipendio → Entrata, Stipendio. Abbonamento Netflix → Uscita, Abbonamenti, ricorrenza annuale.'
     },
     'nav-partner':{
       title:'👫 Spese Partner',
-      body:'A fine mese inserisci qui quanto ha speso la tua compagna nelle categorie comuni. Serve all\'<b>Analisi Coppia</b> per calcolare chi ha anticipato di più e il rimborso da fare.',
-      ex:'Lei ti dice: Casa €200, Spesa €130, Svaghi €45. Li inserisci qui per marzo → l\'Analisi Coppia calcola il pareggio automaticamente.'
+      body:'A fine mese inserisci qui quanto ha speso la tua compagna nelle categorie comuni. Necessario per calcolare le <b>Uscite Nette reali</b> (50% tue + 50% sue) e il rimborso in Analisi Coppia.',
+      ex:'Lei ti dice: Casa €200, Spesa €130. Li inserisci qui per aprile → le Uscite Nette in Statistiche diventano precise → Analisi Coppia calcola il pareggio.'
     },
     'nav-cons':{
       title:'📊 Statistiche',
-      body:'Panoramica finanziaria completa con 4 grafici interattivi. Scegli il periodo con i pulsanti in cima. <b>Clicca un grafico per ingrandirlo.</b> Le schede mostrano Entrate, Uscite, Uscite Nette (se hai dati partner), Saldo e Patrimonio Netto.',
-      ex:'Selezioni "Mese", data odierna → vedi Entrate €1.800, Uscite €1.350, Uscite Nette €1.050 (hai anticipato spese comuni che lei rimborserà).'
+      body:'Panoramica finanziaria completa con 4 grafici interattivi. Scegli il periodo. <b>Switch "Con/Senza rimborsi 💑"</b> per vedere i valori con la quota coppia già calcolata o con gli importi pieni pagati. <b>Clicca le card</b> per vedere il dettaglio del calcolo. <b>Clicca un grafico per ingrandirlo.</b>',
+      ex:'"Con rimborsi 💑": Uscite Nette €750 (tua quota reale). "Senza rimborsi 💑": Uscite Pagate €1.100 (cash out effettivo prima dei rimborsi).'
     },
     'nav-coppia':{
       title:'💑 Analisi Coppia',
-      body:'Bilancio mensile delle sole spese condivise. Mostra per ogni categoria comune quanto hai pagato tu e quanto ha pagato lei, e calcola il <b>rimborso finale</b> per pareggiare al 50%.',
-      ex:'Marzo: tu hai pagato in totale €480 di spese comuni, lei €220. Totale comune €700, quota equa €350. Lei ti deve €130.'
+      body:'Bilancio mensile delle sole spese condivise. Per ogni categoria mostra quanto hai pagato tu e quanto ha pagato lei, e calcola il <b>rimborso finale</b> per pareggiare al 50%.',
+      ex:'Aprile: tu hai anticipato €820 di spese comuni, lei €380. Totale €1.200, quota equa €600. Lei ti deve €220.'
     },
     'nav-ai':{
       title:'🤖 Riepiloghi AI',
-      body:'Claude analizza i tuoi dati e produce un testo sintetico in italiano: valutazione del periodo, aree di spesa rilevanti, osservazioni sulla coppia, consigli. Due modalità: <b>diretta</b> (serve chiave API) o <b>prompt manuale</b> (copi e incolli su claude.ai).',
-      ex:'Output tipico: "Mese equilibrato. Principale voce di spesa: Casa €480 (34%). Risparmio effettivo: +€410. Suggerimento: i Svaghi di coppia sono aumentati del 40% rispetto al mese scorso."'
+      body:'Claude analizza i tuoi dati e produce un\'analisi in italiano. Scegli il dettaglio del prompt: <b>Sintetico</b> (totali + categorie + tx con nota) per periodi lunghi, <b>Completo</b> (tutte le tx) per periodi brevi. Due modalità: diretta (API key) o manuale (prompt da incollare su claude.ai).',
+      ex:'Sintetico su 6 mesi: prompt compatto, analisi precisa dei trend. Completo su aprile: ogni singola transazione è visibile all\'AI per un\'analisi dettagliata.'
     },
 
     // ─── HOME CARDS ────────────────────────────────────────────
     'home-configura':{
       title:'⚙️ Configura — da dove partire',
-      body:'<b>Inizia sempre da qui.</b> Senza depositi e categorie l\'app non funziona. Ci vogliono 5 minuti e si fa una volta sola. Puoi tornare ad aggiornare le categorie in qualsiasi momento.',
-      ex:'Crea: Banca + Satispay come depositi. Macchina + Sanità come personali. Casa + Spesa + Bollette come coppia.'
+      body:'<b>Inizia sempre da qui.</b> Senza depositi e categorie l\'app non funziona. Ci vogliono 5 minuti e si fa una volta sola. Puoi aggiungere categorie in qualsiasi momento — l\'app ti avviserà di inviarle all\'app mobile.',
+      ex:'Crea: Banca + Satispay come depositi. Stipendio come entrata. Macchina + Sanità come personali. Casa + Spesa + Bollette come coppia 💑.'
     },
     'home-inserisci':{
       title:'✏️ Inserisci — operazioni quotidiane',
-      body:'Le tre azioni che usi più spesso: aggiorna i saldi nello <b>Snapshot Patrimonio</b>, registra <b>Spese & Entrate</b>, inserisci le <b>Spese Partner</b> a fine mese.',
-      ex:'Ogni giorno: una spesa → Spese & Entrate. A fine mese: aggiorna i saldi → Snapshot Patrimonio, poi chiedi alla compagna le sue spese → Spese Partner.'
+      body:'Le azioni che usi più spesso: aggiorna i saldi nello <b>Snapshot Patrimonio</b>, registra <b>Spese & Entrate</b> (anche con ricorrenza automatica), inserisci le <b>Spese Partner</b> a fine mese.',
+      ex:'Ogni giorno: una spesa → Spese & Entrate. A fine mese: saldi → Snapshot; spese compagna → Spese Partner. Bollette ricorrenti → imposta una volta, l\'app le aggiunge automaticamente.'
     },
     'home-analizza':{
       title:'📊 Analizza — capire i numeri',
-      body:'Tre viste complementari: <b>Statistiche</b> per l\'andamento generale, <b>Analisi Coppia</b> per capire il bilancio mensile condiviso, <b>Riepiloghi AI</b> per un\'analisi narrativa automatica.',
-      ex:'Fine mese: Statistiche per vedere il saldo, Analisi Coppia per sapere chi deve cosa, AI per un riassunto veloce da leggere.'
+      body:'Tre viste: <b>Statistiche</b> per l\'andamento generale (con switch con/senza rimborsi 💑 e card cliccabili per il dettaglio), <b>Analisi Coppia</b> per il bilancio mensile condiviso, <b>Riepiloghi AI</b> per un\'analisi narrativa.',
+      ex:'Fine mese: Statistiche per vedere il saldo reale; Analisi Coppia per sapere chi deve cosa; AI con modalità Sintetica per un riassunto veloce.'
     },
 
     // ─── FORM SPESE & ENTRATE ──────────────────────────────────
     'b-in':{
       title:'▲ Entrata — incasso denaro',
-      body:'Seleziona <b>Entrata</b> quando ricevi soldi: stipendio, rimborso, vendita, regalo. La categoria è fissa ("Stipendio / Entrata") — non è necessario distinguere tra tipi di entrata per il funzionamento dell\'app.',
-      ex:'Stipendio mensile €1.680, rimborso spese di lavoro €120, vendita oggetto €40 → tre Entrate separate, ognuna con la sua nota.'
+      body:'Seleziona quando ricevi soldi. Scegli la categoria tra quelle di entrata configurate in Progettazione (es. Stipendio, Rimborsi, Regali). Le entrate entrano in tutti i calcoli di saldo e patrimonio.',
+      ex:'Stipendio mensile €1.680 → Entrata, Stipendio. Rimborso spese €120 → Entrata, Rimborsi. Vendita oggetto €40 → Entrata, Varie.'
     },
     'b-out':{
       title:'▼ Uscita — spendo denaro',
-      body:'Seleziona <b>Uscita</b> quando spendi. Scegli la categoria: quelle con 💑 sono condivise con la tua compagna (conteggiate al 50% nelle Uscite Nette). Le categorie senza 💑 sono solo tue.',
-      ex:'Fai la spesa per entrambi: Uscita → Spesa 💑 → €95. Fai benzina: Uscita → Macchina → €58 (solo tua, non influisce sulla coppia).'
+      body:'Seleziona quando spendi. Le categorie con 💑 sono condivise al 50% con la tua compagna. I movimenti con data futura appaiono nel box "non contabilizzati" e non influenzano i calcoli finché non arriva il loro giorno.',
+      ex:'Fai la spesa per entrambi €95 → Uscita, Spesa 💑. Benzina €58 → Uscita, Macchina (solo tua). Affitto a fine mese → Uscita, Casa 💑, data futura → appare nel box futuro.'
+    },
+    'tx-recur':{
+      title:'🔁 Imposta ricorrenza automatica',
+      body:'Attiva per pagamenti periodici: l\'app genera automaticamente le occorrenze future. Ogni occorrenza già maturata (≤ oggi) entra nei calcoli come una transazione normale. Le occorrenze future restano nel box "non contabilizzate".',
+      ex:'Bolletta gas ogni mese: imposti il 3 del mese con ricorrenza mensile → ogni 3 del mese appare automaticamente nelle spese. A fine anno hai 12 bollette senza inserirle manualmente.'
+    },
+
+    // ─── STATISTICHE — SWITCH ──────────────────────────────────
+    'cons-view-net':{
+      title:'💑 Con rimborsi — vista costo netto reale',
+      body:'Patrimonio, uscite e saldo calcolati considerando che la tua compagna rimborserà il suo 50% delle spese comuni. <b>Formula:</b> uscite nette = personale + 50% tue spese coppia + 50% sue spese coppia. I grafici si adattano.',
+      ex:'Hai pagato €400 di Bollette 💑 e lei ha pagato €300 di Casa 💑. Uscite nette = €200 (tua quota Bollette) + €150 (tua quota Casa) = €350.'
+    },
+    'cons-view-cash':{
+      title:'💸 Senza rimborsi — vista cash flow reale',
+      body:'Patrimonio, uscite e saldo calcolati sugli importi effettivamente usciti dal tuo conto, senza considerare i rimborsi futuri. Utile per capire quanto hai fisicamente pagato in un periodo.',
+      ex:'Hai pagato €400 di Bollette 💑. In questa vista pesano €400 interi, non €200. Il rimborso che riceverai dalla compagna non è ancora conteggiato.'
+    },
+
+    // ─── AI — MODALITÀ PROMPT ──────────────────────────────────
+    'ai-mode-syn':{
+      title:'📊 Prompt Sintetico',
+      body:'Invia all\'AI: totali del periodo, riepilogo per categoria, solo le transazioni con nota + le 10 più alte per importo. Compatto e veloce — ideale per periodi lunghi (mesi, anni). Il prompt resta gestibile anche con anni di dati.',
+      ex:'6 mesi di dati, 200 transazioni → il prompt include ~30 transazioni rilevanti + tutti i totali per categoria. L\'analisi è precisa e il prompt non è pesante.'
+    },
+    'ai-mode-full':{
+      title:'📋 Prompt Completo',
+      body:'Invia all\'AI tutte le transazioni del periodo con date, categorie, importi e note. Massima precisione. Consigliato solo per periodi brevi (mese singolo, 20-60 transazioni) per non appesantire troppo il prompt.',
+      ex:'Aprile 2026, 35 transazioni → il prompt le elenca tutte → l\'AI può citare singole voci specifiche nell\'analisi, come "la spesa del 12 aprile €143 supera la media mensile".'
     },
 
     // ─── STATISTICHE ──────────────────────────────────────────
-    'period-bar':{
-      title:'📆 Seleziona il periodo',
-      body:'Filtra tutti i dati al periodo scelto. La data nel campo a destra indica il punto di riferimento: l\'app prende il periodo che la contiene. <b>Tutto</b> mostra l\'intera storia dall\'inizio.',
-      ex:'"Mese" + 15/03 → tutto marzo. "Trimestre" + 15/03 → gennaio–marzo. "Anno" + qualsiasi data 2025 → tutto il 2025. "Semestre" + 01/09 → luglio–dicembre.'
-    },
     'cons-dt':{
-      title:'📅 Selettore periodo',
-      body:'Scegli come vuoi visualizzare i dati: Mese corrente (aggiornato in automatico), Mese a scelta, Periodo personalizzato (per anno, mese o date specifiche) oppure Tutto per vedere l\'intera storia.',
-      ex:'Vuoi confrontare marzo e aprile? Usa "Mese a scelta" e cambia il mese. Vuoi vedere tutto il 2025? Usa "Periodo a scelta → Per anno".'
+      title:'📆 Selettore periodo',
+      body:'Scegli come vuoi visualizzare i dati: <b>Mese corrente</b> (aggiornato in automatico), <b>Mese a scelta</b>, <b>Periodo a scelta</b> (per anno, mese o date libere), oppure <b>Tutto</b> per l\'intera storia.',
+      ex:'Vuoi vedere tutto il 2025? "Periodo a scelta → Per anno → 2025". Vuoi confrontare mesi? Usa "Mese a scelta" e cambia il mese volta per volta.'
     },
 
     // ─── ANALISI COPPIA ───────────────────────────────────────
     'cop-month':{
       title:'📅 Mese da analizzare',
-      body:'L\'Analisi Coppia lavora sempre mese per mese. Seleziona il mese che vuoi esaminare: l\'app legge le tue spese 💑 di quel mese e i dati partner inseriti per quel mese.',
-      ex:'Seleziona Febbraio 2026 → vedi le spese comuni di febbraio. Se non hai ancora inserito i dati di lei, vai prima in Spese Partner.'
+      body:'L\'Analisi Coppia lavora mese per mese. Seleziona il mese: l\'app legge le tue spese 💑 di quel mese e i dati partner inseriti in "Spese Partner" per quel mese.',
+      ex:'Seleziona Marzo 2026 → vedi le spese comuni di marzo. Se non hai ancora inserito i dati di lei, vai prima in Spese Partner → Marzo.'
     },
 
     // ─── PORTAFOGLIO ──────────────────────────────────────────
     'wallet-snap-btn':{
       title:'💾 Salva snapshot patrimonio',
-      body:'Fissa i saldi reali in questo momento. Lo snapshot viene usato nelle Statistiche come base per calcolare il <b>Patrimonio Netto</b>. I debiti futuri inseriti con valore negativo abbassano il totale dello snapshot, riflettendo la situazione reale.',
-      ex:'Depositi: Banca €2.870, Satispay €64. Debiti futuri: ConadCard -€175, Unipol Move -€88 → snapshot netto: €2.671.'
+      body:'Fissa i saldi reali a una data scelta. Lo snapshot è la base per il <b>Patrimonio Netto</b> in Statistiche: snapshot + tutti i movimenti successivi = patrimonio corrente. Lo snapshot non è retroattivo: non influenza i calcoli di periodi precedenti.',
+      ex:'Snapshot il 1° aprile: €10.000 netti. Poi nel mese aggiungi €1.000 stipendio e -€500 spese → Patrimonio Netto al 30 aprile = €10.500.'
     },
 
     // ─── RIEPILOGHI AI ─────────────────────────────────────────
-    'ai-per-month':{
-      title:'📅 Riepilogo mensile',
-      body:'Analizza un singolo mese. Seleziona il mese nel campo che appare sotto. È la modalità più usata: ideale per capire com\'è andata a fine mese.',
-      ex:'Seleziona Marzo 2026 → l\'AI legge tutte le entrate, uscite, spese di coppia di marzo e produce un\'analisi narrativa.'
+    'ai-call-btn':{
+      title:'✨ Genera riepilogo AI',
+      body:'Invia i dati del periodo all\'API di Claude e ricevi in secondi un\'analisi in italiano. Richiede chiave API nelle Impostazioni. La modalità prompt (Sintetico/Completo) determina quanti dettagli vengono inviati.',
+      ex:'Periodo: Aprile 2026, modalità Sintetica → risposta in ~5 secondi: "Mese in leggero passivo. Principale spesa: Casa 💑 €480. Consiglio: Svaghi in aumento."'
     },
-    'ai-per-range':{
-      title:'📆 Riepilogo per intervallo',
-      body:'Scegli un intervallo di date personalizzato: utile per analizzare periodi particolari come un trimestre, una vacanza, o dal tuo ultimo stipendio a oggi.',
-      ex:'Dal 01/01/2026 al 31/03/2026 → analisi del primo trimestre. Dal 15/02 al 15/03 → analisi "da stipendio a stipendio".'
+    'ai-gen-prompt':{
+      title:'📋 Genera prompt manuale',
+      body:'Costruisce il testo completo del prompt con tutti i dati finanziari del periodo selezionato. Puoi copiarlo e incollarlo su claude.ai senza configurare una chiave API.',
+      ex:'Premi → appare il riquadro con il prompt → "Copia e apri Claude" → si apre claude.ai → incolli → Claude risponde con l\'analisi.'
     },
-    'ai-per-all':{
-      title:'🗂 Riepilogo globale',
-      body:'Analizza l\'intera storia dell\'app. Utile per un bilancio annuale o per capire i trend su più anni. Attenzione: con molti anni di dati il prompt sarà grande.',
-      ex:'Se usi l\'app da settembre 2014 → l\'AI riceve il totale di oltre 10 anni di movimenti e produce una visione d\'insieme generale.'
+    'ai-copy-btn':{
+      title:'🔗 Copia prompt e apri Claude',
+      body:'Copia il prompt negli appunti e apre claude.ai in una nuova scheda. Incolla con Ctrl+V (Cmd+V su Mac) e premi Invio.',
+      ex:'Clic → prompt negli appunti + si apre claude.ai → Cmd+V → Claude legge i tuoi dati e risponde con l\'analisi in italiano.'
     },
 
     // ─── PROGETTAZIONE ────────────────────────────────────────
     'prog-wcats':{
       title:'💰 Depositi e debiti futuri',
-      body:'Aggiungi due tipi di voci: <b>🟢 Deposito</b> (dove tieni fisicamente i soldi) oppure <b>🔴 Debito futuro</b> (spese già sostenute ma non ancora addebitate). Appaiono colorati di conseguenza sia qui che nello Snapshot Patrimonio.',
-      ex:''
+      body:'<b>🟢 Deposito:</b> dove tieni fisicamente i soldi (conti, wallet, contanti). <b>🔴 Debito futuro:</b> spese già sostenute ma non ancora addebitate — inseriscile come valore negativo nello snapshot. Appaiono colorati di conseguenza.',
+      ex:'Depositi: Banca, Satispay, Portafoglio. Debiti futuri: ConadCard (addebito mensile), Unipol Move (pedaggi differiti).'
     },
     'wcat-btn-deposit':{
-      title:'🟢 Aggiungi deposito',
-      body:'Seleziona questo tipo prima di premere + per aggiungere una voce di deposito: un conto bancario, un wallet digitale, contanti fisici o qualsiasi posto dove tieni denaro disponibile. La voce apparirà in verde.',
-      ex:'Banca BancoPosta, Conto N26, Satispay, Contanti, Portafoglio fisico (contanti), Salvadanaio, Auto (contante tenuto in macchina).'
+      title:'🟢 Tipo: Deposito',
+      body:'Seleziona prima di premere + per aggiungere un deposito: un conto, wallet digitale, contante fisico. Nello Snapshot Patrimonio inserisci il saldo come numero positivo.',
+      ex:'Banca BancoPosta, N26, Satispay, Contanti, Portafoglio, Salvadanaio, Auto (contante tenuto in macchina).'
     },
     'wcat-btn-debt':{
-      title:'🔴 Aggiungi debito futuro',
-      body:'Seleziona questo tipo per aggiungere una voce che rappresenta spese già sostenute ma non ancora addebitate sul conto. Nello Snapshot Patrimonio inserisci il valore come numero negativo: abbassa il totale riflettendo il debito reale. La voce apparirà in rosso.',
-      ex:'ConadCard (addebito mensile spesa), Unipol Move (pedaggi differiti), Amazon Pay (rate), Carta credito (saldo mese precedente).'
+      title:'🔴 Tipo: Debito futuro',
+      body:'Seleziona per aggiungere una voce di debito: spese già sostenute non ancora addebitate. Nello Snapshot Patrimonio inserisci il valore come numero positivo — l\'app lo tratta automaticamente come negativo.',
+      ex:'ConadCard (addebito mensile spesa), Unipol Move (pedaggi), Amazon Pay (rate), Carta credito (saldo mese precedente).'
     },
     'prog-ecats':{
       title:'📋 Spese Personali — solo tue',
-      body:'Categorie per spese che riguardano solo te. <b>Attenzione:</b> se una categoria ha lo stesso nome di una di coppia (es. entrambe "Svaghi"), diventa <b>MISTA</b>: puoi registrare sia spese solo tue che spese condivise sotto lo stesso nome.',
-      ex:'Personali pure: Macchina, Sanità, Abbonamenti, Cibo Fuori. Potenzialmente MISTA: Svaghi (se la metti anche in Coppia).'
+      body:'Categorie per spese che riguardano solo te. Se una categoria ha lo stesso nome di una di coppia, diventa <b>MISTA</b>: puoi registrare sia spese personali che condivise sotto lo stesso nome.',
+      ex:'Personali pure: Macchina, Sanità, Abbonamenti. MISTA: "Svaghi" (se esiste anche in Coppia) → puoi registrare uscite personali E condivise.'
     },
     'prog-ccats':{
       title:'💑 Spese di Coppia — condivise al 50%',
-      body:'Categorie per spese che paghi tu ma sono comuni: la tua compagna ti rimborserà il 50% (o viceversa). Ogni transazione 💑 entra nel calcolo dell\'<b>Analisi Coppia</b> e nelle <b>Uscite Nette</b>.',
-      ex:'Casa (affitto/mutuo), Spesa (supermercato), Bollette (luce/gas/internet), Svaghi (cene, cinema), Vacanze. Queste appaiono con 💑 nel form di inserimento.'
+      body:'Categorie per spese che paghi tu ma sono comuni. Ogni transazione 💑 entra nel calcolo delle <b>Uscite Nette</b> e dell\'<b>Analisi Coppia</b>. Inserisci anche le spese della partner in "Spese Partner" per avere i calcoli completi.',
+      ex:'Casa, Spesa, Bollette, Svaghi, Vacanze/W.E. → appaiono con 💑 nel form. Se lei paga la spesa, tu inserisci le sue spese in "Spese Partner".'
     },
 
     // ─── PARTNER ──────────────────────────────────────────────
     'pt-mo':{
       title:'📅 Mese di riferimento',
-      body:'Entrambe le sezioni (spese della compagna e mie spese da comunicare) si basano su questo mese. Cambialo per consultare o inserire dati di mesi passati.',
-      ex:'Siamo ad aprile ma vuoi sistemare i dati di marzo: seleziona Marzo 2026 → vedi le tue spese di coppia di marzo e puoi inserire quelle di lei.'
+      body:'Entrambe le sezioni (spese della compagna e mie spese da comunicare) si riferiscono a questo mese. Cambialo per gestire mesi passati.',
+      ex:'Siamo ad aprile ma devi sistemare marzo: seleziona Marzo 2026 → vedi le spese comuni di marzo e puoi inserire quelle di lei.'
     },
     'copy-couple-costs':{
       title:'📋 Copia riepilogo da mandare alla compagna',
-      body:'Genera un messaggio testuale con le tue spese nelle categorie comuni per il mese selezionato, e lo copia negli appunti. Inviaglielo su WhatsApp: lei fa lo stesso con te, e puoi inserire i suoi dati nell\'app.',
-      ex:'Risultato copiato: "📢 Mie spese comuni — Marzo 2026\n• Casa: €440\n• Spesa: €142\n• Bollette: €138\nTotale: €720\nComunicami le tue 🙏"'
+      body:'Genera un messaggio con le tue spese nelle categorie comuni del mese e lo copia negli appunti. Mandaglielo: lei fa lo stesso e tu inserisci i suoi dati in Spese Partner.',
+      ex:'"📢 Mie spese comuni — Aprile 2026\n• Casa: €440\n• Spesa: €142\n• Bollette: €138\nTotale: €720\nComunicami le tue 🙏"'
     },
 
     // ─── PROGETTAZIONE — PULSANTI ─────────────────────────────
     'add-wcat':{
-      title:'＋ Aggiungi deposito',
-      body:'Crea un nuovo deposito: un conto o posto fisico dove tieni i soldi. Apparirà come campo nello Snapshot Patrimonio dove inserire il saldo reale.',
-      ex:'Scrivi "Satispay" e premi + → nello Snapshot Patrimonio troverai il campo Satispay dove inserire il saldo aggiornato.'
+      title:'＋ Aggiungi deposito/debito',
+      body:'Crea una nuova voce patrimoniale del tipo selezionato (deposito o debito futuro). Apparirà nello Snapshot Patrimonio dove potrai inserire il saldo aggiornato.',
+      ex:'Scrivi "Satispay" con tipo Deposito → nello Snapshot trovi il campo Satispay. Scrivi "ConadCard" con tipo Debito futuro → appare in rosso.'
+    },
+    'add-icat':{
+      title:'＋ Aggiungi categoria entrata',
+      body:'Crea una categoria per classificare le tue entrate (es. Stipendio, Rimborsi, Regali). Appare nel selettore quando scegli "Entrata" nel form. Le categorie entrata appaiono anche in "Per Categoria" nelle Statistiche.',
+      ex:'"Stipendio", "Rimborsi", "Regali", "Vendite" → ogni tipo di entrata ha la sua categoria per analisi più precise.'
     },
     'add-ecat':{
       title:'＋ Aggiungi categoria personale',
-      body:'Crea una categoria per spese solo tue. Se il nome coincide con una categoria di coppia già esistente, diventa automaticamente <b>MISTA</b>: puoi usarla sia per spese personali che condivise.',
-      ex:'Scrivi "Macchina" → spese solo tue (benzina, bollo, assicurazione). Scrivi "Svaghi" quando esiste già in Coppia → diventa MISTA: puoi registrare sia uscite personali che condivise.'
+      body:'Crea una categoria per spese solo tue. Se il nome coincide con una categoria di coppia già esistente, diventa <b>MISTA</b>.',
+      ex:'"Macchina" → solo tue. "Svaghi" quando esiste già in Coppia → MISTA: puoi registrare uscite personali E condivise.'
     },
     'add-ccat':{
       title:'＋ Aggiungi categoria di coppia',
-      body:'Crea una categoria per spese condivise al 50% con la tua compagna. Appare con 💑 nel form di inserimento, influisce sulle Uscite Nette e alimenta l\'Analisi Coppia.',
-      ex:'Scrivi "Bollette" → ogni uscita in Bollette 💑 viene trattata come spesa comune: il tuo 50% entra nelle Uscite Nette, l\'altro 50% viene confrontato con i dati della tua compagna.'
+      body:'Crea una categoria per spese condivise al 50%. Appare con 💑 nel form, influisce sulle Uscite Nette e alimenta l\'Analisi Coppia. Ricordati di inserire le spese della partner in "Spese Partner".',
+      ex:'"Bollette" → ogni uscita in Bollette 💑 è condivisa: il tuo 50% è nelle Uscite Nette, l\'altro 50% si confronta con i dati della compagna.'
     },
     'btn-send-cats':{
       title:'📤 Invia categorie al telefono',
-      body:'Appare quando aggiungi o modifichi categorie. Esporta tutte le categorie in un file JSON e apre Gmail con il file pronto da inviare all\'email di default. Sull\'app mobile: Impostazioni → Importa categorie.',
-      ex:'Hai aggiunto "Vacanze" come coppia → appare questo pulsante → Gmail si apre con il file allegato → la tua compagna lo scarica e importa sull\'app mobile.'
+      body:'Appare quando modifichi le categorie. Esporta tutte le categorie in JSON e apre Gmail per inviarle all\'app mobile. Sull\'app mobile: Impostazioni → Importa categorie.',
+      ex:'Hai aggiunto "Vacanze" come coppia → appare il banner → Gmail si apre con il file → la compagna lo scarica e importa sull\'app mobile.'
     },
 
     // ─── SPESE & ENTRATE — PULSANTI ───────────────────────────
     'tx-add':{
-      title:'＋ Aggiungi transazione',
-      body:'Salva il movimento nel registro. Comparirà subito nella lista a destra e verrà incluso nelle statistiche, nei grafici e nell\'analisi coppia (se categoria 💑).',
-      ex:'Inserisci: Uscita, Spesa 💑, €92, "supermercato giovedì" → Aggiungi → appare nella lista e aggiorna automaticamente le statistiche del mese.'
+      title:'＋ Aggiungi / 💾 Salva',
+      body:'Salva il movimento nel registro. Se è la prima di una ricorrenza, crea anche la regola ricorrente. I movimenti con data futura vanno nel box "non contabilizzati" e non influenzano le statistiche finché non arriva il loro giorno.',
+      ex:'Uscita, Bollette 💑, €400, ricorrenza mensile → salvi → entra nelle statistiche di oggi + le occorrenze future appaiono nel box futuro.'
     },
     'tx-cancel':{
       title:'✕ Annulla modifica',
-      body:'Scarta le modifiche in corso e torna alla modalità "nuova transazione". La transazione originale rimane invariata nel registro.',
-      ex:'Stavi correggendo l\'importo di una bolletta ma hai cambiato idea → Annulla → il form si svuota e la bolletta originale è ancora lì inalterata.'
+      body:'Scarta le modifiche e torna alla modalità "nuova transazione". La transazione originale rimane invariata. Se stavi modificando una ricorrenza, la regola rimane come era.',
+      ex:'Stavi modificando l\'importo di una bolletta ma hai cambiato idea → Annulla → il form si svuota e la bolletta originale è invariata.'
     },
     'btn-import-mobile':{
       title:'📲 Importa dati dal telefono',
-      body:'Carica il file JSON esportato dall\'app mobile Bilancio. I movimenti vengono aggiunti al registro. Se rileva transazioni con lo stesso ID già presenti, ti chiede come gestire i duplicati.',
-      ex:'Hai registrato 15 movimenti sull\'app mobile a marzo → esporti il file → qui premi Importa → quei 15 movimenti si aggiungono al registro desktop.'
+      body:'Carica il file JSON esportato dall\'app mobile Bilancio Mobile. I movimenti vengono aggiunti al registro. Se rileva transazioni duplicate, ti chiede come gestirle.',
+      ex:'Hai registrato 15 movimenti sull\'app mobile → esporti il file → qui premi Importa → quei 15 movimenti si aggiungono al registro desktop.'
     },
 
     // ─── PARTNER — PULSANTI ────────────────────────────────────
     'save-partner':{
       title:'💾 Salva spese partner',
-      body:'Registra i totali mensili della tua compagna per il mese selezionato. Dati necessari per l\'Analisi Coppia: senza questi valori l\'app non può calcolare chi deve cosa all\'altro.',
-      ex:'Inserisci Casa €200, Spesa €110, Bollette €55 per marzo → Salva → Analisi Coppia di marzo ora mostra il pareggio corretto tra voi due.'
+      body:'Registra i totali mensili della tua compagna per il mese selezionato. Necessari per le <b>Uscite Nette reali</b> in Statistiche e per il calcolo del rimborso in Analisi Coppia.',
+      ex:'Inserisci Casa €200, Spesa €110 per aprile → Salva → le Uscite Nette di aprile ora includono anche la sua quota → Analisi Coppia è completa.'
     },
 
     // ─── STATISTICHE — GRAFICI ────────────────────────────────
     'chart-c1':{
-      title:'📈 Andamento entrate e uscite — 6 mesi',
-      body:'Due linee: verde = entrate mensili, rosso = uscite mensili. Mostra se stai spendendo più o meno di quello che guadagni nel tempo. <b>Clicca per ingrandire.</b>',
-      ex:'Linea rossa che supera la verde a dicembre → quel mese hai speso più di quanto hai guadagnato (forse regali di Natale). Il mese successivo controlla il recupero.'
+      title:'📈 Entrate vs Uscite',
+      body:'Confronta entrate e uscite periodo per periodo. Si adatta allo switch <b>Con/Senza rimborsi 💑</b>: "Con rimborsi" mostra le uscite nette (tua quota reale), "Senza rimborsi" mostra quanto hai fisicamente pagato. <b>Clicca per ingrandire.</b>',
+      ex:'"Con rimborsi": linea rossa = €750 (tua quota). "Senza rimborsi": linea rossa = €1.100 (cash out reale). La differenza è la quota che ti rimborserà la compagna.'
     },
     'chart-c2':{
-      title:'💰 Risparmio mensile — 6 mesi',
-      body:'Barre verdi = mesi in positivo (hai guadagnato più di quanto speso), rosse = mesi in negativo. Altezza = entità del risparmio o deficit. <b>Clicca per ingrandire.</b>',
-      ex:'Barra verde alta a ottobre (doppio stipendio o rimborso), barra rossa a agosto (vacanze). Visione immediata del trend mensile.'
+      title:'💰 Andamento risparmio',
+      body:'Curva del risparmio cumulativo: verde sopra lo zero (stai risparmiando), rossa sotto (sei in passivo). Linea tratteggiata = zero. Si adatta allo switch <b>Con/Senza rimborsi 💑</b>. <b>Clicca per ingrandire.</b>',
+      ex:'Curva verde che scende verso lo zero ad agosto → mese costoso (vacanze). Rimbalza a settembre con lo stipendio. "Senza rimborsi" la curva scende di più — visione più prudente.'
     },
     'chart-c3':{
-      title:'🍩 Spese per area — mese corrente',
-      body:'Grafico a ciambella con la distribuzione delle spese nelle categorie del <b>mese corrente</b> (non del periodo statistico). Mostra quale area pesa di più. <b>Clicca per ingrandire.</b>',
-      ex:'Casa 38%, Spesa 22%, Svaghi 18%, Macchina 14%, Sanità 8% → a colpo d\'occhio vedi le tue priorità di spesa del mese.'
+      title:'🏦 Patrimonio netto nel tempo',
+      body:'Andamento del patrimonio netto nel periodo: snapshot di partenza + variazioni giorno per giorno. Si adatta allo switch <b>Con/Senza rimborsi 💑</b>. <b>Clicca per ingrandire.</b>',
+      ex:'"Con rimborsi": patrimonio €10.500 (come se i rimborsi fossero già avvenuti). "Senza rimborsi": patrimonio €9.900 (quanto hai fisicamente oggi prima dei rimborsi).'
     },
     'chart-c4':{
-      title:'📊 Spese per area — andamento 6 mesi',
-      body:'Barre impilate: ogni colonna è un mese, ogni colore è una categoria. Mostra come cambiano le spese nelle varie aree nel tempo. <b>Clicca per ingrandire.</b>',
-      ex:'Vedi Bollette (viola) alta a gennaio e luglio → picchi stagionali di riscaldamento e condizionamento. Svaghi (arancio) alta ad agosto → effetto vacanze.'
-    },
-
-    // ─── AI — PULSANTI ─────────────────────────────────────────
-    'ai-call-btn':{
-      title:'✨ Genera riepilogo AI',
-      body:'Invia i tuoi dati finanziari del periodo all\'API di Claude. Ricevi in pochi secondi un\'analisi narrativa in italiano: valutazione, spese rilevanti, note sulla coppia, consiglio pratico. Richiede chiave API nelle Impostazioni.',
-      ex:'Periodo: Marzo 2026 → risposta: "Mese in leggero passivo (-€180). Principale spesa: Casa €480. Spese di coppia in linea. Consiglio: Svaghi in aumento del 35% rispetto a febbraio."'
-    },
-    'ai-gen-prompt':{
-      title:'📋 Genera prompt manuale',
-      body:'Costruisce il testo completo del prompt con tutti i dati finanziari del periodo. Puoi copiarlo e incollarlo su claude.ai senza configurare una chiave API — la via più semplice per iniziare.',
-      ex:'Premi → appare il riquadro con il testo del prompt → premi "Copia e apri Claude" → si apre claude.ai → incolli → Claude risponde con l\'analisi.'
-    },
-    'ai-copy-btn':{
-      title:'🔗 Copia prompt e apri Claude',
-      body:'Copia il prompt negli appunti e apre claude.ai in una nuova scheda. Nella chat di Claude incolla con Ctrl+V (o Cmd+V su Mac) e premi Invio per ricevere l\'analisi.',
-      ex:'Clic → il prompt è negli appunti + si apre claude.ai → nella chat premi Cmd+V → Claude legge i tuoi dati e risponde con il riepilogo in italiano.'
+      title:'📊 Dettaglio categorie',
+      body:'Distribuzione delle spese per categoria nel periodo. Passa da <b>Barre</b> a <b>Torta</b> con i pulsanti. Si adatta allo switch <b>Con/Senza rimborsi 💑</b>. <b>Clicca per ingrandire.</b>',
+      ex:'"Con rimborsi": Casa 💑 = €220 (tuo 50%). "Senza rimborsi": Casa 💑 = €440 (hai pagato tutto tu, aspetti il rimborso).'
     },
 
     // ─── IMPOSTAZIONI — PULSANTI ──────────────────────────────
     'btn-backup':{
       title:'⬇️ Esporta backup JSON',
-      body:'Scarica un file JSON con tutti i dati: transazioni, categorie, snapshot patrimonio, spese partner, email, tema. Salvalo come copia di sicurezza. Consigliato farlo almeno una volta al mese.',
-      ex:'Premi → si apre il dialogo "Salva con nome" → scegli la cartella → il file si chiama bilancio_2026-03-23.json → conservalo in una cartella sicura.'
+      body:'Scarica un file JSON con tutti i dati: transazioni, categorie, snapshot patrimonio, spese partner, regole ricorrenti, preferenze. Conservalo come copia di sicurezza. Consigliato almeno una volta al mese.',
+      ex:'Premi → si apre "Salva con nome" → il file si chiama bilancio_2026-04-03.json → conservalo in una cartella sicura o su cloud.'
     },
     'btn-restore':{
       title:'⬆️ Importa backup JSON',
-      body:'Carica un file JSON precedentemente esportato e ripristina tutti i dati. I dati attuali vengono sostituiti. Usa questa funzione per cambiare computer o recuperare dopo un problema.',
-      ex:'Nuovo computer → copia il file di backup → apri l\'app → Importa backup → seleziona il file → tutti i dati sono di nuovo disponibili esattamente com\'erano.'
+      body:'Carica un backup precedentemente esportato e ripristina tutti i dati (incluse le regole ricorrenti). I dati attuali vengono sostituiti completamente.',
+      ex:'Nuovo computer → copia il file di backup → Importa backup → seleziona il file → tutti i dati sono di nuovo disponibili esattamente com\'erano.'
     },
     'btn-save-email':{
       title:'💾 Salva email di default',
-      body:'Memorizza l\'indirizzo email usato automaticamente da "Invia categorie al telefono". Senza questa email il pulsante ti chiederà di configurarla prima di procedere.',
+      body:'Memorizza l\'indirizzo email usato automaticamente da "Invia categorie al telefono". Senza questa email il pulsante chiederà di configurarla prima.',
       ex:'Inserisci luca@gmail.com → Salva → ogni volta che premi "Invia categorie" Gmail si apre già con quell\'indirizzo nel campo "A:".'
     },
     'btn-save-apikey':{
       title:'💾 Salva chiave API Anthropic',
-      body:'Memorizza la tua chiave API nel browser locale. Usata da "Genera riepilogo AI" per chiamare direttamente Claude. La chiave non lascia il tuo browser — non è mai inviata a server di questa app.',
-      ex:'Vai su console.anthropic.com → crea una chiave API → incollala qui → Salva → il pulsante "Genera riepilogo AI" diventa funzionante.'
+      body:'Memorizza la chiave API nel browser locale. Usata da "Genera riepilogo AI" per chiamare Claude direttamente. La chiave non lascia mai il tuo browser.',
+      ex:'console.anthropic.com → crea una chiave API → incollala qui → Salva → "Genera riepilogo AI" diventa funzionante senza passare per il prompt manuale.'
     },
     'btn-clear-apikey':{
       title:'🗑 Rimuovi chiave API',
-      body:'Cancella la chiave API salvata dal browser. Il pulsante "Genera riepilogo AI" mostrerà di nuovo il banner di configurazione. Puoi sempre inserirne una nuova.',
-      ex:'Stai per condividere il computer con qualcuno o vuoi revocare l\'accesso → Rimuovi → la chiave non è più memorizzata nel browser.'
+      body:'Cancella la chiave API salvata dal browser. Puoi sempre inserirne una nuova in seguito.',
+      ex:'Stai per condividere il computer → Rimuovi → la chiave non è più memorizzata nel browser.'
     },
     'btn-reset':{
       title:'🗑 Esegui il reset — IRREVERSIBILE',
-      body:'Elimina definitivamente i dati selezionati. Non è possibile annullare. <b>Esporta un backup prima di procedere.</b> Richiede la password di sicurezza.',
-      ex:'Vuoi ripartire da zero per il 2026: seleziona "Intervallo", imposta dal 01/01/2026 a oggi, inserisci la password → solo i dati 2026 vengono eliminati. I dati precedenti rimangono.'
+      body:'Elimina definitivamente i dati selezionati. Non è possibile annullare. <b>Esporta un backup prima di procedere.</b> Non disponibile in modalità debug. Richiede password di sicurezza.',
+      ex:'Vuoi cancellare solo aprile 2026: "Intervallo" → 01/04/2026 → 30/04/2026 → password → solo i dati di aprile vengono eliminati.'
+    },
+    'btn-debug':{
+      title:'🧪 Modalità Debug',
+      body:'Attiva una sandbox sicura: puoi inserire, modificare o eliminare qualsiasi dato liberamente senza che venga salvato. All\'uscita, tutti i cambiamenti vengono annullati e i tuoi dati reali vengono ripristinati. Un banner rosso lampeggiante in cima alla pagina indica che il debug è attivo.',
+      ex:'Vuoi testare come funziona una ricorrenza complessa o come cambia il patrimonio con certi inserimenti → attiva debug → smanetti liberamente → esci → tutto torna come prima.'
+    },
+
+    // ─── CARD SECTIONS ────────────────────────────────────────
+    'prog-icats':{
+      title:'📥 Categorie Entrate Personali',
+      body:'Le categorie con cui classifichi i tuoi incassi. Appaiono nel form quando scegli "Entrata". Più categorie hai, più precisa sarà l\'analisi delle tue fonti di reddito in Statistiche.',
+      ex:'"Stipendio", "Rimborsi spese", "Regali", "Vendite", "Freelance" → ogni fonte di entrata è tracciata separatamente nelle statistiche per categoria.'
+    },
+    'logica-coppia':{
+      title:'💑 Logica Coppia — come funziona il 50%',
+      body:'Le spese di coppia sono condivise: tu paghi il 100% ma il tuo <b>costo reale è il 50%</b>. L\'altro 50% te lo rimborsa la tua compagna. Le <b>Uscite Nette</b> in Statistiche mostrano già solo la tua quota. Inserisci le spese di lei in "Spese Partner" per avere i calcoli completi.',
+      ex:'Paghi Bollette €300 (💑). Uscita pagate: €300. Uscite nette: €150 (tua quota). Se lei ha pagato Casa €400 (💑), il tuo costo reale include anche €200 (50% delle sue).'
+    },
+    'tx-form-card':{
+      title:'✏️ Inserisci movimento',
+      body:'Form per registrare qualsiasi movimento: entrata (stipendio, rimborso) o uscita (spesa personale o di coppia 💑). Puoi inserire una <b>ricorrenza automatica</b> per ripetere il movimento periodicamente. I movimenti con data futura non influenzano i calcoli finché non arriva il loro giorno.',
+      ex:'Stipendio €1.680 → Entrata, Stipendio. Affitto €600 → Uscita, Casa 💑, ricorrenza mensile. Abbonamento palestra → Uscita, Abbonamenti, data futura (se non ancora addebitato).'
+    },
+    'card-import-mobile':{
+      title:'📲 Importa dall\'app mobile',
+      body:'Se usi anche l\'app mobile Bilancio Mobile per registrare spese in mobilità, esporta il file JSON dall\'app e importalo qui. I movimenti vengono aggiunti al registro desktop. Se ci sono duplicati, l\'app ti chiede come gestirli.',
+      ex:'Hai registrato 15 movimenti sull\'app mobile durante la settimana → esporti il file → qui premi Importa → i 15 movimenti appaiono nel registro desktop in pochi secondi.'
+    },
+    'card-tx-filters':{
+      title:'🔍 Filtri e ricerca transazioni',
+      body:'Filtra la lista per <b>mese</b>, <b>categoria</b> e <b>ordinamento</b>. La ricerca testuale funziona su categoria, nota, data (nel formato gg/mm/aaaa) e importo. I movimenti futuri appaiono sempre nel box separato in fondo, indipendentemente dai filtri.',
+      ex:'Vuoi vedere tutte le spese di Casa di marzo → filtro mese: Marzo, categoria: Casa. Vuoi trovare la bolletta del gas → cerca "gas" o cerca l\'importo "276".'
+    },
+    'card-wallet-saldi':{
+      title:'💰 Aggiorna i saldi correnti',
+      body:'Inserisci qui i saldi aggiornati di ogni deposito (banca, wallet, contanti) e i valori attuali dei debiti futuri (spese già sostenute non ancora addebitate). Poi salva lo snapshot per registrare la situazione patrimoniale a questa data.',
+      ex:'Banca €2.870, Satispay €64, Portafoglio €40, ConadCard -€175, Unipol Move -€88 → totale netto €2.711 → premi "Salva snapshot" per fissare questo dato.'
+    },
+    'card-wallet-hist':{
+      title:'📋 Storico snapshot',
+      body:'Elenco di tutti gli snapshot salvati, in ordine cronologico. Premi ✏️ per modificare un snapshot (attenzione: cambia i calcoli del patrimonio netto da quella data in poi). Ogni snapshot è la base da cui il patrimonio si evolve con i movimenti successivi.',
+      ex:'Hai 3 snapshot: 01/01, 01/02, 01/03. Il Patrimonio Netto di metà marzo parte dall\'ultimo snapshot (01/03) + tutti i movimenti dal 1° marzo a oggi.'
+    },
+    'card-partner-her':{
+      title:'👫 Spese della tua compagna',
+      body:'Inserisci qui i totali mensili che la tua compagna ti ha comunicato per ogni categoria comune. Questi dati servono per calcolare le <b>Uscite Nette reali</b> in Statistiche (50% tue + 50% sue) e il <b>rimborso</b> in Analisi Coppia.',
+      ex:'Lei ti dice: Casa €200, Spesa €110, Svaghi €45 per aprile → li inserisci qui → le Uscite Nette di aprile diventano precise → Analisi Coppia calcola chi deve cosa.'
+    },
+    'card-partner-mine':{
+      title:'📢 Mie spese da comunicare a lei',
+      body:'Riepilogo automatico delle tue spese nelle categorie comuni per il mese selezionato. Comunicalo alla tua compagna (usa il pulsante 📋 per copiarlo) così lei può inserire i tuoi dati nella sua app e calcolare il rimborso dalla sua parte.',
+      ex:'Vedi: Casa €440, Bollette €276, Spesa €142, Svaghi €68. Copi il riepilogo → lo mandi su WhatsApp → lei inserisce i tuoi dati nella sua app.'
+    },
+    'card-partner-hist':{
+      title:'📅 Storico inserimenti partner',
+      body:'Cronologia di tutti i mesi per cui hai inserito i dati delle spese della tua compagna. Premi su un mese per riaprire e modificare. Utile per correggere errori o aggiornare dati cambiati.',
+      ex:'Vedi che marzo è già inserito (Casa €200, Spesa €110). Premi su marzo → i campi si ripopolano → puoi correggere e salvare di nuovo.'
+    },
+    'card-cons-period':{
+      title:'📊 Selezione periodo e vista',
+      body:'Scegli il <b>periodo</b> (mese corrente, mese a scelta, intervallo personalizzato o tutto) e la <b>vista</b>: "💑 Con rimborsi" mostra i valori con la quota coppia già calcolata; "💸 Senza rimborsi" mostra gli importi fisicamente pagati. Tutti i grafici e le card si adattano.',
+      ex:'"Con rimborsi 💑" + Aprile → Uscite Nette €750 (tua quota reale). "Senza rimborsi 💸" + Aprile → Uscite Pagate €1.100 (cash out prima dei rimborsi).'
+    },
+    'card-ai-config':{
+      title:'⚙️ Configura il riepilogo AI',
+      body:'Scegli il <b>periodo</b> da analizzare e la <b>modalità prompt</b>: Sintetico (totali + categorie + tx con nota, ideale per periodi lunghi) o Completo (tutte le transazioni, per periodi brevi). Poi genera con l\'API diretta o copia il prompt manualmente.',
+      ex:'Vuoi l\'analisi di tutto l\'anno → Modalità Sintetica + "Tutto" → prompt compatto con i trend principali. Vuoi il dettaglio di aprile → Completo + "Mese a scelta: aprile".'
+    },
+    'card-ai-apikey':{
+      title:'🔑 Chiave API mancante',
+      body:'Per usare la modalità diretta ("Genera riepilogo AI") hai bisogno di una chiave API Anthropic. Puoi ottenerla gratuitamente su console.anthropic.com. In alternativa usa la modalità manuale (📋 Genera prompt → incolla su claude.ai) che non richiede chiave.',
+      ex:'Vai su console.anthropic.com → crea account → API Keys → New Key → copia → vai in Impostazioni → Chiave API → incolla e salva → il pulsante "Genera riepilogo AI" si attiva.'
+    },
+    'card-coppia-month':{
+      title:'💑 Seleziona il mese da analizzare',
+      body:'L\'Analisi Coppia mostra il bilancio mensile delle sole spese condivise. Seleziona il mese: l\'app legge le tue spese 💑 di quel mese e i dati della partner inseriti in "Spese Partner" per quel mese. Se i dati partner mancano, il calcolo del rimborso sarà incompleto.',
+      ex:'Seleziona Aprile 2026 → se hai già inserito le sue spese in "Spese Partner → Aprile", vedi il rimborso esatto. Altrimenti vai prima in Spese Partner.'
+    },
+    'card-coppia-table':{
+      title:'📊 Tabella riepilogativa coppia',
+      body:'Per ogni categoria comune mostra: quanto hai pagato tu, quanto ha pagato lei, il totale, la quota equa (50%) e il rimborso. In fondo: chi deve cosa e di quanto. Il rimborso è calcolato sulla somma di tutte le categorie, non categoria per categoria.',
+      ex:'Casa: tu €440, lei €200, totale €640, equo €320. Spesa: tu €142, lei €110, totale €252, equo €126. Totale: tu hai pagato €582 in più → lei ti deve €291.'
+    },
+    'card-settings-backup':{
+      title:'💾 Esporta backup',
+      body:'Salva tutti i tuoi dati in un file JSON: transazioni, categorie, snapshot patrimonio, spese partner, regole ricorrenti e preferenze. Conservalo in una cartella sicura o sul cloud. Consigliato farlo almeno una volta al mese.',
+      ex:'Premi → si apre "Salva con nome" → il file si chiama bilancio_2026-04-15.json → salvalo in Google Drive o Dropbox come backup sicuro.'
+    },
+    'card-settings-restore':{
+      title:'⬆️ Importa backup',
+      body:'Carica un file JSON esportato precedentemente e ripristina tutti i dati. I dati attuali vengono completamente sostituiti. Usa questa funzione per cambiare computer, recuperare da un errore o trasferire dati tra versioni.',
+      ex:'Nuovo computer → apri l\'app → Importa backup → seleziona il file → tutti i dati tornano disponibili, compresi le regole ricorrenti e gli snapshot.'
+    },
+    'card-settings-updates':{
+      title:'🔄 Aggiornamenti app',
+      body:'Controlla se è disponibile una versione più recente dell\'app. Se l\'app è installata come PWA sul desktop, dopo l\'aggiornamento ricarica la pagina per applicarlo. Il numero di versione attuale è mostrato in fondo.',
+      ex:'Premi "Verifica aggiornamenti" → se c\'è una nuova versione, appare un pulsante per aggiornarla. Se sei già all\'ultima versione, lo dice esplicitamente.'
+    },
+    'card-settings-email':{
+      title:'📧 Email di default',
+      body:'L\'indirizzo email usato automaticamente quando invii le categorie all\'app mobile. Configurandola una volta, il processo di invio diventa immediato senza doverla reinserire ogni volta.',
+      ex:'Inserisci luca@gmail.com → Salva → d\'ora in poi "Invia categorie al telefono" apre Gmail già con il tuo indirizzo nel campo "A:".'
+    },
+    'card-settings-api':{
+      title:'🤖 Chiave API Anthropic',
+      body:'La chiave API per i Riepiloghi AI in modalità diretta. Viene salvata solo nel tuo browser — non viene mai inviata a server esterni né condivisa. Senza chiave puoi comunque usare la modalità manuale (prompt da incollare su claude.ai).',
+      ex:'console.anthropic.com → API Keys → New Key → copia la chiave → incollala qui → Salva. La chiave inizia con "sk-ant-...".'
+    },
+    'card-settings-reset':{
+      title:'🗑 Resetta dati — attenzione',
+      body:'Elimina definitivamente i dati selezionati. Puoi scegliere: mese corrente, anno corrente, intervallo di date personalizzato o tutto. Opzioni aggiuntive: resetta anche le categorie (Progettazione) e/o le impostazioni (tema, email, chiave API). <b>Irreversibile</b> — esporta un backup prima.',
+      ex:'Vuoi azzerare solo aprile: "Intervallo" → 01/04 → 30/04 → password → solo le transazioni di aprile vengono eliminate. Le categorie e gli altri mesi rimangono intatti.'
+    },
+    'btn-cats-sent':{
+      title:'✓ Categorie già inviate',
+      body:'Conferma che hai già inviato le categorie aggiornate all\'app mobile. Il banner di avviso scomparirà e riapparirà solo se aggiungi nuove categorie.',
+      ex:'Hai inviato il file JSON alla compagna via Gmail e lei lo ha importato → premi "✓ Già inviate" → il banner sparisce.'
+    },
+    'btn-reset-wallet':{
+      title:'🔄 Azzera tutti i campi saldi',
+      body:'Svuota tutti i campi di inserimento saldo riportandoli a zero. Utile se hai iniziato a inserire valori ma vuoi ricominciare da capo.',
+      ex:'Hai inserito valori sbagliati in più campi → Azzera → tutti tornano a 0 → reinserisci i valori corretti.'
+    },
+    'btn-snap-cancel':{
+      title:'✕ Annulla modifica snapshot',
+      body:'Annulla la modifica di uno snapshot esistente e torna alla modalità inserimento normale. Lo snapshot originale rimane invariato.',
+      ex:'Stavi modificando lo snapshot di marzo ma hai cambiato idea → Annulla → il form torna a "Nuovo snapshot" e i valori di marzo sono intatti.'
+    },
+    'btn-check-updates':{
+      title:'🔄 Verifica aggiornamenti',
+      body:'Controlla se è disponibile una versione più recente dell\'app. Se c\'è un aggiornamento, ricarica la pagina per applicarlo.',
+      ex:'"Sei alla versione più recente (1.1.5)" oppure "Nuova versione disponibile → ricarica per aggiornare."'
+    },
+    'btn-net-eye':{
+      title:'👁 Nascondi/Mostra patrimonio netto',
+      body:'Oscura o rivela il valore del patrimonio netto con effetto blur. Utile quando mostri l\'app ad altri. La preferenza viene ricordata.',
+      ex:'Condividi lo schermo → premi 🙈 → patrimonio illeggibile. Fine condivisione → premi 👁 → torna visibile.'
     },
   };
 
@@ -5656,7 +6036,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.1.4';
+  var APP_VERSION = '1.1.5';
 
   if(!('serviceWorker' in navigator)) return;
 
