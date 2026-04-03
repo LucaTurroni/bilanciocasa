@@ -1095,7 +1095,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
-  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.1.8</div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.0</div>
 </div>
 <div id="page-prog" class="page">
   <div class="pg-head">
@@ -1348,7 +1348,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
           <input type="date" class="inp" id="snap-date" style="font-size:.85rem">
         </div>
         <input type="hidden" id="snap-edit-idx" value="">
-        <button class="btn btn-primary" id="snap-save-btn" onclick="saveWSnap()" data-tt-id="wallet-snap-btn">💾 Salva snapshot</button>
+        <button class="btn btn-primary" id="snap-save-btn" onclick="saveWSnap()" data-tt-id="wallet-snap-btn">💾 Aggiungi snapshot</button>
         <button class="btn btn-ghost" id="snap-cancel-btn" onclick="cancelSnapEdit()" style="display:none" data-tt-id="btn-snap-cancel">✕ Annulla modifica</button>
         <button class="btn btn-ghost" onclick="resetWAFields()" data-tt-id="btn-reset-wallet">🔄 Azzera campi</button>
       </div>
@@ -1381,7 +1381,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
       <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Inserisci quanto ha speso lei in ogni categoria comune questo mese.</p>
       <div id="pt-list" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"></div>
       <div class="action-row">
-        <button class="btn btn-primary" onclick="savePartner()" data-tt-id="save-partner">💾 Salva</button>
+        <button class="btn btn-primary" id="partner-save-btn" onclick="savePartner()" data-tt-id="save-partner">💾 Inserisci spese</button>
       </div>
     </div>
 
@@ -1744,6 +1744,10 @@ function load(){
       for(var k in p) if(S.hasOwnProperty(k)) S[k]=p[k];
       // Migrate old string-format wCats to object format
       S.wCats=S.wCats.map(function(c){ return typeof c==='string'?{name:c,type:'deposit'}:c; });
+      // Guarantee fields introduced in later versions
+      if(!Array.isArray(S.iCats)) S.iCats=[];
+      if(!Array.isArray(S.recurringRules)) S.recurringRules=[];
+      if(typeof S.partnerData!=='object'||Array.isArray(S.partnerData)) S.partnerData={};
     }
   }catch(e){}
 }
@@ -1920,7 +1924,7 @@ function bcConfirmHtml(htmlMsg, title, icon, confirmLabel, cancelLabel){
 
 function resetWAFields(){
   S.wCats.forEach(function(c){
-    var e=document.getElementById('wa-'+slug(wcatName(c)));
+    var e=document.getElementById('wa-'+S.wCats.indexOf(c));
     if(e) e.value='0';
   });
   calcWTot();
@@ -2364,6 +2368,10 @@ function applyBackup(p){
   }
   // Migrate old string-format wCats
   S.wCats=S.wCats.map(function(c){ return typeof c==='string'?{name:c,type:'deposit'}:c; });
+  // Guarantee fields introduced in later versions
+  if(!Array.isArray(S.iCats)) S.iCats=[];
+  if(!Array.isArray(S.recurringRules)) S.recurringRules=[];
+  if(typeof S.partnerData!=='object'||Array.isArray(S.partnerData)) S.partnerData={};
 }
 
 async function triggerRestore(){
@@ -2525,7 +2533,7 @@ function drawWA(){
       +'<label style="'+labelColor+'">'+(isDebt?'🔴 ':'🟢 ')+escH(name)+'</label>'
       +'<div class="wa-amt-row">'+signHtml
       +'<span class="wa-cur" style="'+(isDebt?'color:var(--red-d)':'color:var(--green-d)')+'">\u20ac</span>'
-      +'<input type="number" class="n-inp" step="0.01" min="0" style="'+inputStyle+'" value="'+v+'" id="wa-'+slug(name)+'" oninput="calcWTot()" onfocus="zF(this)" onblur="zB(this)" data-isdebt="'+(isDebt?'1':'0')+'"></div></div>';
+      +'<input type="number" class="n-inp" step="0.01" min="0" style="'+inputStyle+'" value="'+v+'" id="wa-'+i+'" oninput="calcWTot()" onfocus="zF(this)" onblur="zB(this)" data-isdebt="'+(isDebt?'1':'0')+'"></div></div>';
   }).join('');
   if(!S.wCats.length) g.innerHTML='<p style="color:var(--sub);font-size:.82rem">Aggiungi depositi in Progettazione.</p>';
   calcWTot(); drawWHist();
@@ -2533,7 +2541,7 @@ function drawWA(){
 function calcWTot(){
   var tot=0;
   S.wCats.forEach(function(c){
-    var e=document.getElementById('wa-'+slug(wcatName(c)));
+    var e=document.getElementById('wa-'+S.wCats.indexOf(c));
     if(!e) return;
     var v=parseFloat(e.value)||0;
     tot+=wcatType(c)==='debt'?-v:v;
@@ -2544,7 +2552,7 @@ function getWAValues(){
   var amounts={}, tot=0;
   S.wCats.forEach(function(c){
     var name=wcatName(c);
-    var e=document.getElementById('wa-'+slug(name));
+    var e=document.getElementById('wa-'+S.wCats.indexOf(c));
     var raw=e ? (parseFloat(e.value)||0) : 0;
     var v=wcatType(c)==='debt'?-raw:raw;
     amounts[name]=v; tot+=v;
@@ -2580,34 +2588,50 @@ function getNetWorth(refDateStr){
   return baseSnap.total+flow;
 }
 
-function _doSaveSnap(editIdx, oldSnap, snapDate, snap, newTotal, expected, expectedNet, isEdit){
-  if(isEdit){
-    S.wHist[editIdx]={date:oldSnap.date, snapDate:snapDate, amounts:snap.amounts, total:newTotal};
-  } else {
-    S.wHist.push({date:new Date().toISOString(), snapDate:snapDate, amounts:snap.amounts, total:newTotal});
+function _doSaveSnap(editIdx, oldSnap, snapDate, snap, newTotal, expected, expectedNet, futureTxs, isEdit){
+  var diff=newTotal-expected;
+  var diffNet=newTotal-expectedNet;
+  var hasDiscrepancy=Math.abs(newTotal-expected)>0.01 && (isEdit||S.wHist.length>0);
+
+  function doCommit(){
+    if(isEdit){
+      S.wHist[editIdx]={date:oldSnap.date, snapDate:snapDate, amounts:snap.amounts, total:newTotal};
+    } else {
+      S.wHist.push({date:new Date().toISOString(), snapDate:snapDate, amounts:snap.amounts, total:newTotal});
+    }
+    S.wHist.sort(function(a,b){
+      return (a.snapDate||a.date.slice(0,10)).localeCompare(b.snapDate||b.date.slice(0,10));
+    });
+    cancelSnapEdit();
+    resetWAFields();
+    save(); drawWHist(); updateCons(); drawDashboard();
+    toast(isEdit?'Snapshot modificato!':'Snapshot aggiunto!');
   }
-  S.wHist.sort(function(a,b){
-    return (a.snapDate||a.date.slice(0,10)).localeCompare(b.snapDate||b.date.slice(0,10));
-  });
-  cancelSnapEdit();
-  resetWAFields();
-  save(); drawWHist(); updateCons(); drawDashboard();
-  if(Math.abs(newTotal-expected)>0.01 && (isEdit||S.wHist.length>1)){
-    var diff=newTotal-expected;
+
+  if(hasDiscrepancy){
     var diffStr=(diff>0?'+':'')+fmt(diff);
-    var diffNet=newTotal-expectedNet;
     var diffNetStr=(diffNet>0?'+':'')+fmt(diffNet);
     var diffColor=function(d){ return d===0?'var(--text)':d>0?'var(--green-d)':'var(--red-d)'; };
+    var futureLine='';
+    if(futureTxs&&futureTxs.length){
+      var futFlow=futureTxs.reduce(function(a,t){return a+(t.type==='income'?t.amount:-t.amount);},0);
+      futureLine='<p style="margin:10px 0 0;padding:8px;background:var(--surface2);border-radius:6px;font-size:.79rem;color:var(--sub)">ℹ️ <strong>'+futureTxs.length+' moviment'+(futureTxs.length===1?'o':'i')+' futur'+(futureTxs.length===1?'o':'i')+'</strong> (data > oggi) esclus'+(futureTxs.length===1?'o':'i')+' dal raffronto — flusso atteso: <strong style="color:'+(futFlow>=0?'var(--green-d)':'var(--red-d)')+'">'+(futFlow>=0?'+':'')+fmt(futFlow)+'€</strong></p>';
+    }
     var htmlMsg=''
+      +'<p style="margin:0 0 12px">Il valore inserito non coincide con il patrimonio stimato. Vuoi salvare comunque?</p>'
       +'<p style="margin:0 0 12px"><strong>Snapshot inserito:</strong> €'+fmt(newTotal)+'</p>'
       +'<table style="width:100%;border-collapse:collapse;font-size:.83rem;margin-bottom:12px">'
       +'<tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 8px;color:var(--sub)">Patrimonio stimato (💑 con rimborsi)</td><td style="padding:5px 8px;text-align:right;font-weight:700">€'+fmt(expectedNet)+'</td><td style="padding:5px 8px;text-align:right;font-weight:700;color:'+diffColor(diffNet)+'">'+diffNetStr+'</td></tr>'
       +'<tr><td style="padding:5px 8px;color:var(--sub)">Patrimonio stimato (💸 senza rimborsi)</td><td style="padding:5px 8px;text-align:right;font-weight:700">€'+fmt(expected)+'</td><td style="padding:5px 8px;text-align:right;font-weight:700;color:'+diffColor(diff)+'">'+diffStr+'</td></tr>'
       +'</table>'
-      +'<p style="margin:0;font-size:.8rem;color:var(--sub)">Possibili cause: transazioni non registrate, importi errati, o debiti futuri da aggiornare.</p>';
-    bcAlertHtml(htmlMsg,'Snapshot non coincide','⚠️');
+      +'<p style="margin:0;font-size:.8rem;color:var(--sub)">Possibili cause: transazioni non registrate, importi errati, o debiti futuri da aggiornare.</p>'
+      +futureLine;
+    bcConfirmHtml(htmlMsg,'Snapshot non coincide','⚠️','Salva comunque','Annulla').then(function(ok){
+      if(ok) doCommit();
+      else cancelSnapEdit();
+    });
   } else {
-    toast(isEdit?'Snapshot aggiornato!':'Snapshot salvato!');
+    doCommit();
   }
 }
 
@@ -2622,8 +2646,13 @@ function saveWSnap(){
   var isEdit=editIdx>=0;
   var histBackup=S.wHist.slice();
   if(isEdit) S.wHist.splice(editIdx,1);
-  var expected=getNetWorth(snapDate);
-  var expectedNet=getNetWorthNet(snapDate);
+  // Per il raffronto, usa min(snapDate, today) come ref — esclude sempre le tx future (> oggi)
+  var todayStr=today();
+  var refForCompare=snapDate<todayStr?snapDate:todayStr;
+  var expected=getNetWorth(refForCompare);
+  var expectedNet=getNetWorthNet(refForCompare);
+  // Tx future (> oggi) presenti nel sistema — segnalate ma escluse dal raffronto
+  var futureTxs=S.txs.filter(function(t){return t.date>todayStr;});
   S.wHist=histBackup;
   if(isEdit){
     var oldSnap=S.wHist[editIdx];
@@ -2633,10 +2662,13 @@ function saveWSnap(){
       bcConfirm(
         'Questo snapshot ha '+txAfter.length+' transazion'+(txAfter.length===1?'e':'i')+' registrat'+(txAfter.length===1?'a':'e')+' dopo la sua data.\nModificarlo cambierà il calcolo del patrimonio netto dal '+fmtShort(oldDate)+' in poi.\n\nVuoi continuare?',
         'Modifica snapshot','⚠️','Sì, modifica','Annulla'
-      ).then(function(ok){ if(ok) _doSaveSnap(editIdx,oldSnap,snapDate,snap,newTotal,expected,expectedNet,true); });
+      ).then(function(ok){
+        if(ok) _doSaveSnap(editIdx,oldSnap,snapDate,snap,newTotal,expected,expectedNet,futureTxs,true);
+        else cancelSnapEdit();
+      });
       return;
     }
-    _doSaveSnap(editIdx,oldSnap,snapDate,snap,newTotal,expected,expectedNet,true);
+    _doSaveSnap(editIdx,oldSnap,snapDate,snap,newTotal,expected,expectedNet,futureTxs,true);
   } else {
     // New snapshot — warn if there are already transactions on or after this date
     var txOnOrAfter=S.txs.filter(function(t){return t.date>=snapDate;});
@@ -2647,9 +2679,9 @@ function saveWSnap(){
         +'<p style="margin:0 0 10px">Questi movimenti <strong>verranno inclusi</strong> nel calcolo del Patrimonio Netto a partire da questo snapshot.<br>Flusso cumulativo: <strong style="color:'+(netFlow>=0?'var(--green-d)':'var(--red-d)')+'">'+(netFlow>=0?'+':'')+fmt(netFlow)+'€</strong></p>'
         +'<p style="margin:0;font-size:.8rem;color:var(--sub)">Vuoi procedere con il salvataggio?</p>',
         'Transazioni già presenti','ℹ️','Sì, salva','Annulla'
-      ).then(function(ok){ if(ok) _doSaveSnap(-1,null,snapDate,snap,newTotal,expected,expectedNet,false); });
+      ).then(function(ok){ if(ok) _doSaveSnap(-1,null,snapDate,snap,newTotal,expected,expectedNet,futureTxs,false); });
     } else {
-      _doSaveSnap(-1,null,snapDate,snap,newTotal,expected,expectedNet,false);
+      _doSaveSnap(-1,null,snapDate,snap,newTotal,expected,expectedNet,futureTxs,false);
     }
   }
 }
@@ -2657,9 +2689,9 @@ function saveWSnap(){
 function editSnap(idx){
   var s=S.wHist[idx]; if(!s) return;
   var snapDate=s.snapDate||s.date.slice(0,10);
-  S.wCats.forEach(function(c){
+  S.wCats.forEach(function(c,i){
     var n=wcatName(c);
-    var e=document.getElementById('wa-'+slug(n));
+    var e=document.getElementById('wa-'+i);
     if(!e) return;
     var v=s.amounts[n]||0;
     e.value=wcatType(c)==='debt'?Math.abs(v):v;
@@ -2667,7 +2699,7 @@ function editSnap(idx){
   calcWTot();
   CP.setValue('snap-date',snapDate);
   document.getElementById('snap-edit-idx').value=idx;
-  document.getElementById('snap-save-btn').textContent='💾 Aggiorna snapshot';
+  document.getElementById('snap-save-btn').textContent='💾 Modifica snapshot';
   document.getElementById('snap-cancel-btn').style.display='';
   var txAfter=S.txs.filter(function(t){return t.date>snapDate;});
   if(txAfter.length){
@@ -2678,7 +2710,7 @@ function editSnap(idx){
 
 function cancelSnapEdit(){
   document.getElementById('snap-edit-idx').value='';
-  document.getElementById('snap-save-btn').textContent='💾 Salva snapshot';
+  document.getElementById('snap-save-btn').textContent='💾 Aggiungi snapshot';
   document.getElementById('snap-cancel-btn').style.display='none';
 }
 
@@ -2885,7 +2917,7 @@ function addTx(){
             S.recurringRules[existingRuleIdx]=ruleData;
             updTx.ruleId=ruleData.id;
           } else {
-            ruleData.id=Date.now()+1;
+            ruleData.id=Date.now()+Math.floor(Math.random()*9000)+1000;
             S.recurringRules.push(ruleData);
             updTx.ruleId=ruleData.id;
           }
@@ -2927,7 +2959,7 @@ function addTx(){
       var ruleId=null;
       if(recur){
         if(!S.recurringRules) S.recurringRules=[];
-        ruleId=Date.now()+1;
+        ruleId=Date.now()+Math.floor(Math.random()*9000)+1000;
         S.recurringRules.push({
           id:ruleId, startDate:date, cat:cat, amount:amt, note:note,
           type:S.txType, isCouple:isC,
@@ -3005,11 +3037,34 @@ function cancelEdit(){
   setType('income');
 }
 function delTx(id){
-  bcConfirm('Eliminare questa transazione?','Elimina','🗑','Elimina','Annulla').then(function(ok){
-    if(!ok) return;
-    S.txs=S.txs.filter(function(t){ return t.id!==id; });
-    save(); drawTxList(); updateCons(); drawDashboard(); if(currentPage==='coppia') drawCoppia();
-  });
+  var tx=S.txs.find(function(t){return t.id===id;});
+  if(tx&&tx.ruleId){
+    var ruleId=tx.ruleId;
+    bcConfirm(
+      'Questa transazione fa parte di una serie ricorrente.\nVuoi eliminare solo questa occorrenza o tutta la serie?',
+      'Elimina ricorrente','🗑','Solo questa','Tutta la serie'
+    ).then(function(onlyThis){
+      if(onlyThis===null) return; // dismissed
+      if(onlyThis){
+        // Delete only this tx
+        S.txs=S.txs.filter(function(t){return t.id!==id;});
+        // Add exception to rule so the scheduled occurrence is also hidden
+        var rule=(S.recurringRules||[]).find(function(r){return r.id===ruleId;});
+        if(rule){ if(!rule.exceptions) rule.exceptions=[]; if(rule.exceptions.indexOf(tx.date)===-1) rule.exceptions.push(tx.date); }
+      } else {
+        // Delete entire series: all real txs + the rule
+        S.txs=S.txs.filter(function(t){return t.ruleId!==ruleId;});
+        S.recurringRules=(S.recurringRules||[]).filter(function(r){return r.id!==ruleId;});
+      }
+      save(); drawTxList(); updateCons(); drawDashboard(); if(currentPage==='coppia') drawCoppia();
+    });
+  } else {
+    bcConfirm('Eliminare questa transazione?','Elimina','🗑','Elimina','Annulla').then(function(ok){
+      if(!ok) return;
+      S.txs=S.txs.filter(function(t){return t.id!==id;});
+      save(); drawTxList(); updateCons(); drawDashboard(); if(currentPage==='coppia') drawCoppia();
+    });
+  }
 }
 function drawTxList(){
   fillFCat();
@@ -3291,13 +3346,16 @@ function editRecurRule(ruleId){
 
 function delScheduled(ruleId, date){
   bcConfirm('Eliminare solo questa occorrenza o tutta la serie ricorrente?',
-    'Elimina ricorrenza','🗑','Tutta la serie','Solo questa data').then(function(allSeries){
-    if(allSeries){
-      S.recurringRules=(S.recurringRules||[]).filter(function(r){return r.id!==ruleId;});
-    } else {
-      // Add exception: add this date to rule.exceptions
+    'Elimina ricorrenza','🗑','Solo questa data','Tutta la serie').then(function(onlyThis){
+    if(onlyThis){
+      // Add exception for this date only
       var rule=(S.recurringRules||[]).find(function(r){return r.id===ruleId;});
       if(rule){ if(!rule.exceptions) rule.exceptions=[]; if(rule.exceptions.indexOf(date)===-1) rule.exceptions.push(date); }
+    } else {
+      // Delete entire series
+      S.recurringRules=(S.recurringRules||[]).filter(function(r){return r.id!==ruleId;});
+      // Also remove all real txs in this series
+      S.txs=S.txs.filter(function(t){return t.ruleId!==ruleId;});
     }
     save(); drawTxList(); updateCons(); drawDashboard();
   });
@@ -3312,6 +3370,9 @@ function drawPartner(){
       +'<input type="number" class="n-inp" step="0.01" min="0" value="'+(ex[c]||0)+'" id="pt-'+slug(c)+'" onfocus="zF(this)" onblur="zB(this)"></div></div>';
   }).join('');
   if(!S.cCats.length) g.innerHTML='<p style="color:var(--sub);font-size:.82rem">Aggiungi categorie di coppia in Progettazione.</p>';
+  // Update partner save button label based on existing data
+  var ptBtn=document.getElementById('partner-save-btn');
+  if(ptBtn) ptBtn.textContent=(mo&&S.partnerData[mo])?'💾 Aggiorna spese':'💾 Inserisci spese';
   drawPtHist();
   drawMyCoupleCosts();
 }
@@ -3606,13 +3667,22 @@ function getPartnerHers(cat, ym){
 }
 
 function getPartnerHersForPeriod(cat){
+  // Legacy: still used by drawCoppia and drawConsAll with global period
   var p=S.period; var hers=0;
-  var txsInPeriod=getPeriodTxs(); // reuse same logic
-  // Get set of year-months that appear in the period
+  var txsInPeriod=getPeriodTxs();
   var yms={};
   txsInPeriod.forEach(function(t){ yms[t.date.slice(0,7)]=true; });
   if(p==='all') Object.keys(S.partnerData).forEach(function(m){ hers+=(S.partnerData[m][cat]||0); });
   else Object.keys(yms).forEach(function(ym){ hers+=((S.partnerData[ym]&&S.partnerData[ym][cat])||0); });
+  return hers;
+}
+
+function getPartnerHersFromTxs(cat, txs){
+  // Derives partner data from the actual txs passed — period-agnostic
+  var yms={};
+  txs.forEach(function(t){ yms[t.date.slice(0,7)]=true; });
+  var hers=0;
+  Object.keys(yms).forEach(function(ym){ hers+=((S.partnerData[ym]&&S.partnerData[ym][cat])||0); });
   return hers;
 }
 
@@ -3621,14 +3691,14 @@ function buildCatMap(txs){
   function ens(k){ if(!map[k]) map[k]={personal:0,income:0,coupleMe:0,coupleHers:0}; }
   txs.filter(function(t){ return t.type==='income'; }).forEach(function(t){ ens(t.cat); map[t.cat].income+=t.amount; });
   txs.filter(function(t){
-    // a transaction is "couple" if isCouple flag is set OR category name ends with ' 💑'
     return t.type==='expense' && (t.isCouple || t.cat.indexOf('💑')!==-1);
   }).forEach(function(t){ var b=t.cat.replace(' 💑',''); ens(b); map[b].coupleMe+=t.amount; });
   txs.filter(function(t){
     return t.type==='expense' && !t.isCouple && t.cat.indexOf('💑')===-1;
   }).forEach(function(t){ ens(t.cat); map[t.cat].personal+=t.amount; });
+  // Use txs-derived partner data (period-agnostic — no dependency on global S.period)
   S.cCats.forEach(function(cat){
-    var h=getPartnerHersForPeriod(cat); if(h>0){ ens(cat); map[cat].coupleHers+=h; }
+    var h=getPartnerHersFromTxs(cat, txs); if(h>0){ ens(cat); map[cat].coupleHers+=h; }
   });
   Object.keys(map).forEach(function(k){ var d=map[k]; d.coupleTotal=d.coupleMe+d.coupleHers; d.realCost=d.personal+d.coupleTotal/2; });
   return map;
@@ -4770,7 +4840,7 @@ function updateAiBanner(){
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
           <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()" data-tt-id="btn-debug">🧪 Entra in modalità debug</button>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1.8</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.0</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -4918,11 +4988,12 @@ function importFromMobile(input){
         var added=0, skipped=0, replaced=0;
         // Add new transactions
         newTxs.forEach(function(t){
-          // normalize: mobile uses 'name' field, desktop uses 'note'
+          // isCouple: prefer explicit flag from mobile, fallback to category check
+          var isC = (t.isCouple !== undefined) ? !!t.isCouple : isCopCat(t.cat);
           S.txs.push({
             id:t.id, date:t.date, cat:t.cat,
             amount:t.amount, note:t.note||t.name||'',
-            type:t.type, isCouple:isCopCat(t.cat)
+            type:t.type, isCouple:isC
           });
           added++;
         });
@@ -4931,9 +5002,10 @@ function importFromMobile(input){
           duplicates.forEach(function(t){
             var idx=S.txs.findIndex(function(x){ return x.id===t.id; });
             if(idx!==-1){
+              var isC = (t.isCouple !== undefined) ? !!t.isCouple : isCopCat(t.cat);
               S.txs[idx]={id:t.id, date:t.date, cat:t.cat,
                 amount:t.amount, note:t.note||t.name||'',
-                type:t.type, isCouple:isCopCat(t.cat)};
+                type:t.type, isCouple:isC};
               replaced++;
             }
           });
@@ -6142,7 +6214,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.1.8';
+  var APP_VERSION = '1.2.0';
 
   if(!('serviceWorker' in navigator)) return;
 
