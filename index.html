@@ -1095,7 +1095,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
-  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.1.6</div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.1.7</div>
 </div>
 <div id="page-prog" class="page">
   <div class="pg-head">
@@ -1882,6 +1882,25 @@ function bcConfirm(msg, title, icon, confirmLabel, cancelLabel){
   });
 }
 
+function bcConfirmHtml(htmlMsg, title, icon, confirmLabel, cancelLabel){
+  return new Promise(function(resolve){
+    var overlay=document.createElement('div');
+    overlay.className='bc-alert-overlay';
+    overlay.innerHTML='<div class="bc-alert-box" style="max-width:500px">'
+      +'<div class="bc-alert-hdr"><span class="bc-alert-icon">'+(icon||'❓')+'</span>'
+      +'<span class="bc-alert-title">'+(title||'Conferma')+'</span></div>'
+      +'<div class="bc-alert-body" style="max-height:60vh;overflow-y:auto;font-size:.82rem;line-height:1.6">'+htmlMsg+'</div>'
+      +'<div class="bc-alert-footer">'
+      +'<button class="btn btn-ghost" id="bc-conf-no">'+(cancelLabel||'Annulla')+'</button>'
+      +'<button class="btn btn-primary" id="bc-conf-yes">'+(confirmLabel||'Conferma')+'</button>'
+      +'</div></div>';
+    document.body.appendChild(overlay);
+    overlay.querySelector('#bc-conf-yes').addEventListener('click',function(){ overlay.remove(); resolve(true); });
+    overlay.querySelector('#bc-conf-no').addEventListener('click',function(){ overlay.remove(); resolve(false); });
+    overlay.addEventListener('click',function(e){ if(e.target===overlay){ overlay.remove(); resolve(false); } });
+  });
+}
+
 function resetWAFields(){
   S.wCats.forEach(function(c){
     var e=document.getElementById('wa-'+slug(wcatName(c)));
@@ -2633,7 +2652,54 @@ function cancelSnapEdit(){
 }
 
 function deleteSnap(idx){
-  bcConfirm('Eliminare questo snapshot?','Elimina snapshot','🗑','Elimina','Annulla').then(function(ok){
+  var snap=S.wHist[idx]; if(!snap) return;
+  var snapDate=snap.snapDate||snap.date.slice(0,10);
+
+  // Calculate consequences
+  var txAfter=S.txs.filter(function(t){return t.date>=snapDate;});
+  var isLastSnap=S.wHist.length===1;
+  var prevSnap=null;
+  S.wHist.forEach(function(s,i){
+    if(i<idx){ var sd=s.snapDate||s.date.slice(0,10); if(!prevSnap||(s.snapDate||s.date.slice(0,10))>(prevSnap.snapDate||prevSnap.date.slice(0,10))) prevSnap=s; }
+  });
+  var nextSnap=null;
+  S.wHist.forEach(function(s,i){
+    if(i>idx) { if(!nextSnap) nextSnap=s; }
+  });
+
+  var lines=[];
+  lines.push('Snapshot del <b>'+fmtShort(snapDate)+'</b> — €'+fmt(snap.total));
+  lines.push('');
+
+  if(isLastSnap){
+    lines.push('⚠️ <b>È l\'unico snapshot salvato.</b>');
+    lines.push('Il Patrimonio Netto non sarà più calcolabile in nessun periodo.');
+    lines.push('Le card e i grafici del patrimonio mostreranno zero o nessun dato.');
+  } else if(!prevSnap){
+    lines.push('⚠️ <b>È il primo snapshot.</b>');
+    if(nextSnap){
+      var nd=nextSnap.snapDate||nextSnap.date.slice(0,10);
+      lines.push('Il calcolo del patrimonio partirà dal prossimo snapshot: <b>'+fmtShort(nd)+'</b> (€'+fmt(nextSnap.total)+').');
+    }
+  } else {
+    var pd=prevSnap.snapDate||prevSnap.date.slice(0,10);
+    lines.push('Il calcolo del patrimonio dal <b>'+fmtShort(snapDate)+'</b> in avanti ripartirà dallo snapshot precedente: <b>'+fmtShort(pd)+'</b> (€'+fmt(prevSnap.total)+').');
+  }
+
+  lines.push('');
+  if(txAfter.length>0){
+    lines.push('📊 <b>'+txAfter.length+' moviment'+(txAfter.length===1?'o':'i')+' registrat'+(txAfter.length===1?'o':'i')+'</b> dal '+fmtShort(snapDate)+' in poi '+(txAfter.length===1?'verrà':'verranno')+' ricalcolat'+(txAfter.length===1?'o':'i')+' rispetto alla nuova base patrimoniale.');
+    // Show amount impact
+    var netFlow=txAfter.reduce(function(a,t){return a+(t.type==='income'?t.amount:-t.amount);},0);
+    lines.push('Il flusso cumulativo di questi movimenti è '+(netFlow>=0?'+':'')+' €'+fmt(netFlow)+'.');
+  } else {
+    lines.push('✅ Nessun movimento registrato dopo questa data — nessun calcolo verrà alterato.');
+  }
+
+  lines.push('');
+  lines.push('<b>Questa azione è irreversibile.</b> Vuoi procedere?');
+
+  bcConfirm(lines.join('\n'),'Elimina snapshot','🗑','Sì, elimina','Annulla').then(function(ok){
     if(!ok) return;
     S.wHist.splice(idx,1);
     save(); drawWHist(); updateCons(); drawDashboard();
@@ -4678,7 +4744,7 @@ function updateAiBanner(){
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
           <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()" data-tt-id="btn-debug">🧪 Entra in modalità debug</button>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1.6</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.1.7</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -6036,7 +6102,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.1.6';
+  var APP_VERSION = '1.1.7';
 
   if(!('serviceWorker' in navigator)) return;
 
