@@ -1095,7 +1095,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
-  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.0</div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.1</div>
 </div>
 <div id="page-prog" class="page">
   <div class="pg-head">
@@ -1286,6 +1286,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
         <div class="action-row">
           <button class="btn btn-ghost btn-sm" id="tx-cancel-btn" onclick="cancelEdit()" style="display:none" data-tt-id="tx-cancel">✕ Annulla</button>
           <button class="btn btn-primary" id="tx-add-btn" onclick="addTx()" data-tt-id="tx-add">＋ Aggiungi</button>
+          <button class="btn btn-ghost btn-sm" onclick="resetTxFields()" title="Azzera tutti i campi">🔄 Azzera</button>
         </div>
       </div>
 
@@ -1357,6 +1358,11 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
       <div class="card-title">Storico snapshot</div>
       <div id="w-hist"><p style="color:var(--sub);font-size:.83rem">Nessuno snapshot salvato.</p></div>
     </div>
+
+    <div class="card">
+      <div class="card-title">⚖️ Conguagli snapshot</div>
+      <div id="w-adj-list"><p style="color:var(--sub);font-size:.82rem">Nessun conguaglio presente.</p></div>
+    </div>
   </div>
 </div>
 
@@ -1367,28 +1373,41 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     <p>Inserisci i totali mensili della tua compagna per categoria condivisa</p>
   </div>
 
-  <!-- Selettore mese condiviso -->
+  <!-- Banner modalità modifica -->
+  <div id="pt-edit-banner" style="display:none;background:var(--blue-s);border:1.5px solid var(--blue);border-radius:var(--r-s);padding:10px 16px;margin-bottom:16px;align-items:center;justify-content:space-between;gap:12px">
+    <span style="font-size:.85rem;font-weight:600;color:var(--blue)">✏️ Stai modificando: <span id="pt-edit-label"></span></span>
+    <button class="btn btn-ghost btn-sm" onclick="cancelPartnerEdit()" style="border-color:var(--blue);color:var(--blue)">✕ Annulla modifica</button>
+  </div>
+
+  <!-- Selettore mese per visualizzazione -->
   <div class="field" style="max-width:220px;margin-bottom:22px">
-    <label>Mese di riferimento</label>
-    <input type="month" class="inp" id="pt-mo" onchange="drawPartner();drawMyCoupleCosts()" data-tt-id="pt-mo">
+    <label>Mese da visualizzare</label>
+    <input type="month" class="inp" id="pt-mo" onchange="drawMyCoupleCosts()" data-tt-id="pt-mo">
   </div>
 
   <div class="g2" style="align-items:start;margin-bottom:22px">
 
     <!-- Spese partner -->
-    <div class="card" style="border-color:var(--purple);background:var(--purple-s)" data-tt-id="card-partner-her">
+    <div id="pt-form-card" class="card" style="border-color:var(--purple);background:var(--purple-s)" data-tt-id="card-partner-her">
       <div class="card-title" style="color:var(--purple)">👫 Spese della tua compagna</div>
-      <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Inserisci quanto ha speso lei in ogni categoria comune questo mese.</p>
+      <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Scegli il mese e inserisci quanto ha speso lei in ogni categoria comune.</p>
+      <!-- Selettore mese inserimento -->
+      <div class="field" style="margin-bottom:14px">
+        <label style="font-size:.78rem">Mese di inserimento</label>
+        <input type="month" class="inp" id="pt-insert-mo" onchange="onPartnerInsertMonthChange()" data-tt-id="pt-mo">
+      </div>
       <div id="pt-list" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"></div>
       <div class="action-row">
         <button class="btn btn-primary" id="partner-save-btn" onclick="savePartner()" data-tt-id="save-partner">💾 Inserisci spese</button>
+        <button class="btn btn-ghost" id="pt-cancel-btn" onclick="cancelPartnerEdit()" style="display:none">✕ Annulla</button>
+        <button class="btn btn-ghost btn-sm" onclick="resetPartnerFields()" title="Azzera tutti i campi">🔄 Azzera</button>
       </div>
     </div>
 
     <!-- Mie spese da comunicare -->
     <div class="card" style="border-color:var(--red);background:var(--red-s)" data-tt-id="card-partner-mine">
       <div class="card-title" style="color:var(--red-d)">📢 Mie spese da comunicare</div>
-      <p style="font-size:.82rem;color:var(--sub);margin-bottom:16px">Le tue spese nelle categorie comuni per il mese selezionato — da comunicare alla tua compagna affinché possa compilare la sua parte.</p>
+      <p style="font-size:.82rem;color:var(--sub);margin-bottom:16px">Le tue spese nelle categorie comuni per il mese visualizzato — da comunicare alla tua compagna.</p>
       <div id="my-couple-costs"></div>
       <div id="my-couple-total" style="margin-top:14px"></div>
       <div style="margin-top:14px">
@@ -1697,6 +1716,7 @@ var S = {
   wCats:[], eCats:[], cCats:[], iCats:[],
   txs:[], wHist:[], partnerData:{},
   recurringRules:[],
+  snapAdjustments:[],
   txType:'income', period:'month',
   defEmail:''
 };
@@ -1747,6 +1767,7 @@ function load(){
       // Guarantee fields introduced in later versions
       if(!Array.isArray(S.iCats)) S.iCats=[];
       if(!Array.isArray(S.recurringRules)) S.recurringRules=[];
+      if(!Array.isArray(S.snapAdjustments)) S.snapAdjustments=[];
       if(typeof S.partnerData!=='object'||Array.isArray(S.partnerData)) S.partnerData={};
     }
   }catch(e){}
@@ -1777,7 +1798,12 @@ function showPage(id, btn){
   if(id==='comp'){ setType('expense'); fillTxCat(); fillFCat(); drawTxList(); }
   if(id==='prog') updateSendCatsBar();
   if(id==='wallet') drawWA();
-  if(id==='partner'){ drawPartner(); drawMyCoupleCosts(); }
+  if(id==='partner'){
+    // Init insert month to current if not set
+    var im=document.getElementById('pt-insert-mo');
+    if(im&&!im.value){ var now2=new Date(); im.value=now2.getFullYear()+'-'+String(now2.getMonth()+1).padStart(2,'0'); }
+    drawPartner(); drawMyCoupleCosts();
+  }
   if(id==='cons') setTimeout(updateCons, 80);
   if(id==='coppia') drawCoppia();
   if(id==='ai'){ updateAiBanner(); setAiPeriod('current',document.getElementById('ai-per-current')); }
@@ -2371,6 +2397,7 @@ function applyBackup(p){
   // Guarantee fields introduced in later versions
   if(!Array.isArray(S.iCats)) S.iCats=[];
   if(!Array.isArray(S.recurringRules)) S.recurringRules=[];
+  if(!Array.isArray(S.snapAdjustments)) S.snapAdjustments=[];
   if(typeof S.partnerData!=='object'||Array.isArray(S.partnerData)) S.partnerData={};
 }
 
@@ -2591,17 +2618,48 @@ function getNetWorth(refDateStr){
 function _doSaveSnap(editIdx, oldSnap, snapDate, snap, newTotal, expected, expectedNet, futureTxs, isEdit){
   var diff=newTotal-expected;
   var diffNet=newTotal-expectedNet;
-  var hasDiscrepancy=Math.abs(newTotal-expected)>0.01 && (isEdit||S.wHist.length>0);
+  // No discrepancy alert for very first snapshot (nothing to compare against)
+  var hasDiscrepancy=Math.abs(newTotal-expected)>0.01 && (isEdit||S.wHist.length>=1);
 
   function doCommit(){
+    if(!S.snapAdjustments) S.snapAdjustments=[];
+    var snapId;
     if(isEdit){
-      S.wHist[editIdx]={date:oldSnap.date, snapDate:snapDate, amounts:snap.amounts, total:newTotal};
+      // Preserve existing id or generate one
+      snapId=oldSnap.id||('snap_'+Date.now());
+      S.wHist[editIdx]={date:oldSnap.date, snapDate:snapDate, amounts:snap.amounts, total:newTotal, id:snapId};
     } else {
-      S.wHist.push({date:new Date().toISOString(), snapDate:snapDate, amounts:snap.amounts, total:newTotal});
+      snapId='snap_'+Date.now();
+      S.wHist.push({date:new Date().toISOString(), snapDate:snapDate, amounts:snap.amounts, total:newTotal, id:snapId});
     }
     S.wHist.sort(function(a,b){
       return (a.snapDate||a.date.slice(0,10)).localeCompare(b.snapDate||b.date.slice(0,10));
     });
+    // Remove any existing adjustments for this snapshot
+    S.snapAdjustments=S.snapAdjustments.filter(function(a){return a.snapId!==snapId;});
+    // Generate two adjustments (one per view) if this is not the first snapshot
+    if(S.wHist.length>=1){
+      if(Math.abs(diff)>0.01){
+        S.snapAdjustments.push({
+          snapId: snapId,
+          date: snapDate,
+          amount: Math.abs(diff),
+          type: diff>0?'income':'expense',
+          view: 'cash',
+          note: 'Conguaglio 💸 '+fmtShort(snapDate)
+        });
+      }
+      if(Math.abs(diffNet)>0.01){
+        S.snapAdjustments.push({
+          snapId: snapId,
+          date: snapDate,
+          amount: Math.abs(diffNet),
+          type: diffNet>0?'income':'expense',
+          view: 'net',
+          note: 'Conguaglio 💑 '+fmtShort(snapDate)
+        });
+      }
+    }
     cancelSnapEdit();
     resetWAFields();
     save(); drawWHist(); updateCons(); drawDashboard();
@@ -2759,7 +2817,11 @@ function deleteSnap(idx){
 
   bcConfirmHtml(lines.join(''), 'Elimina snapshot','🗑','Sì, elimina','Annulla').then(function(ok){
     if(!ok) return;
+    var deletedId=S.wHist[idx]?S.wHist[idx].id:null;
     S.wHist.splice(idx,1);
+    if(deletedId&&S.snapAdjustments){
+      S.snapAdjustments=S.snapAdjustments.filter(function(a){return a.snapId!==deletedId;});
+    }
     save(); drawWHist(); updateCons(); drawDashboard();
     toast('Snapshot eliminato.');
   });
@@ -2767,12 +2829,17 @@ function deleteSnap(idx){
 
 function drawWHist(){
   var el=document.getElementById('w-hist'); if(!el) return;
-  if(!S.wHist.length){ el.innerHTML='<p style="color:var(--sub);font-size:.82rem">Nessuno snapshot salvato.</p>'; return; }
+  if(!S.wHist.length){ el.innerHTML='<p style="color:var(--sub);font-size:.82rem">Nessuno snapshot salvato.</p>'; drawAdjustments(); return; }
   el.innerHTML=S.wHist.map(function(s,i){ return {s:s,i:i}; }).reverse().slice(0,20).map(function(entry){
     var s=entry.s, i=entry.i;
     var displayDate=s.snapDate||s.date.slice(0,10);
-    // Calcola patrimonio netto stimato a quella data (senza snapshot successivi)
     var txAfter=S.txs.filter(function(t){return t.date>displayDate;}).length;
+    var adjs=(s.id&&S.snapAdjustments)?S.snapAdjustments.filter(function(a){return a.snapId===s.id;}):[];
+    var adjBadge=adjs.map(function(a){
+      var color=a.type==='income'?'var(--green-d)':'var(--red-d)';
+      var sign=a.type==='income'?'+':'-';
+      return '<div style="font-size:.72rem;margin-bottom:2px;color:'+color+'">⚖️ '+sign+'€'+fmt(a.amount)+' '+escH(a.note.replace('Conguaglio ','').replace(fmtShort(s.snapDate||s.date.slice(0,10)),'').trim())+'</div>';
+    }).join('');
     var tags=S.wCats.filter(function(c){var n=wcatName(c);return (s.amounts[n]||0)!==0;}).map(function(c){
       var n=wcatName(c), isDebt=wcatType(c)==='debt', v=s.amounts[n]||0;
       var style='font-size:.73rem;background:'+(isDebt?'var(--red-s)':'var(--green-s)')+';color:var(--text);padding:2px 7px;border-radius:8px;border:1px solid '+(isDebt?'var(--red)':'var(--green)');
@@ -2783,12 +2850,39 @@ function drawWHist(){
       +'<div style="font-weight:700;font-size:.9rem;margin-bottom:2px" class="privacy-blur">€ '+fmt(s.total)+'</div>'
       +'<div style="font-size:.74rem;color:var(--sub);margin-bottom:4px">📅 '+fmtShort(displayDate)+'</div>'
       +(txAfter?'<div style="font-size:.7rem;color:var(--amber);margin-bottom:4px">'+txAfter+' tx successive</div>':'')
+      +adjBadge
       +(tags?'<div style="display:flex;flex-wrap:wrap;gap:4px">'+tags+'</div>':'')
       +'</div>'
       +'<div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">'
       +'<button onclick="editSnap('+i+')" class="btn btn-ghost btn-xs" title="Modifica snapshot">✏️</button>'
       +'<button onclick="deleteSnap('+i+')" class="btn btn-ghost btn-xs" style="color:var(--red-d)" title="Elimina snapshot">🗑</button>'
       +'</div>'
+      +'</div>';
+  }).join('');
+  drawAdjustments();
+}
+
+function drawAdjustments(){
+  var el=document.getElementById('w-adj-list'); if(!el) return;
+  var adjs=(S.snapAdjustments||[]).slice().sort(function(a,b){return a.date.localeCompare(b.date);});
+  if(!adjs.length){ el.innerHTML='<p style="color:var(--sub);font-size:.82rem">Nessun conguaglio presente.</p>'; return; }
+  var groups={}, order=[];
+  adjs.forEach(function(a){
+    if(!groups[a.snapId]){ groups[a.snapId]={date:a.date,items:[]}; order.push(a.snapId); }
+    groups[a.snapId].items.push(a);
+  });
+  el.innerHTML=order.map(function(sid){
+    var g=groups[sid];
+    var items=g.items.map(function(a){
+      var color=a.type==='income'?'var(--green-d)':'var(--red-d)';
+      var sign=a.type==='income'?'+':'-';
+      var icon=a.view==='cash'?'💸':'💑';
+      return '<span style="color:'+color+';font-size:.79rem;font-weight:700" class="privacy-blur">'+icon+' '+sign+'€'+fmt(a.amount)+'</span>';
+    }).join('<span style="color:var(--border);margin:0 6px">|</span>');
+    return '<div class="hist-row" style="gap:6px;align-items:center">'
+      +'<span style="font-size:.74rem;color:var(--sub);flex-shrink:0">⚖️ '+fmtShort(g.date)+'</span>'
+      +'<span style="color:var(--border)">—</span>'
+      +items
       +'</div>';
   }).join('');
 }
@@ -2977,6 +3071,10 @@ function addTx(){
       document.getElementById('tx-a').value='';
       document.getElementById('tx-n').value='';
       resetRecurForm();
+      // Sync month filter to the inserted transaction's month
+      var txYm=date.slice(0,7);
+      var fmo=document.getElementById('f-mo');
+      if(fmo&&fmo.value!==txYm){ CP.setValue('f-mo', txYm); }
       save(); drawTxList(); updateCons(); drawDashboard();
       toast(recur?'✅ Transazione aggiunta con ricorrenza!':'Aggiunta!');
     };
@@ -3361,20 +3459,35 @@ function delScheduled(ruleId, date){
   });
 }
 // ═══════════════════════════════════════
+var _ptEditingMonth=null; // month being edited (null = new insertion)
+
+function onPartnerInsertMonthChange(){
+  var mo=(document.getElementById('pt-insert-mo')||{}).value||'';
+  if(_ptEditingMonth){
+    // Edit mode: keep fields, just update banner label
+    var label=document.getElementById('pt-edit-label');
+    if(label) label.textContent=mo!==_ptEditingMonth?fmtMon(_ptEditingMonth)+' → '+fmtMon(mo):fmtMon(mo);
+    var btn=document.getElementById('partner-save-btn');
+    if(btn) btn.textContent='💾 Salva modifica';
+  } else {
+    // New insertion: only update button label, never clear fields
+    var btn=document.getElementById('partner-save-btn');
+    if(btn) btn.textContent=(mo&&S.partnerData[mo])?'💾 Aggiorna spese':'💾 Inserisci spese';
+  }
+}
+
 function drawPartner(){
   var g=document.getElementById('pt-list'); if(!g) return;
-  var mo=(document.getElementById('pt-mo')||{}).value||'';
+  var mo=(document.getElementById('pt-insert-mo')||{}).value||'';
   var ex=mo&&S.partnerData[mo]?S.partnerData[mo]:{};
   g.innerHTML=S.cCats.map(function(c){
     return '<div class="wa-item"><label>'+escH(c)+'</label><div class="wa-amt-row"><span class="wa-cur">€</span>'
       +'<input type="number" class="n-inp" step="0.01" min="0" value="'+(ex[c]||0)+'" id="pt-'+slug(c)+'" onfocus="zF(this)" onblur="zB(this)"></div></div>';
   }).join('');
   if(!S.cCats.length) g.innerHTML='<p style="color:var(--sub);font-size:.82rem">Aggiungi categorie di coppia in Progettazione.</p>';
-  // Update partner save button label based on existing data
   var ptBtn=document.getElementById('partner-save-btn');
   if(ptBtn) ptBtn.textContent=(mo&&S.partnerData[mo])?'💾 Aggiorna spese':'💾 Inserisci spese';
   drawPtHist();
-  drawMyCoupleCosts();
 }
 
 function drawMyCoupleCosts(){
@@ -3507,12 +3620,48 @@ function copyMyCoupleCosts(){
 }
 
 function savePartner(){
-  var mo=(document.getElementById('pt-mo')||{}).value||'';
-  if(!mo){ toast('Seleziona un mese!',true); return; }
+  var mo=(document.getElementById('pt-insert-mo')||{}).value||'';
+  if(!mo){ toast('Seleziona un mese di inserimento!',true); return; }
   var amounts={};
   S.cCats.forEach(function(c){ var e=document.getElementById('pt-'+slug(c)); amounts[c]=parseFloat(e?e.value:0)||0; });
-  S.partnerData[mo]=amounts;
-  save(); drawPtHist(); updateCons(); drawCoppia(); toast('Salvato!');
+
+  function doSave(){
+    if(_ptEditingMonth&&_ptEditingMonth!==mo) delete S.partnerData[_ptEditingMonth];
+    S.partnerData[mo]=amounts;
+    _ptEditingMonth=null;
+    save(); updateCons(); drawCoppia();
+    var banner=document.getElementById('pt-edit-banner'); if(banner) banner.style.display='none';
+    var cb=document.getElementById('pt-cancel-btn'); if(cb) cb.style.display='none';
+    var card=document.getElementById('pt-form-card'); if(card){ card.style.borderColor=''; card.style.background=''; }
+    drawPartner();
+  }
+
+  // Case 1: editing existing record (possibly with month change)
+  if(_ptEditingMonth){
+    var msg=_ptEditingMonth!==mo
+      ? 'Stai spostando le spese da <strong>'+fmtMon(_ptEditingMonth)+'</strong> a <strong>'+fmtMon(mo)+'</strong>.<br>Il record di '+fmtMon(_ptEditingMonth)+' verrà eliminato.'
+      : 'Stai modificando le spese di <strong>'+fmtMon(mo)+'</strong>. I valori precedenti verranno sostituiti.';
+    bcConfirmHtml('<p style="margin:0">'+msg+'</p>','Conferma modifica','✏️','Salva','Annulla').then(function(ok){
+      if(!ok) return;
+      doSave();
+      toast('Spese aggiornate per '+fmtMon(mo)+'!');
+    });
+    return;
+  }
+
+  // Case 2: new insertion but month already has data → overwrite
+  if(S.partnerData[mo]){
+    bcConfirmHtml('<p style="margin:0">Esistono già le spese per <strong>'+fmtMon(mo)+'</strong>. Vuoi sovrascriverle?</p>','Mese già presente','⚠️','Sovrascrivi','Annulla').then(function(ok){
+      if(!ok) return;
+      doSave();
+      toast('Spese aggiornate per '+fmtMon(mo)+'!');
+    });
+    return;
+  }
+
+  // Case 3: clean new insertion — no alert
+  doSave();
+  toast('Spese inserite per '+fmtMon(mo)+'!');
 }
 function deletePartner(m){
   bcConfirm('Eliminare i dati di '+fmtMonShort(m)+'?','Elimina dati partner','🗑','Elimina','Annulla').then(function(ok){
@@ -3524,9 +3673,56 @@ function deletePartner(m){
     toast('Eliminato.');
   });
 }
+function resetPartnerFields(){
+  S.cCats.forEach(function(c){
+    var e=document.getElementById('pt-'+slug(c));
+    if(e) e.value='0';
+  });
+  toast('Campi azzerati.');
+}
+
+function resetTxFields(){
+  document.getElementById('tx-a').value='';
+  document.getElementById('tx-n').value='';
+  var dateEl=document.getElementById('tx-d');
+  if(dateEl) CP.setValue('tx-d', today());
+  resetRecurForm();
+  toast('Campi azzerati.');
+}
+
+function cancelPartnerEdit(){
+  _ptEditingMonth=null;
+  var now=new Date();
+  var ym=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  var el=document.getElementById('pt-insert-mo'); if(el) el.value=ym;
+  CP.setValue('pt-insert-mo', ym);
+  document.getElementById('pt-edit-banner').style.display='none';
+  var cb=document.getElementById('pt-cancel-btn'); if(cb) cb.style.display='none';
+  var card=document.getElementById('pt-form-card');
+  if(card){ card.style.borderColor=''; card.style.background=''; }
+  drawPartner();
+}
+
 function loadPartnerMonth(m){
-  CP.setAndTrigger('pt-mo',m); drawPartner();
-  toast('Mese caricato — modifica e salva.');
+  _ptEditingMonth=m;
+  var el=document.getElementById('pt-insert-mo'); if(el) el.value=m;
+  CP.setValue('pt-insert-mo', m);
+  var ex=S.partnerData[m]||{};
+  S.cCats.forEach(function(c){
+    var field=document.getElementById('pt-'+slug(c));
+    if(field) field.value=ex[c]||0;
+  });
+  var banner=document.getElementById('pt-edit-banner');
+  if(banner){ banner.style.display='flex'; }
+  var label=document.getElementById('pt-edit-label');
+  if(label) label.textContent=fmtMon(m);
+  var cb=document.getElementById('pt-cancel-btn'); if(cb) cb.style.display='';
+  var btn=document.getElementById('partner-save-btn'); if(btn) btn.textContent='💾 Salva modifica';
+  var card=document.getElementById('pt-form-card');
+  if(card){ card.style.borderColor='var(--blue)'; card.style.background='var(--blue-s)'; }
+  drawPtHist();
+  var form=document.getElementById('pt-form-card');
+  if(form) form.scrollIntoView({behavior:'smooth', block:'start'});
 }
 function drawPtHist(){
   var el=document.getElementById('pt-hist'); if(!el) return;
@@ -4026,11 +4222,28 @@ function showNetWorthDetail(net, netNet, snapTotal, snapDateStr){
       if(paid>0) rows.push({label:'Uscite — '+k, value:'-€'+fmt(paid), sub:d.coupleMe>0?'pers. €'+fmt(d.personal)+' + coppia €'+fmt(d.coupleMe):'', cls:'neg'});
     }
   });
-  rows.push({label:'', value:''});
-  rows.push({label:'= Patrimonio netto ('+(_consView==='net'?'con rimborsi 💑':'senza rimborsi 💑')+')', value:'€'+fmt(displayNet), cls:displayNet>=(snapTotal||0)?'pos':'neg'});
-  if(net!==netNet){
-    rows.push({label:'  ('+(_consView==='net'?'senza rimborsi 💑':'con rimborsi 💑')+' sarebbe)', value:'€'+fmt(_consView==='net'?net:netNet), cls:''});
+  // Conguagli del periodo per la vista corrente
+  var adjTotal=0;
+  if(S.snapAdjustments&&S.snapAdjustments.length){
+    var periodEndDate=getPeriodEndDate();
+    var baseDate=snapDateStr||'';
+    var intermIds={};
+    S.wHist.forEach(function(s){
+      var sd=s.snapDate||s.date.slice(0,10);
+      if(s.id&&sd>baseDate&&sd<=periodEndDate) intermIds[s.id]=true;
+    });
+    S.snapAdjustments.forEach(function(a){
+      if(intermIds[a.snapId]&&(!a.view||a.view===_consView)){
+        adjTotal+=(a.type==='income'?a.amount:-a.amount);
+      }
+    });
   }
+  if(adjTotal!==0){
+    rows.push({label:'', value:''});
+    rows.push({label:'⚖️ Conguagli snapshot', value:(adjTotal>0?'+':'')+fmt(adjTotal)+'€', cls:adjTotal>0?'pos':'neg'});
+  }
+  rows.push({label:'', value:''});
+  rows.push({label:'= Patrimonio netto', value:'€'+fmt(displayNet), cls:displayNet>=(snapTotal||0)?'pos':'neg'});
   openStatDetail('📊 Dettaglio Patrimonio Netto', fmtDetailTable(rows));
 }
 
@@ -4100,8 +4313,44 @@ function updateCons(){
   var realExp=Object.values(catMap).reduce(function(a,d){return a+d.personal+d.coupleTotal/2;},0);
   var bal=inc-realExp;
   var periodEndDate=getPeriodEndDate();
-  var net=getNetWorth(periodEndDate);
-  var netNet=getNetWorthNet(periodEndDate);
+
+  // Find oldest snapshot at or before start of data as base
+  var periodTxDates=txs.map(function(t){return t.date;});
+  var periodFirstDate=periodTxDates.length?periodTxDates.slice().sort()[0]:periodEndDate;
+  // Also consider snapshot dates in the period
+  S.wHist.forEach(function(s){ var sd=s.snapDate||s.date.slice(0,10); if(sd<=periodEndDate) periodFirstDate=periodFirstDate<sd?periodFirstDate:sd; });
+
+  // Base snapshot: most recent with snapDate <= periodFirstDate
+  var baseSnap=null;
+  S.wHist.forEach(function(s){
+    var sd=s.snapDate||s.date.slice(0,10);
+    if(sd<=periodFirstDate&&(!baseSnap||sd>=(baseSnap.snapDate||baseSnap.date.slice(0,10)))) baseSnap=s;
+  });
+  // Fallback: if no snapshot before period, use earliest available
+  if(!baseSnap&&S.wHist.length){
+    baseSnap=S.wHist.slice().sort(function(a,b){
+      return (a.snapDate||a.date.slice(0,10)).localeCompare(b.snapDate||b.date.slice(0,10));
+    })[0];
+  }
+
+  // Sum adjustments of intermediate snapshots between baseSnap and periodEnd
+  var adjFlow=0;
+  if(baseSnap&&S.snapAdjustments&&S.snapAdjustments.length){
+    var baseDate=baseSnap.snapDate||baseSnap.date.slice(0,10);
+    // Find all snapshots with id, date > baseDate and <= periodEndDate, excluding baseSnap
+    var intermIds={};
+    S.wHist.forEach(function(s){
+      var sd=s.snapDate||s.date.slice(0,10);
+      if(s.id&&s.id!==(baseSnap.id||'')&&sd>baseDate&&sd<=periodEndDate) intermIds[s.id]=true;
+    });
+    S.snapAdjustments.forEach(function(a){
+      if(intermIds[a.snapId]&&(!a.view||a.view===_consView)) adjFlow+=(a.type==='income'?a.amount:-a.amount);
+    });
+  }
+
+  var snapBase=baseSnap?baseSnap.total:0;
+  var net=snapBase+(inc-rawExp)+adjFlow;
+  var netNet=snapBase+(inc-realExp)+adjFlow;
   var displayNet=_consView==='net'?netNet:net;
   var displayBal=_consView==='net'?bal:inc-rawExp;
 
@@ -4110,15 +4359,8 @@ function updateCons(){
   var netHidden=localStorage.getItem('bc_net_hidden')==='1';
   var hasCoupleSplit=Object.values(catMap).some(function(d){return d.coupleHers>0||d.coupleMe>0;});
 
-  // Build snapshot info for detail
-  var baseSnap=null;
-  S.wHist.forEach(function(s){
-    var sd=(s.snapDate||s.date.slice(0,10));
-    if(sd<=periodEndDate&&(!baseSnap||sd>=(baseSnap.snapDate||baseSnap.date.slice(0,10)))) baseSnap=s;
-  });
   var snapDateStr=baseSnap?(baseSnap.snapDate||baseSnap.date.slice(0,10)):'';
   var snapTot=baseSnap?baseSnap.total:0;
-  var netTxs=baseSnap?getPeriodTxs().filter(function(t){return t.date>=snapDateStr&&t.date<=periodEndDate;}):[];
 
   var netCard='<div class="stat-card stat-net'+(netHidden?' stat-net-hidden':'')+'" style="position:relative;cursor:pointer" onclick="showNetWorthDetail('+net+','+netNet+','+snapTot+',\''+snapDateStr+'\')" data-tooltip="'+escH('Snapshot patrimoniale più recente ('+( baseSnap?fmtShort(snapDateStr):'nessuno')+') aggiornato con tutti i movimenti successivi. Clicca per vedere il dettaglio del calcolo. Usa 👁 per nascondere il valore.')+'">'
     +'<button class="net-eye-btn" onclick="event.stopPropagation();toggleNetVisibility()" title="'+(netHidden?'Mostra':'Nascondi')+' patrimonio netto" data-tt-id="btn-net-eye">'+(netHidden?'🙈':'👁')+'</button>'
@@ -4141,7 +4383,7 @@ function updateCons(){
     {label:'Uscite pagate', val:'-€'+fmt(rawExp), cls:'v-red', cardCls:'stat-exp',
      note:'importi pieni pagati di tasca', onclick:'showExpDetail(getPeriodTxs(),buildCatMap(getPeriodTxs()),\'raw\')'}
   ];
-  if(hasCoupleSplit) otherStats.push(
+  if(hasCoupleSplit && _consView==='net') otherStats.push(
     {label:'Uscite nette', val:'-€'+fmt(realExp), cls:'v-red', cardCls:'stat-exp',
      note:'personale + 50% coppia', onclick:'showExpDetail(getPeriodTxs(),buildCatMap(getPeriodTxs()),\'net\')'}
   );
@@ -4323,15 +4565,41 @@ function updateCons(){
     var savTxs=txs.slice().sort(function(a,b){return a.date.localeCompare(b.date);});
     var savDates=[], savCum=[], cumVal=0;
     if(savTxs.length){ savDates.push(savTxs[0].date); savCum.push(0); }
+    // Pre-build catMap for partner data (needed for net view)
+    var savCatMap=_consView==='net'?buildCatMap(txs):null;
     savTxs.forEach(function(t){
       var cost;
-      if(t.type==='income') cost=t.amount;
-      else if(t.isCouple||t.cat.indexOf('💑')!==-1) cost=-t.amount*(_consView==='cash'?1:0.5);
-      else cost=-t.amount;
+      if(t.type==='income'){
+        cost=t.amount;
+      } else if(_consView==='cash'){
+        cost=-t.amount;
+      } else {
+        // net: personal full, couple 50% mine + 50% hers
+        var isC=t.isCouple||t.cat.indexOf('💑')!==-1;
+        if(isC){
+          var catKey=t.cat.replace(' 💑','');
+          var d=savCatMap?savCatMap[catKey]:null;
+          // cost = 50% mine. Partner share is added as a lump below.
+          cost=-t.amount*0.5;
+        } else {
+          cost=-t.amount;
+        }
+      }
       cumVal+=cost;
       savDates.push(t.date);
       savCum.push(cumVal);
     });
+    // In net view, add partner share as single adjustment at end date
+    if(_consView==='net'&&savCatMap){
+      var partnerTotal=0;
+      Object.values(savCatMap).forEach(function(d){ partnerTotal+=d.coupleHers/2; });
+      if(partnerTotal>0&&savDates.length>0){
+        var lastDate=savTxs.length?savTxs[savTxs.length-1].date:savDates[savDates.length-1];
+        cumVal-=partnerTotal;
+        savDates.push(lastDate);
+        savCum.push(cumVal);
+      }
+    }
     if(savDates.length>1){
       var ptR=savDates.length>40?0:savDates.length>15?2:4;
       var minV=Math.min.apply(null,savCum);
@@ -4386,7 +4654,8 @@ function updateCons(){
              borderColor:function(ctx){
                var v0=savCumRef[ctx.p0DataIndex]||0;
                var v1=savCumRef[ctx.p1DataIndex]||0;
-               return (v0+v1)/2>=0?savGreen:savRed;
+               // Use destination value to determine color
+               return v1>=0?savGreen:savRed;
              }
            },
            order:1}
@@ -4730,6 +4999,7 @@ function drawCoppia(){
 function renderAll(){
   drawWCats(); drawECats(); drawCCats(); drawICats(); drawSharedBanner();
   fillTxCat(); fillFCat();
+  drawWHist();
   if(currentPage==='home') drawDashboard();
   if(currentPage==='comp') drawTxList();
   if(currentPage==='wallet') drawWA();
@@ -4768,7 +5038,12 @@ function updateAiBanner(){
   // Init custom pickers
   CP.init('tx-d','date',function(){ drawTxList&&drawTxList(); },false,'📅 Transazione — Data');
   CP.init('snap-date','date',function(){},false,'📅 Patrimonio — Data snapshot');
-  CP.init('pt-mo','month',function(){ drawPartner(); drawMyCoupleCosts(); },false,'🗓 Spese Partner — Mese');
+  CP.init('pt-mo','month',function(){
+    drawMyCoupleCosts();
+  },false,'🗓 Spese Partner — Visualizza mese');
+  CP.init('pt-insert-mo','month',function(){
+    onPartnerInsertMonthChange();
+  },false,'🗓 Spese Partner — Mese inserimento');
   CP.init('f-mo','month',function(){ drawTxList(); },false,'🗓 Spese & Entrate — Mese');
   CP.init('cop-month','month',function(){ drawCoppia(); },false,'🗓 Analisi Coppia — Mese');
   CP.init('cons-pick-month','month',function(){ updateCons(); },false,'🗓 Statistiche — Mese');
@@ -4840,7 +5115,7 @@ function updateAiBanner(){
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
           <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()" data-tt-id="btn-debug">🧪 Entra in modalità debug</button>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.0</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.1</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -5516,18 +5791,23 @@ function doReset(){
   // After filtering txs, remove rules whose originating tx no longer exists
   function cleanOrphanRules(){
     if(!S.recurringRules) return;
-    var txIds={};
-    S.txs.forEach(function(t){ if(t.id) txIds[t.id]=true; });
     S.recurringRules=S.recurringRules.filter(function(r){
       return S.txs.some(function(t){ return t.ruleId===r.id; });
     });
+  }
+  // Remove adjustments for snapshots that no longer exist
+  function cleanOrphanAdj(){
+    if(!S.snapAdjustments) return;
+    var snapIds={};
+    S.wHist.forEach(function(s){ if(s.id) snapIds[s.id]=true; });
+    S.snapAdjustments=S.snapAdjustments.filter(function(a){ return snapIds[a.snapId]; });
   }
 
   if(scope==='all'){
     bcConfirm('Sei sicuro di voler cancellare TUTTI i dati? Questa azione è irreversibile.','Reset totale','🗑','Sì, cancella tutto','Annulla').then(function(ok){
       if(!ok) return;
       S.txs=[]; S.wHist=[]; S.partnerData={};
-      S.recurringRules=[];
+      S.recurringRules=[]; S.snapAdjustments=[];
       _finishReset('Tutti i dati resettati.',resetProg,resetSettings,msg);
     });
   } else if(scope==='range'){
@@ -5537,22 +5817,25 @@ function doReset(){
     bcConfirm('Eliminare tutte le transazioni dal '+fmtShort(from)+' al '+fmtShort(to)+'?','Elimina intervallo','🗑','Elimina','Annulla').then(function(ok){
       if(!ok) return;
       S.txs=S.txs.filter(function(t){ return t.date<from||t.date>to; });
+      S.wHist=S.wHist.filter(function(s){ var sd=s.snapDate||s.date.slice(0,10); return sd<from||sd>to; });
       Object.keys(S.partnerData).forEach(function(m){
         var mStart=m+'-01', mEnd=m+'-31';
         if(mStart>=from && mEnd<=to) delete S.partnerData[m];
       });
-      cleanOrphanRules();
+      cleanOrphanRules(); cleanOrphanAdj();
       _finishReset('Transazioni dal '+fmtShort(from)+' al '+fmtShort(to)+' eliminate.',resetProg,resetSettings,msg);
     });
   } else if(scope==='month'){
     S.txs=S.txs.filter(function(t){ return !t.date.startsWith(ym); });
+    S.wHist=S.wHist.filter(function(s){ return !(s.snapDate||s.date.slice(0,10)).startsWith(ym); });
     delete S.partnerData[ym];
-    cleanOrphanRules();
+    cleanOrphanRules(); cleanOrphanAdj();
     _finishReset('Dati di '+fmtMon(ym)+' eliminati.',resetProg,resetSettings,msg);
   } else if(scope==='year'){
     S.txs=S.txs.filter(function(t){ return !t.date.startsWith(year); });
+    S.wHist=S.wHist.filter(function(s){ return !(s.snapDate||s.date.slice(0,10)).startsWith(year); });
     Object.keys(S.partnerData).forEach(function(m){ if(m.startsWith(year)) delete S.partnerData[m]; });
-    cleanOrphanRules();
+    cleanOrphanRules(); cleanOrphanAdj();
     _finishReset('Dati dell\'anno '+year+' eliminati.',resetProg,resetSettings,msg);
   }
 }
@@ -6214,7 +6497,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.2.0';
+  var APP_VERSION = '1.2.1';
 
   if(!('serviceWorker' in navigator)) return;
 
