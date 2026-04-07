@@ -277,6 +277,7 @@ body:not(.is-home) .mob-menu-btn{display:none}
 
 /* PAGE */
 .page{display:none;flex:1;padding:36px 40px 80px;max-width:1400px;width:100%}
+.ver-footer{position:fixed;bottom:8px;right:14px;font-size:.65rem;color:var(--placeholder);letter-spacing:.05em;user-select:none;z-index:100;pointer-events:none}
 .page.active{display:block;animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
@@ -1095,7 +1096,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
-  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.1</div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.2</div>
 </div>
 <div id="page-prog" class="page">
   <div class="pg-head">
@@ -1149,17 +1150,18 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
     <!-- Invia categorie -->
     <div id="send-cats-bar" style="display:none">
-      <div class="card" style="border-color:var(--teal);background:var(--teal-s);height:100%">
-        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px">
+      <div id="send-cats-card" class="card" style="border-color:var(--teal);background:var(--teal-s);height:100%">
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
           <span style="font-size:1.2rem">📤</span>
-          <div>
-            <div style="font-weight:700;font-size:.88rem;color:var(--teal)">Categorie non ancora inviate al telefono</div>
-            <div style="font-size:.78rem;color:var(--sub);margin-top:2px">Invia le categorie aggiornate all'app mobile.</div>
+          <div style="flex:1">
+            <div id="send-cats-title" style="font-weight:700;font-size:.88rem;color:var(--teal)">Invia categorie al telefono</div>
+            <div id="send-cats-sub" style="font-size:.78rem;color:var(--sub);margin-top:2px">Ci sono categorie non ancora inviate all'app mobile.</div>
+            <div id="send-cats-last" style="font-size:.74rem;color:var(--sub);margin-top:4px"></div>
           </div>
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-sm btn-send-cats-pulse" style="background:var(--teal);color:#fff;box-shadow:0 3px 10px rgba(20,184,166,.35)" onclick="sendCatsToPhone()" data-tt-id="btn-send-cats">📤 Invia</button>
-          <button class="btn btn-sm btn-ghost" onclick="dismissSendCatsBar()" style="border-color:var(--teal);color:var(--teal)" data-tt-id="btn-cats-sent">✓ Già inviate</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button id="send-cats-btn" class="btn btn-sm btn-send-cats-pulse" style="background:var(--teal);color:#fff;box-shadow:0 3px 10px rgba(20,184,166,.35)" onclick="sendCatsToPhone()" data-tt-id="btn-send-cats">📤 Invia</button>
+          <button class="btn btn-sm btn-ghost" onclick="checkNewCatsVsLastSent()" style="border-color:var(--teal);color:var(--teal)">🔍 Cosa c'è di nuovo</button>
         </div>
       </div>
     </div>
@@ -4285,7 +4287,7 @@ function showExpDetail(txs, catMap, mode){
   });
   if(coupleTot>0){ rows.push({label:'Subtotale coppia', value:'-€'+fmt(coupleTot), cls:'neg'}); rows.push({label:'', value:''}); }
   rows.push({label:'Totale '+(mode==='net'?'uscite nette':'uscite pagate'), value:'-€'+fmt(personalTot+coupleTot), cls:'neg'});
-  openStatDetail(mode==='net'?'📉 Dettaglio Uscite Nette':'📉 Dettaglio Uscite Pagate', fmtDetailTable(rows));
+  openStatDetail(mode==='net'?'📉 Dettaglio Uscite al netto dei rimborsi 💑':'📉 Dettaglio Tue Uscite', fmtDetailTable(rows));
 }
 
 function showBalDetail(inc, rawExp, realExp, bal){
@@ -4326,12 +4328,7 @@ function updateCons(){
     var sd=s.snapDate||s.date.slice(0,10);
     if(sd<=periodFirstDate&&(!baseSnap||sd>=(baseSnap.snapDate||baseSnap.date.slice(0,10)))) baseSnap=s;
   });
-  // Fallback: if no snapshot before period, use earliest available
-  if(!baseSnap&&S.wHist.length){
-    baseSnap=S.wHist.slice().sort(function(a,b){
-      return (a.snapDate||a.date.slice(0,10)).localeCompare(b.snapDate||b.date.slice(0,10));
-    })[0];
-  }
+  // No fallback: if no snapshot exists at or before period start, patrimonio netto = 0
 
   // Sum adjustments of intermediate snapshots between baseSnap and periodEnd
   var adjFlow=0;
@@ -4373,21 +4370,21 @@ function updateCons(){
 
   var statTooltips={
     'Entrate':'Totale di tutte le entrate nel periodo selezionato (stipendi, rimborsi, regali…). Clicca per vedere il dettaglio per categoria.',
-    'Uscite pagate':'Tutto quello che hai fisicamente pagato: spese personali + spese di coppia per intero (prima dei rimborsi). Clicca per il dettaglio.',
-    'Uscite nette':'Il tuo costo reale: spese personali + 50% spese coppia tue + 50% spese coppia della partner. Clicca per vedere come è composto.',
+    'Tue uscite':'Tutto quello che hai fisicamente pagato: spese personali + spese di coppia per intero (prima dei rimborsi). Clicca per il dettaglio.',
+    'Uscite al netto dei rimborsi 💑':'Il tuo costo reale: spese personali + 50% spese coppia tue + 50% spese coppia della partner. Clicca per vedere come è composto.',
   };
 
   var otherStats=[
     {label:'Entrate', val:'+€'+fmt(inc), cls:'v-green', cardCls:'stat-inc',
      note:'', onclick:'showIncDetail(getPeriodTxs())'},
-    {label:'Uscite pagate', val:'-€'+fmt(rawExp), cls:'v-red', cardCls:'stat-exp',
-     note:'importi pieni pagati di tasca', onclick:'showExpDetail(getPeriodTxs(),buildCatMap(getPeriodTxs()),\'raw\')'}
+    {label:'Tue uscite', val:'-€'+fmt(rawExp), cls:'v-red', cardCls:'stat-exp',
+     note:'tutto quello che hai pagato di tasca', onclick:'showExpDetail(getPeriodTxs(),buildCatMap(getPeriodTxs()),\'raw\')'}
   ];
   if(hasCoupleSplit && _consView==='net') otherStats.push(
-    {label:'Uscite nette', val:'-€'+fmt(realExp), cls:'v-red', cardCls:'stat-exp',
-     note:'personale + 50% coppia', onclick:'showExpDetail(getPeriodTxs(),buildCatMap(getPeriodTxs()),\'net\')'}
+    {label:'Uscite al netto dei rimborsi 💑', val:'-€'+fmt(realExp), cls:'v-red', cardCls:'stat-exp',
+     note:'tua quota dopo i rimborsi', onclick:'showExpDetail(getPeriodTxs(),buildCatMap(getPeriodTxs()),\'net\')'}
   );
-  var saldoLabel='Saldo netto'+(periodLabel?' '+periodLabel:'');
+  var saldoLabel='Saldo netto'+(periodLabel?' ('+periodLabel+')':'')+' <span style="font-size:.65rem;margin-left:4px;opacity:.6;white-space:nowrap">'+(_consView==='net'?'con rimborsi 💑':'senza rimborsi 💸')+'</span>';
   otherStats.push(
     {label:saldoLabel, val:(displayBal>=0?'+':'-')+'€'+fmt(Math.abs(displayBal)),
      cls:displayBal>=0?'v-green':'v-red', cardCls:displayBal>=0?'stat-bal':'stat-exp',
@@ -4602,23 +4599,21 @@ function updateCons(){
     }
     if(savDates.length>1){
       var ptR=savDates.length>40?0:savDates.length>15?2:4;
-      var minV=Math.min.apply(null,savCum);
-      var maxV=Math.max.apply(null,savCum);
+      var realVals=savCum.slice(1); // exclude artificial starting 0
+      var minV=realVals.length?Math.min.apply(null,realVals):0;
+      var maxV=realVals.length?Math.max.apply(null,realVals):0;
       var savGreen=c.green, savRed=c.red;
-      var savCumRef=savCum; // closure reference
-      // Plugin that builds gradient after chart layout (canvas sized correctly)
+      var savCumRef=savCum;
       var gradPlugin={
         id:'savGrad',
-        afterLayout:function(chart){
+        afterDatasetsDraw:function(chart){
           var ctx=chart.ctx;
           var yAxis=chart.scales.y;
           if(!yAxis) return;
           var top=yAxis.top, bottom=yAxis.bottom, h=bottom-top;
           if(h<=0) return;
           var zeroY=yAxis.getPixelForValue(0);
-          // Clamp zero line within chart area
           var zeroFrac=Math.max(0,Math.min(1,(zeroY-top)/h));
-          // Fill gradient: green above zero, red below
           var fillG=ctx.createLinearGradient(0,top,0,bottom);
           if(minV>=0){
             fillG.addColorStop(0,savGreen+'55'); fillG.addColorStop(1,savGreen+'11');
@@ -4631,6 +4626,7 @@ function updateCons(){
             fillG.addColorStop(1,savRed+'55');
           }
           chart.data.datasets[1].backgroundColor=fillG;
+          chart.update('none');
         }
       };
       CH['c2']=new Chart(cv2,{
@@ -5115,7 +5111,7 @@ function updateAiBanner(){
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
           <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()" data-tt-id="btn-debug">🧪 Entra in modalità debug</button>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.1</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.2</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -5331,16 +5327,7 @@ function importFromMobileResolve(overwrite){
 // ═══════════════════════════════════════
 // Track whether cats have been sent since last change — persisted in localStorage
 var _catsSentHash=localStorage.getItem('bc_cats_sent_hash')||'';
-
-function dismissSendCatsBar(){
-  bcConfirm('Confermi di aver già inviato le categorie al telefono?\n\nL\'avviso sparirà e riapparirà automaticamente solo se aggiungerai nuove categorie.','Categorie inviate','📤','Sì, ho inviato','Annulla').then(function(ok){
-    if(!ok) return;
-    _catsSentHash=getCatsHash();
-    localStorage.setItem('bc_cats_sent_hash',_catsSentHash);
-    updateSendCatsBar();
-    toast('Avviso rimosso. Riapparirà se aggiungi nuove categorie.');
-  });
-}
+var _catsSentDate=localStorage.getItem('bc_cats_sent_date')||'';
 
 function getCatsHash(){
   return JSON.stringify({e:S.eCats.slice().sort(), c:S.cCats.slice().sort(), i:(S.iCats||[]).slice().sort()});
@@ -5350,8 +5337,69 @@ function updateSendCatsBar(){
   var bar=document.getElementById('send-cats-bar');
   if(!bar) return;
   var hasCategories=S.eCats.length>0||S.cCats.length>0;
+  if(!hasCategories){ bar.style.display='none'; return; }
+  bar.style.display='';
+
   var changed=getCatsHash()!==_catsSentHash;
-  bar.style.display=(hasCategories&&changed)?'':'none';
+  var card=document.getElementById('send-cats-card');
+  var btn=document.getElementById('send-cats-btn');
+  var title=document.getElementById('send-cats-title');
+  var sub=document.getElementById('send-cats-sub');
+  var lastEl=document.getElementById('send-cats-last');
+
+  if(changed){
+    // Pulsing — ci sono novità
+    if(card){ card.style.borderColor='var(--teal)'; card.style.background='var(--teal-s)'; card.style.opacity='1'; }
+    if(btn){ btn.classList.add('btn-send-cats-pulse'); btn.style.opacity='1'; }
+    if(title) title.textContent='Invia categorie al telefono';
+    if(sub) sub.textContent='Ci sono categorie non ancora inviate all\'app mobile.';
+  } else {
+    // Già inviate — opaco, no pulse
+    if(card){ card.style.borderColor='var(--border)'; card.style.background='var(--surface)'; card.style.opacity='.6'; }
+    if(btn){ btn.classList.remove('btn-send-cats-pulse'); btn.style.opacity='.7'; }
+    if(title) title.textContent='Invia categorie al telefono';
+    if(sub) sub.textContent='Tutte le categorie sono già state inviate.';
+  }
+  if(lastEl) lastEl.textContent=_catsSentDate?'Ultimo invio: '+_catsSentDate:'Nessun invio registrato.';
+}
+
+function checkNewCatsVsLastSent(){
+  var changed=getCatsHash()!==_catsSentHash;
+  if(!changed){
+    bcConfirm(
+      'Non ci sono categorie nuove rispetto all\'ultimo invio.\n\nVuoi inviare comunque?',
+      'Nessuna novità','ℹ️','Invia comunque','Annulla'
+    ).then(function(ok){ if(ok) sendCatsToPhone(); });
+    return;
+  }
+  // Show what's new
+  var prev=_catsSentHash?JSON.parse(_catsSentHash):{e:[],c:[],i:[]};
+  var cur={e:S.eCats.slice().sort(),c:S.cCats.slice().sort(),i:(S.iCats||[]).slice().sort()};
+  var newE=cur.e.filter(function(x){return prev.e.indexOf(x)===-1;});
+  var newC=cur.c.filter(function(x){return prev.c.indexOf(x)===-1;});
+  var newI=cur.i.filter(function(x){return (prev.i||[]).indexOf(x)===-1;});
+  var delE=prev.e.filter(function(x){return cur.e.indexOf(x)===-1;});
+  var delC=prev.c.filter(function(x){return cur.c.indexOf(x)===-1;});
+  var lines=[];
+  if(newI.length) lines.push('<p style="margin:0 0 6px"><strong>➕ Entrate nuove:</strong> '+newI.map(escH).join(', ')+'</p>');
+  if(newE.length) lines.push('<p style="margin:0 0 6px"><strong>➕ Personali nuove:</strong> '+newE.map(escH).join(', ')+'</p>');
+  if(newC.length) lines.push('<p style="margin:0 0 6px"><strong>➕ Coppia nuove:</strong> '+newC.map(escH).join(', ')+'</p>');
+  if(delE.length) lines.push('<p style="margin:0 0 6px"><strong>➖ Personali rimosse:</strong> '+delE.map(escH).join(', ')+'</p>');
+  if(delC.length) lines.push('<p style="margin:0 0 6px"><strong>➖ Coppia rimosse:</strong> '+delC.map(escH).join(', ')+'</p>');
+  bcConfirmHtml(
+    (lines.length?lines.join(''):'<p style="margin:0">Ci sono modifiche alle categorie.</p>')
+    +'<p style="margin:8px 0 0;font-size:.8rem;color:var(--sub)">Vuoi inviarle ora?</p>',
+    'Novità da inviare','📤','Invia ora','Annulla'
+  ).then(function(ok){ if(ok) sendCatsToPhone(); });
+}
+
+function dismissSendCatsBar(){
+  _catsSentHash=getCatsHash();
+  var now=new Date();
+  _catsSentDate=now.toLocaleString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  localStorage.setItem('bc_cats_sent_hash',_catsSentHash);
+  localStorage.setItem('bc_cats_sent_date',_catsSentDate);
+  updateSendCatsBar();
 }
 
 function sendCatsToPhone(){
@@ -5366,7 +5414,6 @@ function sendCatsToPhone(){
     return;
   }
 
-  // Build export object
   var exportObj={
     _source:'bilancio_desktop',
     _version:1,
@@ -5381,34 +5428,60 @@ function sendCatsToPhone(){
   var now=new Date();
   var dd=String(now.getDate()).padStart(2,'0');
   var mm=String(now.getMonth()+1).padStart(2,'0');
-  var filename='CATEGORIE BILANCIO '+dd+'.'+mm+'.json';
+  var yy=String(now.getFullYear()).slice(2);
+  var filename='Categ. per mobile ('+dd+'.'+mm+'.'+yy+').json';
 
-  // 1. Download the JSON file
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a'); a.href=url; a.download=filename; a.click();
-  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  function openGmail(savedFilename, savedPath){
+    var nE=S.eCats.length, nC=S.cCats.length, nI=(S.iCats||[]).length;
+    var subject='Bilancio Casa — Categorie da importare';
+    var fileInfo=savedPath
+      ? 'Il file è stato salvato come:\n📄 '+savedFilename+'\n📁 '+savedPath+'\n\n'
+      : 'Il file scaricato si chiama: '+savedFilename+'\n\n';
+    var body='Ciao!\n\n'+fileInfo
+      +'Categorie entrate ('+nI+'): '+(S.iCats||[]).join(', ')+'\n'
+      +'Categorie personali ('+nE+'): '+S.eCats.join(', ')+'\n'
+      +'Categorie di coppia ('+nC+'): '+S.cCats.join(', ')+'\n\n'
+      +'Come importarle:\n'
+      +'1. Apri l\'app Bilancio Mobile\n'
+      +'2. Vai in Impostazioni\n'
+      +'3. Tocca "Importa categorie" e seleziona il file JSON\n\n'
+      +'Inviato da Bilancio Casa — '+new Date().toLocaleString('it-IT');
+    var gmailUrl='https://mail.google.com/mail/?view=cm'
+      +'&to='+encodeURIComponent(email)
+      +'&su='+encodeURIComponent(subject)
+      +'&body='+encodeURIComponent(body);
+    setTimeout(function(){ window.open(gmailUrl,'_blank'); }, 300);
+    dismissSendCatsBar();
+    toast('File salvato! Si apre Gmail — allegalo manualmente.');
+  }
 
-  // 2. Open Gmail in browser (works on desktop without a local mail client)
-  var nE=S.eCats.length, nC=S.cCats.length, nI=(S.iCats||[]).length;
-  var subject='Bilancio Casa — Categorie da importare';
-  var body='Ciao!\n\nIn allegato trovi il file con le categorie aggiornate di Bilancio Casa.\n\n'
-    +'Categorie entrate ('+nI+'): '+(S.iCats||[]).join(', ')+'\n'
-    +'Categorie personali ('+nE+'): '+S.eCats.join(', ')+'\n'
-    +'Categorie di coppia ('+nC+'): '+S.cCats.join(', ')+'\n\n'
-    +'Come importarle:\n'
-    +'1. Apri l\'app Bilancio Mobile\n'
-    +'2. Vai in Impostazioni\n'
-    +'3. Tocca "Importa categorie" e seleziona il file JSON allegato\n\n'
-    +'Inviato da Bilancio Casa — '+new Date().toLocaleString('it-IT');
-
-  var gmailUrl='https://mail.google.com/mail/?view=cm'
-    +'&to='+encodeURIComponent(email)
-    +'&su='+encodeURIComponent(subject)
-    +'&body='+encodeURIComponent(body);
-
-  setTimeout(function(){ window.open(gmailUrl,'_blank'); }, 300);
-
-  toast('File scaricato! Si apre Gmail — allegalo manualmente alla mail.');
+  // Try showSaveFilePicker for user-chosen location
+  if(window.showSaveFilePicker){
+    window.showSaveFilePicker({
+      suggestedName: filename,
+      types:[{description:'File JSON',accept:{'application/json':['.json']}}]
+    }).then(function(fileHandle){
+      return fileHandle.createWritable().then(function(writable){
+        return writable.write(blob).then(function(){ return writable.close(); }).then(function(){
+          var path=''; try{ path=fileHandle.name; }catch(e){}
+          openGmail(fileHandle.name, path);
+        });
+      });
+    }).catch(function(e){
+      if(e.name==='AbortError') return; // user cancelled
+      // Fallback to standard download
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a'); a.href=url; a.download=filename; a.click();
+      setTimeout(function(){ URL.revokeObjectURL(url); },1000);
+      openGmail(filename, null);
+    });
+  } else {
+    // Fallback: standard download
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a'); a.href=url; a.download=filename; a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); },1000);
+    openGmail(filename, null);
+  }
 }
 
 // ═══════════════════════════════════════
@@ -6497,7 +6570,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.2.1';
+  var APP_VERSION = '1.2.2';
 
   if(!('serviceWorker' in navigator)) return;
 
@@ -6593,5 +6666,6 @@ function closeChModal(e){
 
 })();
 </script>
+<div class="ver-footer" id="ver-footer">Bilancio Casa — Versione 1.2.2</div>
 </body>
 </html>
