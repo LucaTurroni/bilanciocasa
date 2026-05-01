@@ -1098,7 +1098,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
-  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.6</div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.5</div>
 </div>
 <div id="page-prog" class="page">
   <div class="pg-head">
@@ -4404,7 +4404,7 @@ function updateCons(){
   var saldoLabel='Saldo netto'+(periodLabel?' ('+periodLabel+')':'')+' <span style="font-size:.65rem;margin-left:4px;opacity:.6;white-space:nowrap">'+(_consView==='net'?'con rimborsi 💑':'senza rimborsi 💸')+'</span>';
   otherStats.push(
     {label:saldoLabel, val:(displayBal>=0?'+':'-')+'€'+fmt(Math.abs(displayBal)),
-     cls:displayBal>=0?'v-green':'v-red', cardCls:displayBal>=0?'stat-bal':'stat-exp',
+     cls:displayBal>=0?'v-green':'v-red', cardCls:'stat-bal',
      note:_consView==='net'?'entrate − uscite nette':'entrate − uscite pagate',
      tt:_consView==='net'?'Entrate meno uscite nette del periodo. Positivo = risparmio reale. Clicca per il dettaglio.':'Entrate meno uscite pagate (cash flow). Non considera i rimborsi futuri della partner. Clicca per il dettaglio.',
      onclick:'showBalDetail('+inc+','+rawExp+','+realExp+','+(inc-realExp)+')'}
@@ -5128,7 +5128,7 @@ function updateAiBanner(){
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
           <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()" data-tt-id="btn-debug">🧪 Entra in modalità debug</button>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.6</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.5</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -6587,7 +6587,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.2.6';
+  var APP_VERSION = '1.2.5';
 
   if(!('serviceWorker' in navigator)) return;
 
@@ -6683,6 +6683,6 @@ function closeChModal(e){
 
 })();
 </script>
-<div class="ver-footer" id="ver-footer">Bilancio Casa — Versione 1.2.6</div>
+<div class="ver-footer" id="ver-footer">Bilancio Casa — Versione 1.2.5</div>
 </body>
 </html>
