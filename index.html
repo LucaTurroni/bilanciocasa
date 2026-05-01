@@ -1096,7 +1096,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
-  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.2</div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.3</div>
 </div>
 <div id="page-prog" class="page">
   <div class="pg-head">
@@ -4316,38 +4316,49 @@ function updateCons(){
   var bal=inc-realExp;
   var periodEndDate=getPeriodEndDate();
 
-  // Find oldest snapshot at or before start of data as base
-  var periodTxDates=txs.map(function(t){return t.date;});
-  var periodFirstDate=periodTxDates.length?periodTxDates.slice().sort()[0]:periodEndDate;
-  // Also consider snapshot dates in the period
-  S.wHist.forEach(function(s){ var sd=s.snapDate||s.date.slice(0,10); if(sd<=periodEndDate) periodFirstDate=periodFirstDate<sd?periodFirstDate:sd; });
+  // Patrimonio netto: snapshot più recente ≤ periodEndDate come ancora,
+  // + flusso delle sole tx dopo quella data fino a periodEndDate
+  // + conguagli di snapshot intermedi tra ancora e periodEndDate
+  // Questo garantisce che "Maggio" = "Tutto" se non ci sono tx dopo l'ultimo snapshot
 
-  // Base snapshot: most recent with snapDate <= periodFirstDate
-  var baseSnap=null;
+  var anchorSnap=null;
   S.wHist.forEach(function(s){
     var sd=s.snapDate||s.date.slice(0,10);
-    if(sd<=periodFirstDate&&(!baseSnap||sd>=(baseSnap.snapDate||baseSnap.date.slice(0,10)))) baseSnap=s;
+    if(sd<=periodEndDate&&(!anchorSnap||sd>=(anchorSnap.snapDate||anchorSnap.date.slice(0,10)))) anchorSnap=s;
   });
-  // No fallback: if no snapshot exists at or before period start, patrimonio netto = 0
 
-  // Sum adjustments of intermediate snapshots between baseSnap and periodEnd
-  var adjFlow=0;
-  if(baseSnap&&S.snapAdjustments&&S.snapAdjustments.length){
-    var baseDate=baseSnap.snapDate||baseSnap.date.slice(0,10);
-    // Find all snapshots with id, date > baseDate and <= periodEndDate, excluding baseSnap
-    var intermIds={};
-    S.wHist.forEach(function(s){
-      var sd=s.snapDate||s.date.slice(0,10);
-      if(s.id&&s.id!==(baseSnap.id||'')&&sd>baseDate&&sd<=periodEndDate) intermIds[s.id]=true;
-    });
-    S.snapAdjustments.forEach(function(a){
-      if(intermIds[a.snapId]&&(!a.view||a.view===_consView)) adjFlow+=(a.type==='income'?a.amount:-a.amount);
-    });
+  var net=0, netNet=0;
+  var snapDateStr='', snapTot=0;
+
+  if(anchorSnap){
+    var anchorDate=anchorSnap.snapDate||anchorSnap.date.slice(0,10);
+    snapDateStr=anchorDate; snapTot=anchorSnap.total;
+
+    // Only txs AFTER the anchor snapshot date (not before, those are already in the snapshot total)
+    var postTxs=txs.filter(function(t){return t.date>anchorDate;});
+    var postInc=postTxs.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+t.amount;},0);
+    var postRawExp=postTxs.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
+    var postCatMap=buildCatMap(postTxs);
+    var postRealExp=Object.values(postCatMap).reduce(function(a,d){return a+d.personal+d.coupleTotal/2;},0);
+
+    // Adjustments of snapshots STRICTLY AFTER anchor and <= periodEndDate
+    var postAdjFlow=0;
+    if(S.snapAdjustments&&S.snapAdjustments.length){
+      var anchorId=anchorSnap.id||'';
+      var postIds={};
+      S.wHist.forEach(function(s){
+        var sd=s.snapDate||s.date.slice(0,10);
+        if(s.id&&s.id!==anchorId&&sd>anchorDate&&sd<=periodEndDate) postIds[s.id]=true;
+      });
+      S.snapAdjustments.forEach(function(a){
+        if(postIds[a.snapId]&&(!a.view||a.view===_consView)) postAdjFlow+=(a.type==='income'?a.amount:-a.amount);
+      });
+    }
+
+    net=anchorSnap.total+postInc-postRawExp+postAdjFlow;
+    netNet=anchorSnap.total+postInc-postRealExp+postAdjFlow;
   }
 
-  var snapBase=baseSnap?baseSnap.total:0;
-  var net=snapBase+(inc-rawExp)+adjFlow;
-  var netNet=snapBase+(inc-realExp)+adjFlow;
   var displayNet=_consView==='net'?netNet:net;
   var displayBal=_consView==='net'?bal:inc-rawExp;
 
@@ -4355,9 +4366,6 @@ function updateCons(){
   var periodLabel=getPeriodLabel();
   var netHidden=localStorage.getItem('bc_net_hidden')==='1';
   var hasCoupleSplit=Object.values(catMap).some(function(d){return d.coupleHers>0||d.coupleMe>0;});
-
-  var snapDateStr=baseSnap?(baseSnap.snapDate||baseSnap.date.slice(0,10)):'';
-  var snapTot=baseSnap?baseSnap.total:0;
 
   var netCard='<div class="stat-card stat-net'+(netHidden?' stat-net-hidden':'')+'" style="position:relative;cursor:pointer" onclick="showNetWorthDetail('+net+','+netNet+','+snapTot+',\''+snapDateStr+'\')" data-tooltip="'+escH('Snapshot patrimoniale più recente ('+( baseSnap?fmtShort(snapDateStr):'nessuno')+') aggiornato con tutti i movimenti successivi. Clicca per vedere il dettaglio del calcolo. Usa 👁 per nascondere il valore.')+'">'
     +'<button class="net-eye-btn" onclick="event.stopPropagation();toggleNetVisibility()" title="'+(netHidden?'Mostra':'Nascondi')+' patrimonio netto" data-tt-id="btn-net-eye">'+(netHidden?'🙈':'👁')+'</button>'
@@ -5111,7 +5119,7 @@ function updateAiBanner(){
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
           <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()" data-tt-id="btn-debug">🧪 Entra in modalità debug</button>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.2</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.3</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -6570,7 +6578,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.2.2';
+  var APP_VERSION = '1.2.3';
 
   if(!('serviceWorker' in navigator)) return;
 
@@ -6666,6 +6674,6 @@ function closeChModal(e){
 
 })();
 </script>
-<div class="ver-footer" id="ver-footer">Bilancio Casa — Versione 1.2.2</div>
+<div class="ver-footer" id="ver-footer">Bilancio Casa — Versione 1.2.3</div>
 </body>
 </html>
