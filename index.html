@@ -463,7 +463,9 @@ input[type=number].inp::-webkit-inner-spin-button{-webkit-appearance:none}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0}
 .stat-inc::before{background:var(--green)}
 .stat-exp::before{background:var(--red)}
-.stat-bal::before{background:var(--blue)}
+.stat-bal::before{background:var(--blue);height:4px}
+.stat-bal{border-color:rgba(59,130,246,.5)!important;border-width:2px!important;background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(99,102,241,.06))!important}
+.dark .stat-bal{border-color:rgba(96,165,250,.45)!important;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(99,102,241,.07))!important}
 .stat-wal::before{background:var(--amber)}
 .stat-net::before{background:linear-gradient(90deg,#d97706,#fbbf24)}
 .stat-cop::before{background:var(--teal)}
@@ -1096,7 +1098,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
-  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.5</div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.6</div>
 </div>
 <div id="page-prog" class="page">
   <div class="pg-head">
@@ -5126,7 +5128,7 @@ function updateAiBanner(){
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
           <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()" data-tt-id="btn-debug">🧪 Entra in modalità debug</button>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.5</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.6</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -6585,7 +6587,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.2.5';
+  var APP_VERSION = '1.2.6';
 
   if(!('serviceWorker' in navigator)) return;
 
@@ -6681,6 +6683,6 @@ function closeChModal(e){
 
 })();
 </script>
-<div class="ver-footer" id="ver-footer">Bilancio Casa — Versione 1.2.5</div>
+<div class="ver-footer" id="ver-footer">Bilancio Casa — Versione 1.2.6</div>
 </body>
 </html>
