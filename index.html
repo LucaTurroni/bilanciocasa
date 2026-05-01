@@ -1096,7 +1096,7 @@ body.privacy-on #cop-cat-detail:hover{filter:blur(0px)}
     </div>
 
   </div>
-  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.4</div>
+  <div style="text-align:center;padding:24px 0 8px;color:var(--placeholder);font-size:.7rem;letter-spacing:.05em;user-select:none">Bilancio Casa — Versione 1.2.5</div>
 </div>
 <div id="page-prog" class="page">
   <div class="pg-head">
@@ -4316,41 +4316,54 @@ function updateCons(){
   var bal=inc-realExp;
   var periodEndDate=getPeriodEndDate();
 
-  // Patrimonio netto: snapshot più recente <= periodEndDate come ancora,
-  // + solo le tx DOPO quella data + conguagli di snapshot dopo quella data
-  // Così "Maggio" e "Tutto" coincidono quando non ci sono tx dopo l'ultimo snapshot
-  var anchorSnap=null;
+  // Patrimonio netto: snapshot più vecchio disponibile come base,
+  // + flusso di TUTTE le tx dalla sua data fino a periodEndDate
+  // + conguagli di tutti gli snapshot intermedi fino a periodEndDate
+  // Il periodo selezionato NON cambia il punto di partenza del patrimonio
+  var oldestSnap=null;
   S.wHist.forEach(function(s){
     var sd=s.snapDate||s.date.slice(0,10);
-    if(sd<=periodEndDate&&(!anchorSnap||sd>=(anchorSnap.snapDate||anchorSnap.date.slice(0,10)))) anchorSnap=s;
+    if(!oldestSnap||sd<=(oldestSnap.snapDate||oldestSnap.date.slice(0,10))) oldestSnap=s;
   });
 
   var net=0, netNet=0;
   var snapDateStr='', snapTot=0;
-  if(anchorSnap){
-    var anchorDate=anchorSnap.snapDate||anchorSnap.date.slice(0,10);
-    snapDateStr=anchorDate; snapTot=anchorSnap.total;
-    // Only txs strictly AFTER anchor date
-    var postTxs=txs.filter(function(t){return t.date>anchorDate;});
-    var postInc=postTxs.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+t.amount;},0);
-    var postRawExp=postTxs.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
-    var postCatMap=buildCatMap(postTxs);
-    var postRealExp=Object.values(postCatMap).reduce(function(a,d){return a+d.personal+d.coupleTotal/2;},0);
-    // Adjustments of snapshots strictly after anchor and <= periodEndDate
-    var postAdjFlow=0;
+  if(oldestSnap){
+    var oldestDate=oldestSnap.snapDate||oldestSnap.date.slice(0,10);
+    snapDateStr=oldestDate; snapTot=oldestSnap.total;
+    // All txs from oldest snapshot date to periodEndDate
+    var allHistTxs=getPeriodTxs().concat(
+      // Include txs outside the selected period but within history
+      S.txs.filter(function(t){return t.date>=oldestDate&&t.date<=periodEndDate&&!getPeriodTxs().some(function(p){return p.id===t.id;})})
+    );
+    // Actually simpler: use ALL txs >= oldestDate and <= periodEndDate
+    var todayStr=today();
+    var histTxs=S.txs.filter(function(t){return t.date>=oldestDate&&t.date<=periodEndDate&&t.date<=todayStr;});
+    // Add active scheduled occurrences
+    var histSched=getActiveScheduled().filter(function(t){
+      var rule=(S.recurringRules||[]).find(function(r){return r.id===t.ruleId;});
+      return !(rule&&rule.exceptions&&rule.exceptions.indexOf(t.date)!==-1)&&t.date>=oldestDate&&t.date<=periodEndDate;
+    });
+    var allHist=histTxs.concat(histSched);
+    var histInc=allHist.filter(function(t){return t.type==='income';}).reduce(function(a,t){return a+t.amount;},0);
+    var histRawExp=allHist.filter(function(t){return t.type==='expense';}).reduce(function(a,t){return a+t.amount;},0);
+    var histCatMap=buildCatMap(allHist);
+    var histRealExp=Object.values(histCatMap).reduce(function(a,d){return a+d.personal+d.coupleTotal/2;},0);
+    // All adjustments of snapshots after oldest and <= periodEndDate
+    var histAdjFlow=0;
     if(S.snapAdjustments&&S.snapAdjustments.length){
-      var anchorId=anchorSnap.id||'';
-      var postIds={};
+      var oldestId=oldestSnap.id||'';
+      var histIds={};
       S.wHist.forEach(function(s){
         var sd=s.snapDate||s.date.slice(0,10);
-        if(s.id&&s.id!==anchorId&&sd>anchorDate&&sd<=periodEndDate) postIds[s.id]=true;
+        if(s.id&&s.id!==oldestId&&sd>oldestDate&&sd<=periodEndDate) histIds[s.id]=true;
       });
       S.snapAdjustments.forEach(function(a){
-        if(postIds[a.snapId]&&(!a.view||a.view===_consView)) postAdjFlow+=(a.type==='income'?a.amount:-a.amount);
+        if(histIds[a.snapId]&&(!a.view||a.view===_consView)) histAdjFlow+=(a.type==='income'?a.amount:-a.amount);
       });
     }
-    net=anchorSnap.total+postInc-postRawExp+postAdjFlow;
-    netNet=anchorSnap.total+postInc-postRealExp+postAdjFlow;
+    net=oldestSnap.total+histInc-histRawExp+histAdjFlow;
+    netNet=oldestSnap.total+histInc-histRealExp+histAdjFlow;
   }
 
   var displayNet=_consView==='net'?netNet:net;
@@ -4361,12 +4374,12 @@ function updateCons(){
   var netHidden=localStorage.getItem('bc_net_hidden')==='1';
   var hasCoupleSplit=Object.values(catMap).some(function(d){return d.coupleHers>0||d.coupleMe>0;});
 
-  var netCard='<div class="stat-card stat-net'+(netHidden?' stat-net-hidden':'')+'" style="position:relative;cursor:pointer" onclick="showNetWorthDetail('+net+','+netNet+','+snapTot+',\''+snapDateStr+'\')" data-tooltip="'+escH('Snapshot patrimoniale più recente ('+(anchorSnap?fmtShort(snapDateStr):'nessuno')+') aggiornato con tutti i movimenti successivi. Clicca per vedere il dettaglio del calcolo. Usa 👁 per nascondere il valore.')+'">'
+  var netCard='<div class="stat-card stat-net'+(netHidden?' stat-net-hidden':'')+'" style="position:relative;cursor:pointer" onclick="showNetWorthDetail('+net+','+netNet+','+snapTot+',\''+snapDateStr+'\')" data-tooltip="'+escH('Snapshot di partenza ('+(oldestSnap?fmtShort(snapDateStr):'nessuno')+') + tutti i movimenti fino ad oggi. Clicca per vedere il dettaglio del calcolo. Usa 👁 per nascondere il valore.')+'">'
     +'<button class="net-eye-btn" onclick="event.stopPropagation();toggleNetVisibility()" title="'+(netHidden?'Mostra':'Nascondi')+' patrimonio netto" data-tt-id="btn-net-eye">'+(netHidden?'🙈':'👁')+'</button>'
     +'<div class="sc-label">Patrimonio netto'+(net!==netNet?'<span style="font-size:.65rem;margin-left:6px;opacity:.6;white-space:nowrap">'+(_consView==='net'?'con rimborsi 💑':'senza rimborsi 💑')+'</span>':'')+'</div>'
     +'<div class="sc-net-mask">'
     +'<div class="sc-value v-net-gold privacy-blur">€'+fmt(displayNet)+'</div>'
-    +'<div class="sc-note">'+(anchorSnap?'Snapshot '+fmtShort(snapDateStr)+' + movimenti':'Nessuno snapshot')+' · 🔍 dettaglio</div>'
+    +'<div class="sc-note">'+(oldestSnap?'Dal '+fmtShort(snapDateStr)+' ad oggi':'Nessuno snapshot')+' · 🔍 dettaglio</div>'
     +'</div>'
     +'</div>';
 
@@ -5113,7 +5126,7 @@ function updateAiBanner(){
           <p style="font-size:.82rem;color:var(--sub);margin-bottom:14px">Entra in una modalità sandbox: puoi inserire o modificare qualsiasi dato senza che venga salvato. All'uscita, tutti i cambiamenti vengono annullati e i dati reali vengono ripristinati.</p>
           <button class="btn btn-sm" style="background:var(--red-d);color:#fff;border:none" onclick="enterDebugMode()" data-tt-id="btn-debug">🧪 Entra in modalità debug</button>
         </div>
-        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.4</div>
+        <div style="text-align:center;padding-top:6px;color:var(--placeholder);font-size:.72rem;letter-spacing:.04em">Versione 1.2.5</div>
       </div>
 
       <!-- TAB: App mobile -->
@@ -6572,7 +6585,7 @@ function closeChModal(e){
 // SERVICE WORKER — aggiornamenti automatici
 // ═══════════════════════════════════════
 (function(){
-  var APP_VERSION = '1.2.4';
+  var APP_VERSION = '1.2.5';
 
   if(!('serviceWorker' in navigator)) return;
 
@@ -6668,6 +6681,6 @@ function closeChModal(e){
 
 })();
 </script>
-<div class="ver-footer" id="ver-footer">Bilancio Casa — Versione 1.2.4</div>
+<div class="ver-footer" id="ver-footer">Bilancio Casa — Versione 1.2.5</div>
 </body>
 </html>
